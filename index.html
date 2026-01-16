@@ -6,34 +6,41 @@
   <meta name="theme-color" content="#ffd400" />
 
   <title>ASTANA JAS Football School — футбольная школа для детей</title>
-  <meta name="description" content="ASTANA JAS Football School — современная футбольная школа для детей в Астане. Тренировки, программы, локации и запись на тренировку." />
-  <meta name="keywords" content="футбольная школа, дети, тренировки, Астана, ASTANA JAS, футбол" />
+  <meta name="description" content="ASTANA JAS Football School — современная футбольная школа для детей. Тренировки, программы, локации и запись." />
 
   <meta property="og:title" content="ASTANA JAS Football School" />
-  <meta property="og:description" content="Футбольная школа для детей. Развитие, дисциплина и любовь к спорту с раннего возраста." />
+  <meta property="og:description" content="Футбольная школа для детей. Развитие, дисциплина и любовь к спорту." />
   <meta property="og:type" content="website" />
 
+  <!-- Modern font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Modern icons (public CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Leaflet (map, no keys) -->
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Leaflet (карта без ключей, подходит для GitHub Pages) -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
+
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- =========================
-       2.1 HEADER (фиксированный)
-  ========================== -->
+  <!-- HEADER -->
   <header class="header" id="top">
     <div class="container header__inner">
       <a class="brand" href="#top" aria-label="ASTANA JAS Football School">
-        <span class="brand__mark" aria-hidden="true">AJ</span>
+        <span class="brand__mark" aria-hidden="true">
+          <i class="fa-solid fa-futbol"></i>
+        </span>
         <span class="brand__text">
           <span class="brand__title">ASTANA JAS</span>
           <span class="brand__sub">FOOTBALL SCHOOL</span>
@@ -51,8 +58,9 @@
       </nav>
 
       <div class="header__actions">
-        <a class="phone" href="tel:+77019744464" aria-label="Позвонить +7 701 974 4464">
-          +7 701 974 4464
+        <a class="phone" href="tel:+77019744464" aria-label="Позвонить">
+          <i class="fa-solid fa-phone"></i>
+          <span>+7 701 974 4464</span>
         </a>
 
         <button class="burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
@@ -61,340 +69,360 @@
       </div>
     </div>
 
-    <!-- Мобильное меню -->
+    <!-- Mobile menu -->
     <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
       <div class="mobile-menu__inner container">
-        <a class="mobile-link" href="#about">О школе</a>
-        <a class="mobile-link" href="#programs">Программы</a>
-        <a class="mobile-link" href="#training">Тренировки</a>
-        <a class="mobile-link" href="#locations">Локации</a>
-        <a class="mobile-link" href="#contacts">Контакты</a>
+        <a class="mobile-link" href="#about"><i class="fa-regular fa-circle-play"></i> О школе</a>
+        <a class="mobile-link" href="#programs"><i class="fa-solid fa-layer-group"></i> Программы</a>
+        <a class="mobile-link" href="#training"><i class="fa-solid fa-dumbbell"></i> Тренировки</a>
+        <a class="mobile-link" href="#locations"><i class="fa-solid fa-location-dot"></i> Локации</a>
+        <a class="mobile-link" href="#contacts"><i class="fa-solid fa-headset"></i> Контакты</a>
+
         <div class="mobile-menu__cta">
-          <a class="btn btn--dark btn--full" href="tel:+77019744464">Позвонить</a>
-          <a class="btn btn--primary btn--full" href="#lead">Оставить заявку</a>
+          <a class="btn btn--dark btn--full" href="tel:+77019744464">
+            <i class="fa-solid fa-phone"></i> Позвонить
+          </a>
+          <a class="btn btn--primary btn--full" href="https://wa.me/77019744464" target="_blank" rel="noopener">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </a>
         </div>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- =========================
-         2.2 HERO (первый экран)
-    ========================== -->
+    <!-- HERO with VIDEO BG -->
     <section class="hero" aria-label="Первый экран">
-      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="hero__videoWrap" aria-hidden="true">
+        <!-- ВАЖНО: загрузите своё видео в /assets/hero.mp4 -->
+        <video class="hero__video" autoplay muted loop playsinline preload="metadata">
+          <source src="assets/hero.mp4" type="video/mp4" />
+        </video>
+        <div class="hero__overlay"></div>
+        <div class="hero__glow"></div>
+      </div>
 
       <div class="container hero__inner">
-        <div class="hero__content">
+        <div class="hero__content reveal">
+          <div class="hero__pill">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Детская футбольная школа в Астане</span>
+          </div>
+
           <h1 class="hero__title">
-            <span>ASTANA JAS</span>
-            <span class="hero__title--thin">FOOTBALL SCHOOL</span>
+            ASTANA JAS
+            <span class="hero__titleSub">FOOTBALL SCHOOL</span>
           </h1>
 
           <p class="hero__subtitle">
-            Футбольная школа для детей. Развитие, дисциплина и любовь к спорту с раннего возраста.
+            Развитие, дисциплина и любовь к спорту — через правильную методику и командную игру.
           </p>
 
           <div class="hero__cta">
-            <a class="btn btn--dark" href="#lead">Записаться на тренировку</a>
-            <a class="btn btn--outline" href="#contacts">Получить консультацию</a>
+            <a class="btn btn--primary btn--xl" href="#contacts">
+              <i class="fa-solid fa-calendar-check"></i> Записаться
+            </a>
+            <a class="btn btn--glass btn--xl" href="#about">
+              <i class="fa-solid fa-circle-info"></i> Подробнее
+            </a>
           </div>
 
-          <div class="hero__badges" aria-label="Ключевые преимущества">
-            <div class="badge">Дети и возрастные группы</div>
-            <div class="badge">Современный инвентарь</div>
-            <div class="badge">Командный дух</div>
+          <div class="hero__stats">
+            <div class="stat">
+              <div class="stat__icon"><i class="fa-solid fa-users"></i></div>
+              <div class="stat__text">
+                <div class="stat__top">Группы по возрасту</div>
+                <div class="stat__bottom">Удобно родителям</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat__icon"><i class="fa-solid fa-shield-heart"></i></div>
+              <div class="stat__text">
+                <div class="stat__top">Безопасная нагрузка</div>
+                <div class="stat__bottom">Контроль и методика</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat__icon"><i class="fa-solid fa-trophy"></i></div>
+              <div class="stat__text">
+                <div class="stat__top">Командный дух</div>
+                <div class="stat__bottom">Рост уверенности</div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="hero__card" role="region" aria-label="Быстрая запись">
-          <div class="hero__cardTop">
-            <div class="chip">Быстрая заявка</div>
-            <div class="chip chip--dark">Ответим в ближайшее время</div>
+          <div class="hero__scroll">
+            <a class="scroll-indicator" href="#about" aria-label="Прокрутить вниз">
+              <span></span>
+            </a>
           </div>
-
-          <form class="mini-form" id="miniForm" autocomplete="on">
-            <label class="field">
-              <span class="field__label">Имя родителя</span>
-              <input class="field__input" type="text" name="name" placeholder="Например: Айгуль" required minlength="2" />
-            </label>
-
-            <label class="field">
-              <span class="field__label">Телефон</span>
-              <input class="field__input" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required />
-            </label>
-
-            <button class="btn btn--primary btn--full" type="submit">Оставить заявку</button>
-            <p class="form-hint">
-              Нажимая кнопку, вы соглашаетесь на обработку данных для обратной связи.
-            </p>
-
-            <div class="form-success" id="miniSuccess" aria-live="polite"></div>
-          </form>
         </div>
       </div>
 
-      <div class="hero__scroll">
-        <a class="scroll-indicator" href="#about" aria-label="Прокрутить вниз">
-          <span></span>
+      <!-- Floating hot actions -->
+      <div class="hotbar" aria-label="Горячие кнопки">
+        <a class="hotbar__btn hotbar__btn--call" href="tel:+77019744464" aria-label="Позвонить">
+          <i class="fa-solid fa-phone"></i><span>Позвонить</span>
+        </a>
+        <a class="hotbar__btn hotbar__btn--wa" href="https://wa.me/77019744464" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span>
+        </a>
+        <a class="hotbar__btn hotbar__btn--tg" href="https://t.me/" target="_blank" rel="noopener" aria-label="Telegram">
+          <i class="fa-brands fa-telegram"></i><span>Telegram</span>
         </a>
       </div>
     </section>
 
-    <!-- =========================
-         2.3 О ШКОЛЕ
-    ========================== -->
+    <!-- ABOUT -->
     <section class="section" id="about">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head reveal">
           <h2 class="h2">О школе</h2>
           <p class="lead">
-            Мы создаём среду, где ребёнок растёт физически, учится дисциплине и получает удовольствие от футбола.
+            ASTANA JAS Football School — это современная футбольная школа для детей: техника, дисциплина и командная игра.
           </p>
         </div>
 
         <div class="grid-2">
-          <div class="card card--soft">
-            <p class="p">
-              <strong>ASTANA JAS Football School</strong> — это современная футбольная школа для детей.
-              Обучение направлено на физическое развитие, командную игру и дисциплину.
-              Занятия проходят в безопасной и мотивирующей среде, внимание уделяется каждому ребёнку.
-            </p>
+          <div class="card card--soft reveal">
+            <div class="feature-list">
+              <div class="feature">
+                <div class="feature__icon"><i class="fa-solid fa-futbol"></i></div>
+                <div class="feature__text">
+                  <div class="feature__title">Современная методика</div>
+                  <div class="feature__desc">Техника, координация, игровое мышление — поэтапно и безопасно.</div>
+                </div>
+              </div>
 
-            <div class="icon-list" aria-label="Ключевые принципы">
-              <div class="icon-item">
-                <span class="icon" aria-hidden="true">⚽</span>
-                <div>
-                  <div class="icon-item__title">Футбольная база</div>
-                  <div class="icon-item__text">Техника, координация, игровое мышление</div>
+              <div class="feature">
+                <div class="feature__icon"><i class="fa-solid fa-people-group"></i></div>
+                <div class="feature__text">
+                  <div class="feature__title">Командная среда</div>
+                  <div class="feature__desc">Дети учатся взаимодействовать, уважать партнёров и играть “вместе”.</div>
                 </div>
               </div>
-              <div class="icon-item">
-                <span class="icon" aria-hidden="true">🛡️</span>
-                <div>
-                  <div class="icon-item__title">Безопасно</div>
-                  <div class="icon-item__text">Контроль нагрузки и корректная методика</div>
-                </div>
-              </div>
-              <div class="icon-item">
-                <span class="icon" aria-hidden="true">🏆</span>
-                <div>
-                  <div class="icon-item__title">Мотивация</div>
-                  <div class="icon-item__text">Дисциплина, уверенность и командный дух</div>
+
+              <div class="feature">
+                <div class="feature__icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="feature__text">
+                  <div class="feature__title">Внимание к каждому</div>
+                  <div class="feature__desc">Подбор нагрузок, развитие сильных сторон, поддержка уверенности.</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="media media--sport" aria-label="Визуальный блок">
-            <div class="media__overlay"></div>
-            <div class="media__content">
-              <div class="media__kicker">Тренировки для детей</div>
-              <div class="media__title">Динамика. Развитие. Команда.</div>
-              <div class="media__sub">Подходит для GitHub Pages — без тяжёлых библиотек и без API-ключей.</div>
+          <div class="media media--ultra reveal" aria-label="Визуальный блок">
+            <div class="media__glass">
+              <div class="media__kicker"><i class="fa-solid fa-star"></i> Атмосфера и дисциплина</div>
+              <div class="media__title">Тренировки, которые цепляют</div>
+              <div class="media__sub">Энергия. Драйв. Прогресс. Сильная подача бренда.</div>
+
+              <div class="media__chips">
+                <span class="chip"><i class="fa-solid fa-stopwatch"></i> Ритм</span>
+                <span class="chip"><i class="fa-solid fa-shoe-prints"></i> Техника</span>
+                <span class="chip"><i class="fa-solid fa-people-group"></i> Команда</span>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- =========================
-         2.4 ПРЕИМУЩЕСТВА
-    ========================== -->
+    <!-- ADVANTAGES -->
     <section class="section section--dark">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head reveal">
           <h2 class="h2 h2--light">Преимущества</h2>
-          <p class="lead lead--light">Коротко о том, почему родителям удобно и спокойно выбирать нашу школу.</p>
+          <p class="lead lead--light">Коротко о сильных сторонах школы — для родителей.</p>
         </div>
 
-        <div class="cards" role="list">
-          <article class="adv" role="listitem">
-            <div class="adv__icon">🎯</div>
+        <div class="cards">
+          <article class="adv reveal">
+            <div class="adv__icon"><i class="fa-solid fa-bullseye"></i></div>
             <h3 class="adv__title">Профессиональный подход</h3>
-            <p class="adv__text">План тренировок: техника, координация, игра и прогресс.</p>
+            <p class="adv__text">Структура тренировки, прогресс и понятные цели.</p>
           </article>
 
-          <article class="adv" role="listitem">
-            <div class="adv__icon">👦👧</div>
+          <article class="adv reveal">
+            <div class="adv__icon"><i class="fa-solid fa-children"></i></div>
             <h3 class="adv__title">Возрастные группы</h3>
-            <p class="adv__text">Занятия по уровню и возрасту — так ребёнку проще развиваться.</p>
+            <p class="adv__text">Комфортный темп, правильная нагрузка и внимание.</p>
           </article>
 
-          <article class="adv" role="listitem">
-            <div class="adv__icon">📅</div>
+          <article class="adv reveal">
+            <div class="adv__icon"><i class="fa-solid fa-calendar-days"></i></div>
             <h3 class="adv__title">Регулярные занятия</h3>
-            <p class="adv__text">Стабильный график и понятная структура обучения.</p>
+            <p class="adv__text">Стабильный график — результат растёт быстрее.</p>
           </article>
 
-          <article class="adv" role="listitem">
-            <div class="adv__icon">🧤</div>
+          <article class="adv reveal">
+            <div class="adv__icon"><i class="fa-solid fa-dumbbell"></i></div>
             <h3 class="adv__title">Современный инвентарь</h3>
-            <p class="adv__text">Фишки, лестницы, мячи и упражнения под детскую подготовку.</p>
+            <p class="adv__text">Упражнения под детскую подготовку.</p>
           </article>
 
-          <article class="adv" role="listitem">
-            <div class="adv__icon">🤝</div>
+          <article class="adv reveal">
+            <div class="adv__icon"><i class="fa-solid fa-handshake-angle"></i></div>
             <h3 class="adv__title">Командный дух</h3>
-            <p class="adv__text">Уважение, коммуникация и умение играть вместе.</p>
+            <p class="adv__text">Уважение, взаимодействие и поддержка в игре.</p>
           </article>
 
-          <article class="adv" role="listitem">
-            <div class="adv__icon">💪</div>
-            <h3 class="adv__title">Развитие личности</h3>
-            <p class="adv__text">Дисциплина, уверенность и полезные привычки.</p>
+          <article class="adv reveal">
+            <div class="adv__icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            <h3 class="adv__title">Физическое развитие</h3>
+            <p class="adv__text">Координация, выносливость, уверенность.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- =========================
-         2.5 ТРЕНИРОВОЧНЫЙ ПРОЦЕСС
-    ========================== -->
+    <!-- TRAINING -->
     <section class="section" id="training">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head reveal">
           <h2 class="h2">Тренировочный процесс</h2>
-          <p class="lead">Как обычно проходит тренировка — понятно и по делу.</p>
+          <p class="lead">Понятная структура тренировки: от разминки до мини-матчей.</p>
         </div>
 
         <div class="grid-2">
-          <div class="steps card">
+          <div class="steps card reveal">
             <div class="step">
               <div class="step__num">01</div>
               <div class="step__body">
-                <div class="step__title">Разминка</div>
-                <div class="step__text">Подготовка мышц и суставов, включение в работу.</div>
+                <div class="step__title"><i class="fa-solid fa-fire"></i> Разминка</div>
+                <div class="step__text">Подготовка организма, правильный старт тренировки.</div>
               </div>
             </div>
             <div class="step">
               <div class="step__num">02</div>
               <div class="step__body">
-                <div class="step__title">Координация и техника</div>
-                <div class="step__text">Упражнения на контроль мяча, движения и баланс.</div>
+                <div class="step__title"><i class="fa-solid fa-shoe-prints"></i> Координация и техника</div>
+                <div class="step__text">Контроль мяча, ловкость, работа ног, баланс.</div>
               </div>
             </div>
             <div class="step">
               <div class="step__num">03</div>
               <div class="step__body">
-                <div class="step__title">Игровые элементы</div>
-                <div class="step__text">Пасы, взаимодействия, принятие решений на скорости.</div>
+                <div class="step__title"><i class="fa-solid fa-chess"></i> Игровые элементы</div>
+                <div class="step__text">Пасы, решения, движение без мяча, взаимодействия.</div>
               </div>
             </div>
             <div class="step">
               <div class="step__num">04</div>
               <div class="step__body">
-                <div class="step__title">Мини-матчи</div>
-                <div class="step__text">Практика в игре: позиция, командная работа, эмоции.</div>
+                <div class="step__title"><i class="fa-solid fa-futbol"></i> Мини-матчи</div>
+                <div class="step__text">Игра, эмоции, понимание командного футбола.</div>
               </div>
             </div>
             <div class="step">
               <div class="step__num">05</div>
               <div class="step__body">
-                <div class="step__title">Растяжка и восстановление</div>
-                <div class="step__text">Снятие нагрузки, закрепление привычки заботы о теле.</div>
+                <div class="step__title"><i class="fa-solid fa-heart"></i> Растяжка и восстановление</div>
+                <div class="step__text">Снятие нагрузки и формирование полезных привычек.</div>
               </div>
             </div>
           </div>
 
-          <div class="gallery">
+          <div class="gallery reveal">
             <div class="shot shot--1">
-              <div class="shot__label">Динамичные кадры</div>
+              <div class="shot__label"><i class="fa-solid fa-bolt"></i> Динамика</div>
             </div>
             <div class="shot shot--2">
-              <div class="shot__label">Дети в процессе игры</div>
+              <div class="shot__label"><i class="fa-solid fa-stopwatch"></i> Скорость</div>
             </div>
             <div class="shot shot--3">
-              <div class="shot__label">Техника и координация</div>
+              <div class="shot__label"><i class="fa-solid fa-people-group"></i> Команда</div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- =========================
-         2.6 ПРОГРАММЫ ОБУЧЕНИЯ
-    ========================== -->
+    <!-- PROGRAMS -->
     <section class="section" id="programs">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head reveal">
           <h2 class="h2">Программы обучения</h2>
-          <p class="lead">Выберите формат, подходящий по возрасту и нагрузке. Цены можно добавить позже.</p>
+          <p class="lead">Формат и возраст — как основа выбора. Цены добавите позже.</p>
         </div>
 
         <div class="programs">
-          <article class="program card">
-            <h3 class="program__title">Start</h3>
-            <div class="program__meta">
-              <span class="tag">Возраст: 5–7</span>
-              <span class="tag">Формат: базовая подготовка</span>
-              <span class="tag">Тренировок: 2 раза/нед</span>
+          <article class="program card reveal">
+            <div class="program__top">
+              <h3 class="program__title">Start</h3>
+              <div class="program__badge"><i class="fa-solid fa-seedling"></i></div>
             </div>
-            <p class="program__text">Основа: координация, техника с мячом, дисциплина и интерес к игре.</p>
+            <div class="program__meta">
+              <span class="tag"><i class="fa-solid fa-child"></i> 5–7 лет</span>
+              <span class="tag"><i class="fa-solid fa-layer-group"></i> База</span>
+              <span class="tag"><i class="fa-solid fa-calendar"></i> 2 раза/нед</span>
+            </div>
+            <p class="program__text">Координация, техника, дисциплина, любовь к игре.</p>
           </article>
 
-          <article class="program card">
-            <h3 class="program__title">Progress</h3>
-            <div class="program__meta">
-              <span class="tag">Возраст: 8–10</span>
-              <span class="tag">Формат: техника + взаимодействие</span>
-              <span class="tag">Тренировок: 3 раза/нед</span>
+          <article class="program card reveal">
+            <div class="program__top">
+              <h3 class="program__title">Progress</h3>
+              <div class="program__badge"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
             </div>
-            <p class="program__text">Развитие: игровые связи, скорость решений, основы тактики.</p>
+            <div class="program__meta">
+              <span class="tag"><i class="fa-solid fa-child-reaching"></i> 8–10 лет</span>
+              <span class="tag"><i class="fa-solid fa-futbol"></i> Техника + игра</span>
+              <span class="tag"><i class="fa-solid fa-calendar"></i> 3 раза/нед</span>
+            </div>
+            <p class="program__text">Взаимодействия, скорость решений, основы тактики.</p>
           </article>
 
-          <article class="program card">
-            <h3 class="program__title">Team</h3>
-            <div class="program__meta">
-              <span class="tag">Возраст: 11–14</span>
-              <span class="tag">Формат: командная игра</span>
-              <span class="tag">Тренировок: 3–4 раза/нед</span>
+          <article class="program card reveal">
+            <div class="program__top">
+              <h3 class="program__title">Team</h3>
+              <div class="program__badge"><i class="fa-solid fa-trophy"></i></div>
             </div>
-            <p class="program__text">Углубление: роли на поле, взаимодействие, подготовка к матчам.</p>
+            <div class="program__meta">
+              <span class="tag"><i class="fa-solid fa-person-running"></i> 11–14 лет</span>
+              <span class="tag"><i class="fa-solid fa-chess-knight"></i> Команда</span>
+              <span class="tag"><i class="fa-solid fa-calendar"></i> 3–4 раза/нед</span>
+            </div>
+            <p class="program__text">Роли на поле, матчи, прогресс и дисциплина.</p>
           </article>
-        </div>
-
-        <div class="note">
-          <div class="note__icon" aria-hidden="true">ℹ️</div>
-          <div class="note__text">
-            Хотите добавить цены и расписание — просто вставьте блоки в эти карточки (структура уже готова).
-          </div>
         </div>
       </div>
     </section>
 
-    <!-- =========================
-         2.7 НАШИ ЛОКАЦИИ
-    ========================== -->
+    <!-- LOCATIONS -->
     <section class="section section--soft" id="locations">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head reveal">
           <h2 class="h2">Наши локации</h2>
-          <p class="lead">Две локации — как указано в данных.</p>
+          <p class="lead">Две локации — строго по вашим данным.</p>
         </div>
 
         <div class="loc-grid">
-          <div class="loc card">
-            <div class="loc__icon">📍</div>
-            <div class="loc__title">Школа-лицей №11 им. Ө. Жәнібеков</div>
-            <div class="loc__text">Астана</div>
+          <div class="loc card reveal">
+            <div class="loc__icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <div class="loc__title">Школа-лицей №11 им. Ө. Жәнібеков</div>
+              <div class="loc__text">Астана</div>
+            </div>
           </div>
 
-          <div class="loc card">
-            <div class="loc__icon">📍</div>
-            <div class="loc__title">Школа-лицей №71</div>
-            <div class="loc__text">Астана</div>
+          <div class="loc card reveal">
+            <div class="loc__icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <div class="loc__title">Школа-лицей №71</div>
+              <div class="loc__text">Астана</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- =========================
-         2.8 КОНТАКТНЫЙ БЛОК (ключевой CTA)
-    ========================== -->
+    <!-- CONTACTS (key CTA) -->
     <section class="section section--brand" id="contacts">
       <div class="container">
-        <div class="contact">
+        <div class="contact reveal">
           <div class="contact__left">
             <h2 class="h2">Свяжитесь с нами</h2>
 
@@ -402,7 +430,7 @@
               <div class="contact__school">ASTANA JAS Football School</div>
 
               <div class="contact__row">
-                <div class="contact__label">Наши локации:</div>
+                <div class="contact__label"><i class="fa-solid fa-location-dot"></i> Наши локации:</div>
                 <ul class="contact__list">
                   <li>Школа-лицей №11 им. Ө. Жәнібеков</li>
                   <li>Школа-лицей №71</li>
@@ -410,134 +438,84 @@
               </div>
 
               <div class="contact__row">
-                <div class="contact__label">Контактное лицо:</div>
+                <div class="contact__label"><i class="fa-solid fa-user-tie"></i> Контактное лицо:</div>
                 <div class="contact__value">Менеджер — Руслан</div>
               </div>
 
               <div class="contact__row">
-                <div class="contact__label">Телефон:</div>
+                <div class="contact__label"><i class="fa-solid fa-phone"></i> Телефон:</div>
                 <a class="contact__phone" href="tel:+77019744464">+7 701 974 4464</a>
               </div>
 
               <div class="contact__buttons">
-                <a class="btn btn--dark" href="tel:+77019744464">Позвонить</a>
-                <a class="btn btn--outlineDark" href="#lead">Оставить заявку</a>
+                <a class="btn btn--dark" href="tel:+77019744464"><i class="fa-solid fa-phone"></i> Позвонить</a>
+                <a class="btn btn--glassDark" href="https://wa.me/77019744464" target="_blank" rel="noopener">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a class="btn btn--glassDark" href="https://t.me/" target="_blank" rel="noopener">
+                  <i class="fa-brands fa-telegram"></i> Telegram
+                </a>
               </div>
             </div>
           </div>
 
           <div class="contact__right">
-            <div class="contact__stat card">
-              <div class="stat__num">2</div>
-              <div class="stat__text">локации в Астане</div>
+            <div class="kpi card">
+              <div class="kpi__icon"><i class="fa-solid fa-map-location-dot"></i></div>
+              <div class="kpi__text">
+                <div class="kpi__num">2</div>
+                <div class="kpi__label">локации в Астане</div>
+              </div>
             </div>
-            <div class="contact__stat card">
-              <div class="stat__num">5+</div>
-              <div class="stat__text">этапов тренировки</div>
+
+            <div class="kpi card">
+              <div class="kpi__icon"><i class="fa-solid fa-diagram-project"></i></div>
+              <div class="kpi__text">
+                <div class="kpi__num">5+</div>
+                <div class="kpi__label">этапов тренировки</div>
+              </div>
             </div>
-            <div class="contact__stat card">
-              <div class="stat__num">100%</div>
-              <div class="stat__text">фокус на детей</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- =========================
-         2.9 ФОРМА ОБРАТНОЙ СВЯЗИ
-    ========================== -->
-    <section class="section" id="lead">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="h2">Форма обратной связи</h2>
-          <p class="lead">Оставьте контакты — мы свяжемся и подскажем по программе и локации.</p>
-        </div>
-
-        <div class="form-wrap card">
-          <form class="lead-form" id="leadForm" autocomplete="on">
-            <label class="field">
-              <span class="field__label">Имя родителя</span>
-              <input class="field__input" type="text" name="name" placeholder="Например: Нуржан" required minlength="2" />
-            </label>
-
-            <label class="field">
-              <span class="field__label">Телефон</span>
-              <input class="field__input" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required />
-            </label>
-
-            <button class="btn btn--primary btn--full" type="submit">Оставить заявку</button>
-
-            <div class="form-success" id="leadSuccess" aria-live="polite"></div>
-            <p class="form-hint">
-              Мы используем ваш номер только для обратной связи по тренировкам ASTANA JAS Football School.
-            </p>
-          </form>
-
-          <div class="form-side">
-            <div class="form-side__title">Быстрые контакты</div>
-            <div class="form-side__item">
-              <div class="muted">Менеджер</div>
-              <div><strong>Руслан</strong></div>
-            </div>
-            <div class="form-side__item">
-              <div class="muted">Телефон</div>
-              <a class="strong-link" href="tel:+77019744464">+7 701 974 4464</a>
-            </div>
-            <div class="form-side__item">
-              <div class="muted">Локации</div>
-              <div>Школа-лицей №11 им. Ө. Жәнібеков</div>
-              <div>Школа-лицей №71</div>
+            <div class="kpi card">
+              <div class="kpi__icon"><i class="fa-solid fa-shield"></i></div>
+              <div class="kpi__text">
+                <div class="kpi__num">100%</div>
+                <div class="kpi__label">фокус на детях</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- =========================
-         КАРТА (по вашему требованию: в самом низу)
-    ========================== -->
+    <!-- MAP at bottom -->
     <section class="section section--map" id="mapSection" aria-label="Карта локаций">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head reveal">
           <h2 class="h2">Карта</h2>
-          <p class="lead">Отметили обе локации. Если нужно — позже уточним точные координаты и адреса.</p>
+          <p class="lead">Маркеры локаций. Координаты можно уточнить и заменить в script.js.</p>
         </div>
       </div>
 
       <div class="map-wrap">
         <div id="map" class="map" role="application" aria-label="Карта локаций ASTANA JAS"></div>
       </div>
-
-      <div class="container map-note">
-        <div class="note">
-          <div class="note__icon" aria-hidden="true">✅</div>
-          <div class="note__text">
-            Карта работает на GitHub Pages без ключей. Маркеры можно быстро подправить в <strong>script.js</strong>.
-          </div>
-        </div>
-      </div>
     </section>
   </main>
 
-  <!-- =========================
-       2.10 FOOTER
-  ========================== -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer__inner">
-      <div class="footer__left">
-        <div class="footer__brand">
-          <span class="brand__mark" aria-hidden="true">AJ</span>
-          <div>
-            <div class="footer__title">ASTANA JAS Football School</div>
-            <div class="footer__sub">Детская футбольная школа</div>
-          </div>
+      <div class="footer__brand">
+        <span class="brand__mark" aria-hidden="true"><i class="fa-solid fa-futbol"></i></span>
+        <div>
+          <div class="footer__title">ASTANA JAS Football School</div>
+          <div class="footer__sub">© ASTANA JAS Football School. Все права защищены.</div>
         </div>
       </div>
 
       <div class="footer__right">
-        <a class="footer__phone" href="tel:+77019744464">+7 701 974 4464</a>
-        <div class="footer__copy">© ASTANA JAS Football School. Все права защищены.</div>
+        <a class="footer__phone" href="tel:+77019744464"><i class="fa-solid fa-phone"></i> +7 701 974 4464</a>
       </div>
     </div>
   </footer>
