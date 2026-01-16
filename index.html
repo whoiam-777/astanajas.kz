@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#ffd400" />
-  <title>ASTANA JAS Football School — футбольная школа для детей</title>
-  <meta name="description" content="ASTANA JAS Football School — современная футбольная школа для детей в Астане. Программы, тренировки, локации и контакты." />
+  <title>ASTANA JAS Football School</title>
+  <meta name="description" content="ASTANA JAS Football School — футбольная школа для детей в Астане. Программы, тренировки, локации и контакты." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,28 +15,33 @@
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
 
+  <!-- Leaflet (map) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
   <style>
     /*
       ============================
       ASSETS (папка /assets)
       ============================
-      1) Видео hero:
-         assets/hero.mp4
+      Видео hero:
+        assets/hero.mp4
 
-      2) Логотип (любой один):
-         assets/logo.svg
-         или assets/logo.png
+      Логотип (любой один):
+        assets/logo.svg
+        или assets/logo.png
 
-      3) Фото-рамки (можно заменить своими):
-         assets/about-1.jpg
-         assets/about-2.jpg
-
-         assets/gallery-1.jpg
-         assets/gallery-2.jpg
-         assets/gallery-3.jpg
-         assets/gallery-4.jpg
-
-      Если файла нет — будет стильная пустая рамка с подписью пути.
+      Фото-рамки (можно заменить своими):
+        assets/about-1.jpg
+        assets/about-2.jpg
+        assets/gallery-1.jpg
+        assets/gallery-2.jpg
+        assets/gallery-3.jpg
+        assets/gallery-4.jpg
     */
 
     :root{
@@ -44,6 +49,7 @@
       --dark:#0b0f14;
       --dark2:#0f1724;
       --text:#0b0f14;
+      --soft:#f6f7fb;
 
       --glass: rgba(255,255,255,.10);
       --glass2: rgba(255,255,255,.06);
@@ -57,8 +63,7 @@
 
       --ease: cubic-bezier(.2,.9,.2,1);
 
-      --hotbarH: 92px; /* мобилка */
-      --headerH: 76px;
+      --hotbarH: 110px; /* мобилка */
     }
 
     *{ box-sizing:border-box; }
@@ -74,11 +79,11 @@
     a{ color: inherit; text-decoration:none; }
     .container{ width:min(1160px, calc(100% - 32px)); margin:0 auto; }
 
-    /* ================== Header ================== */
+    /* ================= Header ================= */
     .header{
-      position: sticky;
-      top: 0;
-      z-index: 200;
+      position:sticky;
+      top:0;
+      z-index:200;
       background: rgba(10,14,20,.55);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(255,255,255,.10);
@@ -111,6 +116,7 @@
       position: relative;
       overflow:hidden;
       transform: translateZ(0);
+      transition:.25s var(--ease);
     }
     .brand__logoFrame::before{
       content:"";
@@ -140,8 +146,8 @@
       box-shadow: 0 24px 85px rgba(0,0,0,.35);
     }
     @keyframes logoGlow{
-      from{ transform: translate3d(-2%, -1%, 0) scale(1.02); filter: blur(0px); }
-      to  { transform: translate3d(2%, 1%, 0) scale(1.10); filter: blur(0px); }
+      from{ transform: translate3d(-2%, -1%, 0) scale(1.02); }
+      to  { transform: translate3d(2%, 1%, 0) scale(1.10); }
     }
 
     .brand__logoImg{
@@ -272,13 +278,12 @@
       margin-top: 6px;
     }
 
-    /* ================== Hero ================== */
+    /* ================= Hero ================= */
     .hero{
       position:relative;
       min-height: 100svh;
       overflow:hidden;
       background:#000;
-      padding-top: 12px; /* header sticky already */
       padding-bottom: 110px; /* место под hotbar на мобилке */
     }
     .hero__videoWrap{
@@ -292,8 +297,8 @@
       width:100%;
       height:100%;
       object-fit:cover;
-      transform: scale(1.06);
-      filter: saturate(1.12) contrast(1.06);
+      transform: scale(1.04);
+      filter: saturate(1.10) contrast(1.05);
     }
     .hero__overlay{
       position:absolute;
@@ -309,7 +314,6 @@
       pointer-events:none;
       opacity:.65;
       mix-blend-mode: screen;
-      filter: blur(.0px);
     }
 
     .hero__inner{
@@ -484,9 +488,7 @@
     .stat__top{ color:#fff; font-weight:1000; }
     .stat__bottom{ color: rgba(255,255,255,.76); font-weight:700; font-size:13px; }
 
-    .hero__scroll{
-      margin-top: 16px;
-    }
+    .hero__scroll{ margin-top: 16px; }
     .scroll{
       width: 44px;
       height: 44px;
@@ -511,42 +513,27 @@
       50%{ transform: translateY(3px) rotate(45deg); }
     }
 
-    /* ================== Sections ================== */
+    /* ================= Sections ================= */
     .section{ padding: 72px 0; }
-    .section--soft{ background: #f6f7fb; }
+    .section--soft{ background: var(--soft); }
     .section--dark{ background: var(--dark); color:#fff; }
     .section--brand{ background: var(--brand); }
     .section--map{ padding-top: 54px; padding-bottom: 0; background:#fff; }
 
-    .section__head{
-      margin-bottom: 22px;
-      display:grid;
-      gap: 8px;
-    }
-    .h2{
-      margin:0;
-      font-size: clamp(26px, 3vw, 36px);
-      font-weight: 1000;
-      letter-spacing:.3px;
-    }
-    .lead{
-      margin:0;
-      color: rgba(15,17,21,.76);
-      font-weight: 700;
-      max-width: 780px;
-    }
+    .section__head{ margin-bottom: 22px; display:grid; gap: 8px; }
+    .h2{ margin:0; font-size: clamp(26px, 3vw, 36px); font-weight: 1000; letter-spacing:.3px; }
+    .lead{ margin:0; color: rgba(15,17,21,.76); font-weight: 700; max-width: 780px; }
     .lead--light{ color: rgba(255,255,255,.76); }
 
-    /* Card system */
     .card{
       background:#fff;
       border: 1px solid rgba(15,17,21,.10);
       border-radius: var(--radius2);
       box-shadow: var(--shadow);
       padding: 18px;
-      transform: translateZ(0);
       position:relative;
       overflow:hidden;
+      transition:.25s var(--ease);
     }
     .card::before{
       content:"";
@@ -557,6 +544,7 @@
       transition:.25s var(--ease);
       pointer-events:none;
     }
+    .card:hover{ transform: translateY(-2px); box-shadow: var(--shadow2); }
     .card:hover::before{ opacity:1; }
 
     .grid-2{
@@ -566,7 +554,7 @@
       align-items:stretch;
     }
 
-    /* Photo frames (empty but with path label) */
+    /* Photo frames */
     .frame{
       border-radius: var(--radius2);
       overflow:hidden;
@@ -577,7 +565,6 @@
       min-height: 320px;
       position:relative;
       box-shadow: var(--shadow);
-      transform: translateZ(0);
     }
     .frame img{
       width:100%;
@@ -588,10 +575,7 @@
       transform: scale(1.04);
       transition: .65s var(--ease);
     }
-    .frame.is-loaded img{
-      opacity: 1;
-      transform: scale(1.0);
-    }
+    .frame.is-loaded img{ opacity: 1; transform: scale(1.0); }
     .frame__label{
       position:absolute;
       left:12px;
@@ -624,7 +608,7 @@
     }
     .frame:hover .frame__hint{ opacity: 1; }
 
-    /* Features */
+    /* Feature list */
     .feature-list{ display:grid; gap:14px; }
     .feature{
       display:flex;
@@ -658,7 +642,7 @@
       font-size: 14px;
     }
 
-    /* Advantages cards (dark) */
+    /* Advantages */
     .cards{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -672,7 +656,6 @@
       transition:.25s var(--ease);
       position:relative;
       overflow:hidden;
-      transform: translateZ(0);
     }
     .adv::before{
       content:"";
@@ -721,16 +704,13 @@
     .step__title{ font-weight: 1000; display:flex; gap:10px; align-items:center; }
     .step__text{ margin-top:4px; color: rgba(15,17,21,.70); font-weight: 700; font-size: 14px; }
 
-    /* Gallery frames */
+    /* Gallery */
     .gallery{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
-    .frame--wide{
-      grid-column: 1 / -1;
-      min-height: 240px;
-    }
+    .frame--wide{ grid-column: 1 / -1; min-height: 240px; }
     .frame--short{ min-height: 200px; }
 
     /* Programs */
@@ -739,10 +719,7 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
-    .program{
-      position:relative;
-      overflow:hidden;
-    }
+    .program{ position:relative; overflow:hidden; }
     .program::before{
       content:"";
       position:absolute;
@@ -870,6 +847,38 @@
       background:#fff;
     }
 
+    /* Map football markers */
+    .ball-marker{ background: transparent; border:0; }
+    .ball-pin{
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,212,0,.95);
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: 0 16px 45px rgba(0,0,0,.22);
+      color: #0b0f14;
+      transform: translateZ(0);
+      position:relative;
+      overflow:hidden;
+    }
+    .ball-pin::after{
+      content:"";
+      position:absolute;
+      inset:-50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 55%);
+      opacity:.0;
+      transition:.25s var(--ease);
+      pointer-events:none;
+    }
+    .ball-pin:hover::after{ opacity: 1; }
+    .ball-pin i{ font-size: 18px; }
+
+    .leaflet-control-attribution{
+      font-family: Manrope, system-ui;
+    }
+
     /* Footer */
     .footer{
       background: var(--dark);
@@ -897,7 +906,7 @@
       border: 1px solid rgba(255,212,0,.22);
     }
 
-    /* ================== Scroll Reveal ================== */
+    /* ================= Scroll Reveal ================= */
     .reveal{
       opacity:0;
       transform: translateY(18px);
@@ -908,7 +917,7 @@
       transform: translateY(0);
     }
 
-    /* ================== Hotbar ================== */
+    /* ================= Hotbar ================= */
     .hotbar{
       position: fixed;
       right: 18px;
@@ -938,7 +947,21 @@
     .hotbar__btn--tg{ background: rgba(36,161,222,.20); }
     .hotbar__btn span{ font-size:13px; opacity:.95; }
 
-    /* MOBILE: hotbar as bottom bar + prevent overlap */
+    /* ================= Responsive ================= */
+    @media (max-width: 980px){
+      .hero__grid{
+        grid-template-columns: 1fr;
+        min-height: unset;
+      }
+      .grid-2{ grid-template-columns: 1fr; }
+      .cards{ grid-template-columns: 1fr; }
+      .programs{ grid-template-columns: 1fr; }
+      .contact{ grid-template-columns: 1fr; }
+      .gallery{ grid-template-columns: 1fr; }
+      .frame--wide{ grid-column:auto; }
+      .hero__stats{ grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 820px){
       .nav{ display:none; }
       .burger{ display:flex; }
@@ -947,12 +970,7 @@
       .mobile-menu{ display:block; }
       .mobile-menu[aria-hidden="true"]{ display:none; }
 
-      .hero{ padding-bottom: 140px; } /* extra for hotbar */
-      body{ padding-bottom: var(--hotbarH); }
-      @supports(padding: env(safe-area-inset-bottom)){
-        body{ padding-bottom: calc(var(--hotbarH) + env(safe-area-inset-bottom)); }
-      }
-
+      /* Hotbar bottom bar */
       .hotbar{
         left: 12px;
         right: 12px;
@@ -974,24 +992,20 @@
       }
       .hotbar__btn span{ display:none; }
 
-      .hero__grid{
-        grid-template-columns: 1fr;
-        min-height: unset;
-        padding-top: 0;
+      /* prevent overlap with fixed hotbar */
+      body{ padding-bottom: var(--hotbarH); }
+      @supports(padding: env(safe-area-inset-bottom)){
+        body{ padding-bottom: calc(var(--hotbarH) + env(safe-area-inset-bottom)); }
       }
+
+      /* hero buttons full width */
       .hero__cta{
         display:grid;
         grid-template-columns: 1fr;
       }
       .btn{ width:100%; }
-      .hero__stats{ grid-template-columns: 1fr; }
-      .grid-2{ grid-template-columns: 1fr; }
-      .cards{ grid-template-columns: 1fr; }
-      .programs{ grid-template-columns: 1fr; }
+
       .loc-grid{ grid-template-columns: 1fr; }
-      .contact{ grid-template-columns: 1fr; }
-      .gallery{ grid-template-columns: 1fr; }
-      .frame--wide{ grid-column:auto; }
     }
 
     @media (max-width: 430px){
@@ -1002,6 +1016,38 @@
       .frame{ min-height: 260px; }
       .map{ height: 460px; }
     }
+
+    /* ================== MOBILE PERFORMANCE MODE (fix lags/crashes) ================== */
+    @media (max-width: 820px){
+      /* remove heavy blur */
+      .header{ backdrop-filter: none; }
+      .hotbar, .hotbar__btn, .hero__pill, .stat, .adv, .btn{
+        backdrop-filter: none !important;
+      }
+
+      /* remove heavy video filters/transforms on mobile */
+      .hero__video{
+        filter: none !important;
+        transform: none !important;
+      }
+
+      /* hide particles canvas on mobile (main lag source) */
+      .hero__particles{ display:none !important; }
+
+      /* lighter shadows */
+      .stat, .btn, .adv, .hero__pill, .brand__logoFrame{
+        box-shadow: 0 10px 26px rgba(0,0,0,.18) !important;
+      }
+
+      /* lighter title */
+      .hero__title{ text-shadow: none !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; }
+      .hero__video{ transform:none !important; filter:none !important; }
+      .hero__particles{ display:none !important; }
+    }
   </style>
 </head>
 
@@ -1011,7 +1057,7 @@
     <div class="container header__inner">
       <a class="brand" href="#top" aria-label="ASTANA JAS Football School">
         <span class="brand__logoFrame">
-          <!-- SVG (если нет - покажет PNG - если нет - мячик) -->
+          <!-- SVG -> PNG -> fallback ball -->
           <img src="./assets/logo.svg" alt="ASTANA JAS" class="brand__logoImg"
                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
           <img src="./assets/logo.png" alt="ASTANA JAS" class="brand__logoImg" style="display:none"
@@ -1076,7 +1122,7 @@
       </video>
       <div class="hero__overlay"></div>
 
-      <!-- particles canvas -->
+      <!-- Particles (disabled on mobile by CSS + JS) -->
       <canvas class="hero__particles" id="particles"></canvas>
     </div>
 
@@ -1095,7 +1141,7 @@
 
           <p class="hero__subtitle">
             Развитие, дисциплина и любовь к спорту с раннего возраста.
-            Современная методика, командная игра и сильный визуальный бренд.
+            Сильная подача, современный стиль, удобство для родителей.
           </p>
 
           <div class="hero__cta">
@@ -1136,7 +1182,6 @@
           </div>
         </div>
 
-        <!-- правая часть специально пустая (под “воздух” и кино-композицию) -->
         <div aria-hidden="true"></div>
       </div>
     </div>
@@ -1162,7 +1207,7 @@
         <h2 class="h2">О школе</h2>
         <p class="lead">
           ASTANA JAS Football School — современная футбольная школа для детей:
-          развитие физики, техники, дисциплины и командной игры в безопасной и мотивирующей среде.
+          физическое развитие, техника, дисциплина и командная игра в безопасной и мотивирующей среде.
         </p>
       </div>
 
@@ -1193,7 +1238,6 @@
           </div>
         </div>
 
-        <!-- PHOTO FRAME (empty) -->
         <div class="frame reveal" data-src="./assets/about-1.jpg">
           <img alt="Фото: тренировка (about-1)" />
           <div class="frame__hint">Положите файл: <b>assets/about-1.jpg</b></div>
@@ -1204,7 +1248,6 @@
       <div style="height:16px"></div>
 
       <div class="grid-2">
-        <!-- PHOTO FRAME (empty) -->
         <div class="frame reveal" data-src="./assets/about-2.jpg">
           <img alt="Фото: команда (about-2)" />
           <div class="frame__hint">Положите файл: <b>assets/about-2.jpg</b></div>
@@ -1246,7 +1289,7 @@
     <div class="container">
       <div class="section__head reveal">
         <h2 class="h2">Преимущества</h2>
-        <p class="lead lead--light">Карточки с микроанимациями — сильная “подача” и современный стиль.</p>
+        <p class="lead lead--light">Сильная подача + живые карточки.</p>
       </div>
 
       <div class="cards">
@@ -1289,7 +1332,7 @@
     <div class="container">
       <div class="section__head reveal">
         <h2 class="h2">Тренировочный процесс</h2>
-        <p class="lead">Как проходят тренировки: разминка → техника → игра → мини-матчи → восстановление.</p>
+        <p class="lead">Разминка → техника → игра → мини-матчи → восстановление.</p>
       </div>
 
       <div class="grid-2">
@@ -1333,7 +1376,6 @@
           </div>
         </div>
 
-        <!-- Gallery frames -->
         <div class="gallery">
           <div class="frame frame--wide reveal" data-src="./assets/gallery-1.jpg">
             <img alt="Галерея 1" />
@@ -1366,7 +1408,7 @@
     <div class="container">
       <div class="section__head reveal">
         <h2 class="h2">Программы обучения</h2>
-        <p class="lead">Цены опционально (можно добавить позже). Сейчас — структура и формат.</p>
+        <p class="lead">Цены можно добавить позже. Сейчас — формат и структура.</p>
       </div>
 
       <div class="programs">
@@ -1506,24 +1548,17 @@
     </div>
   </section>
 
-  <!-- MAP -->
+  <!-- MAP (soccer markers) -->
   <section class="section section--map" id="mapSection">
     <div class="container">
       <div class="section__head reveal">
         <h2 class="h2">Карта</h2>
-        <p class="lead">Нижний блок. Можно позже заменить на точные координаты локаций.</p>
+        <p class="lead">Маркер-«мячик». Координаты можно заменить на точные.</p>
       </div>
     </div>
 
     <div class="map-wrap">
-      <!-- OSM embed (работает в одном файле без библиотек) -->
-      <iframe
-        class="map"
-        title="Карта локаций"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=71.30%2C51.05%2C71.55%2C51.20&layer=mapnik"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
+      <div class="map" id="map"></div>
     </div>
   </section>
 
@@ -1543,6 +1578,13 @@
       <a class="footer__phone" href="tel:+77019744464"><i class="fa-solid fa-phone"></i> +7 701 974 4464</a>
     </div>
   </footer>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
 
   <script>
     // ===== Mobile menu
@@ -1615,47 +1657,37 @@
         if(!img || !src) return;
         img.src = src;
         img.addEventListener('load', ()=> frame.classList.add('is-loaded'));
-        img.addEventListener('error', ()=> {
-          // stays empty frame, label shows the path
-        });
+        img.addEventListener('error', ()=> {/* stays empty */});
       });
     })();
 
-    // ===== Particles (lightweight) on hero
+    // ===== Particles (DISABLED on mobile to avoid lag/crash)
     (function(){
+      if (window.matchMedia("(max-width: 820px)").matches) return;
+
       const canvas = document.getElementById('particles');
       if(!canvas) return;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { alpha: true });
       let w=0,h=0, dpr=1;
       const particles = [];
-      const COUNT = 42;
+      const COUNT = 36; // reduced
 
       function resize(){
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         w = canvas.clientWidth;
         h = canvas.clientHeight;
         canvas.width = Math.floor(w*dpr);
         canvas.height = Math.floor(h*dpr);
         ctx.setTransform(dpr,0,0,dpr,0,0);
       }
-
       function rand(min,max){ return Math.random()*(max-min)+min; }
       function spawn(){
-        return {
-          x: rand(0,w),
-          y: rand(0,h),
-          r: rand(1.2, 3.6),
-          vx: rand(-0.25, 0.25),
-          vy: rand(-0.18, 0.18),
-          a: rand(0.10, 0.28)
-        };
+        return { x: rand(0,w), y: rand(0,h), r: rand(1.2, 3.2), vx: rand(-0.18, 0.18), vy: rand(-0.12, 0.12), a: rand(0.10, 0.22) };
       }
-
       function init(){
         particles.length = 0;
         for(let i=0;i<COUNT;i++) particles.push(spawn());
       }
-
       function tick(){
         ctx.clearRect(0,0,w,h);
         for(const p of particles){
@@ -1665,7 +1697,6 @@
           if(p.y< -20) p.y = h+20;
           if(p.y> h+20) p.y = -20;
 
-          // glow dot
           ctx.beginPath();
           ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
           ctx.fillStyle = `rgba(255,212,0,${p.a})`;
@@ -1673,12 +1704,43 @@
         }
         requestAnimationFrame(tick);
       }
-
       const ro = new ResizeObserver(()=>{ resize(); init(); });
       ro.observe(canvas);
-
-      // initial
       resize(); init(); tick();
+    })();
+
+    // ===== Map with football markers (balls)
+    (function(){
+      const mapEl = document.getElementById("map");
+      if(!mapEl || !window.L) return;
+
+      // Центр Астаны (примерно)
+      const map = L.map("map", { scrollWheelZoom:false }).setView([51.128, 71.430], 12);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+
+      const ballIcon = L.divIcon({
+        className: "ball-marker",
+        html: '<div class="ball-pin"><i class="fa-solid fa-futbol"></i></div>',
+        iconSize: [42, 42],
+        iconAnchor: [21, 42],
+        popupAnchor: [0, -40],
+      });
+
+      // ВРЕМЕННЫЕ координаты (замени на точные, когда будут)
+      const points = [
+        { name: "Школа-лицей №11 им. Ө. Жәнібеков", coords: [51.135, 71.410] },
+        { name: "Школа-лицей №71", coords: [51.115, 71.455] },
+      ];
+
+      points.forEach(p=>{
+        L.marker(p.coords, { icon: ballIcon }).addTo(map).bindPopup(`<b>${p.name}</b>`);
+      });
+
+      // Чтобы карта корректно отрисовалась после загрузки/скролла
+      setTimeout(()=>map.invalidateSize(), 300);
     })();
   </script>
 </body>
