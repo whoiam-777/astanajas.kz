@@ -834,3 +834,7 @@ a{color:inherit; text-decoration:none;}
     max-width: 100%;
   }
 }
+/* Anti-bug hard reset for hero text alignment */
+.hero, .hero *{
+  text-align: left !important;
+}
