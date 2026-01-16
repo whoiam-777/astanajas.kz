@@ -1,9 +1,6 @@
 (function () {
   "use strict";
 
-  // =========================
-  // Mobile menu
-  // =========================
   const burgerBtn = document.getElementById("burgerBtn");
   const mobileMenu = document.getElementById("mobileMenu");
   const header = document.querySelector(".header");
@@ -13,7 +10,6 @@
     burgerBtn.setAttribute("aria-expanded", String(open));
     mobileMenu.setAttribute("aria-hidden", String(!open));
     document.body.style.overflow = open ? "hidden" : "";
-    burgerBtn.classList.toggle("is-open", open);
   }
 
   if (burgerBtn && mobileMenu) {
@@ -36,9 +32,6 @@
     });
   }
 
-  // =========================
-  // Smooth scroll with header offset
-  // =========================
   function getHeaderOffset() {
     const h = header ? header.getBoundingClientRect().height : 0;
     return h + 10;
@@ -60,9 +53,7 @@
     });
   });
 
-  // =========================
-  // Scroll reveal (lots of animation, but lightweight)
-  // =========================
+  // Scroll reveal
   const items = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window && items.length) {
     const io = new IntersectionObserver((entries) => {
@@ -75,7 +66,6 @@
     }, { threshold: 0.12 });
 
     items.forEach((el, i) => {
-      // small stagger
       el.style.transitionDelay = `${Math.min(i * 45, 260)}ms`;
       io.observe(el);
     });
@@ -83,13 +73,10 @@
     items.forEach((el) => el.classList.add("is-visible"));
   }
 
-  // =========================
-  // Map (Leaflet) — no keys
-  // =========================
+  // Map
   const mapEl = document.getElementById("map");
   if (mapEl && typeof window.L !== "undefined") {
     const astanaCenter = [51.1282, 71.4304];
-
     const map = L.map("map", { scrollWheelZoom: false }).setView(astanaCenter, 12);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -97,7 +84,7 @@
       attribution: "&copy; OpenStreetMap"
     }).addTo(map);
 
-    // Замените координаты на точные, когда будут
+    // Replace with exact coordinates when available:
     const loc11 = { name: "Школа-лицей №11 им. Ө. Жәнібеков", coords: [51.1600, 71.4700] };
     const loc71 = { name: "Школа-лицей №71", coords: [51.1050, 71.3900] };
 
@@ -109,9 +96,7 @@
           background:#ffd400;border:1px solid rgba(15,17,21,.25);
           display:grid;place-items:center;font-weight:1000;
           box-shadow:0 18px 60px rgba(0,0,0,.20);
-        ">
-          <span style="font-size:18px;">⚽</span>
-        </div>
+        "><span style="font-size:18px;">⚽</span></div>
       `,
       iconSize: [40, 40],
       iconAnchor: [20, 40],
@@ -120,7 +105,6 @@
 
     const m1 = L.marker(loc11.coords, { icon }).addTo(map)
       .bindPopup(`<strong>${loc11.name}</strong><br/>ASTANA JAS Football School`);
-
     const m2 = L.marker(loc71.coords, { icon }).addTo(map)
       .bindPopup(`<strong>${loc71.name}</strong><br/>ASTANA JAS Football School`);
 
