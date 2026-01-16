@@ -8,19 +8,12 @@
   <title>ASTANA JAS Football School — футбольная школа для детей</title>
   <meta name="description" content="ASTANA JAS Football School — современная футбольная школа для детей. Тренировки, программы, локации и запись." />
 
-  <meta property="og:title" content="ASTANA JAS Football School" />
-  <meta property="og:description" content="Футбольная школа для детей. Развитие, дисциплина и любовь к спорту." />
-  <meta property="og:type" content="website" />
-
-  <!-- Modern font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Modern icons (public CDN) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- Leaflet (map, no keys) -->
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
   <link
@@ -38,9 +31,17 @@
   <header class="header" id="top">
     <div class="container header__inner">
       <a class="brand" href="#top" aria-label="ASTANA JAS Football School">
-        <span class="brand__logoFrame" aria-hidden="true">
-  <i class="fa-solid fa-futbol"></i>
-</span>
+        <!-- Logo frame (best: real logo + fallback) -->
+        <span class="brand__logoFrame">
+          <img
+            src="assets/logo.svg"
+            alt="ASTANA JAS"
+            class="brand__logoImg"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
+          />
+          <i class="fa-solid fa-futbol brand__logoFallback" aria-hidden="true"></i>
+        </span>
+
         <span class="brand__text">
           <span class="brand__title">ASTANA JAS</span>
           <span class="brand__sub">FOOTBALL SCHOOL</span>
@@ -91,10 +92,9 @@
   </header>
 
   <main>
-    <!-- HERO with VIDEO BG -->
+    <!-- HERO -->
     <section class="hero" aria-label="Первый экран">
       <div class="hero__videoWrap" aria-hidden="true">
-        <!-- ВАЖНО: загрузите своё видео в /assets/hero.mp4 -->
         <video class="hero__video" autoplay muted loop playsinline preload="metadata">
           <source src="assets/hero.mp4" type="video/mp4" />
         </video>
@@ -157,9 +157,12 @@
             </a>
           </div>
         </div>
+
+        <!-- right column intentionally empty (for composition) -->
+        <div class="hero__spacer" aria-hidden="true"></div>
       </div>
 
-      <!-- Floating hot actions -->
+      <!-- Hot actions -->
       <div class="hotbar" aria-label="Горячие кнопки">
         <a class="hotbar__btn hotbar__btn--call" href="tel:+77019744464" aria-label="Позвонить">
           <i class="fa-solid fa-phone"></i><span>Позвонить</span>
@@ -212,7 +215,7 @@
             </div>
           </div>
 
-          <div class="media media--ultra reveal" aria-label="Визуальный блок">
+          <div class="media media--ultra reveal">
             <div class="media__glass">
               <div class="media__kicker"><i class="fa-solid fa-star"></i> Атмосфера и дисциплина</div>
               <div class="media__title">Тренировки, которые цепляют</div>
@@ -419,7 +422,7 @@
       </div>
     </section>
 
-    <!-- CONTACTS (key CTA) -->
+    <!-- CONTACTS -->
     <section class="section section--brand" id="contacts">
       <div class="container">
         <div class="contact reveal">
@@ -488,12 +491,12 @@
       </div>
     </section>
 
-    <!-- MAP at bottom -->
+    <!-- MAP -->
     <section class="section section--map" id="mapSection" aria-label="Карта локаций">
       <div class="container">
         <div class="section__head reveal">
           <h2 class="h2">Карта</h2>
-          <p class="lead">Маркеры локаций. Координаты можно уточнить и заменить в script.js.</p>
+          <p class="lead">Маркеры локаций. Координаты можно заменить в script.js.</p>
         </div>
       </div>
 
@@ -503,11 +506,12 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <span class="brand__mark" aria-hidden="true"><i class="fa-solid fa-futbol"></i></span>
+        <span class="brand__logoFrame footer__logoFrame" aria-hidden="true">
+          <i class="fa-solid fa-futbol"></i>
+        </span>
         <div>
           <div class="footer__title">ASTANA JAS Football School</div>
           <div class="footer__sub">© ASTANA JAS Football School. Все права защищены.</div>
@@ -520,7 +524,6 @@
     </div>
   </footer>
 
-  <!-- Leaflet JS -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
