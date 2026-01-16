@@ -772,3 +772,65 @@ a{color:inherit; text-decoration:none;}
   left:0;
   right:0;
 }
+/* ===== HERO: FIX ALIGNMENT (desktop + mobile) ===== */
+.hero__inner{
+  display:grid;
+  grid-template-columns: minmax(0, 680px) 1fr; /* контент слева, справа воздух */
+  align-items: center;
+  gap: 24px;
+}
+
+.hero__content{
+  max-width: 680px;
+  text-align: left;          /* принудительно */
+  margin-left: 0;            /* принудительно */
+  margin-right: auto;        /* чтобы не “прилипало” вправо */
+  justify-self: start;       /* чтобы не выравнивало вправо в grid */
+}
+
+/* чтобы заголовок/подзаголовок не занимали всю ширину */
+.hero__title,
+.hero__subtitle{
+  max-width: 680px;
+}
+
+/* CTA и stats тоже держим слева */
+.hero__cta,
+.hero__stats{
+  max-width: 680px;
+  justify-content: flex-start;
+}
+
+/* На планшетах/мобилках — одна колонка */
+@media (max-width: 980px){
+  .hero__inner{
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .hero__content{
+    max-width: 560px;
+    margin: 0;              /* ровно по контейнеру */
+  }
+
+  .hero__title,
+  .hero__subtitle,
+  .hero__cta,
+  .hero__stats{
+    max-width: 560px;
+  }
+}
+
+/* Очень маленькие экраны */
+@media (max-width: 430px){
+  .hero__content{
+    max-width: 100%;
+  }
+
+  .hero__title,
+  .hero__subtitle,
+  .hero__cta,
+  .hero__stats{
+    max-width: 100%;
+  }
+}
