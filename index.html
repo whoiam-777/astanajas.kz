@@ -1,1747 +1,780 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="scroll-smooth overflow-x-hidden">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#ffd400" />
-  <title>ASTANA JAS Football School</title>
-  <meta name="description" content="ASTANA JAS Football School — футбольная школа для детей в Астане. Программы, тренировки, локации и контакты." />
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
-
-  <!-- Leaflet (map) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  />
-
-  <style>
-    /*
-      ============================
-      ASSETS (папка /assets)
-      ============================
-      Видео hero:
-        assets/hero.mp4
-
-      Логотип (любой один):
-        assets/logo.svg
-        или assets/logo.png
-
-      Фото-рамки (можно заменить своими):
-        assets/about-1.jpg
-        assets/about-2.jpg
-        assets/gallery-1.jpg
-        assets/gallery-2.jpg
-        assets/gallery-3.jpg
-        assets/gallery-4.jpg
-    */
-
-    :root{
-      --brand:#ffd400;
-      --dark:#0b0f14;
-      --dark2:#0f1724;
-      --text:#0b0f14;
-      --soft:#f6f7fb;
-
-      --glass: rgba(255,255,255,.10);
-      --glass2: rgba(255,255,255,.06);
-      --glassBorder: rgba(255,255,255,.16);
-
-      --radius: 18px;
-      --radius2: 26px;
-
-      --shadow: 0 18px 60px rgba(0,0,0,.14);
-      --shadow2: 0 24px 90px rgba(0,0,0,.28);
-
-      --ease: cubic-bezier(.2,.9,.2,1);
-
-      --hotbarH: 110px; /* мобилка */
-    }
-
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-    body{
-      margin:0;
-      font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color: var(--text);
-      background:#fff;
-      line-height:1.5;
-      overflow-x:hidden;
-    }
-    a{ color: inherit; text-decoration:none; }
-    .container{ width:min(1160px, calc(100% - 32px)); margin:0 auto; }
-
-    /* ================= Header ================= */
-    .header{
-      position:sticky;
-      top:0;
-      z-index:200;
-      background: rgba(10,14,20,.55);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .header__inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding: 12px 0;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 260px;
-    }
-
-    /* Logo frame + animation */
-    .brand__logoFrame{
-      width:44px;
-      height:44px;
-      border-radius: 14px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,255,255,.06);
-      border: 1.5px solid rgba(255,255,255,.18);
-      box-shadow: 0 18px 55px rgba(0,0,0,.28);
-      position: relative;
-      overflow:hidden;
-      transform: translateZ(0);
-      transition:.25s var(--ease);
-    }
-    .brand__logoFrame::before{
-      content:"";
-      position:absolute;
-      inset:-60%;
-      background: radial-gradient(circle at 35% 30%, rgba(255,212,0,.35), transparent 55%);
-      opacity:.9;
-      animation: logoGlow 3.6s var(--ease) infinite alternate;
-      pointer-events:none;
-    }
-    .brand__logoFrame::after{
-      content:"";
-      position:absolute;
-      inset:-20%;
-      background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,.16) 50%, transparent 65%);
-      transform: translateX(-35%) rotate(10deg);
-      opacity:.0;
-      transition:.35s var(--ease);
-      pointer-events:none;
-    }
-    .brand__logoFrame:hover::after{
-      opacity:.9;
-      transform: translateX(35%) rotate(10deg);
-    }
-    .brand__logoFrame:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 24px 85px rgba(0,0,0,.35);
-    }
-    @keyframes logoGlow{
-      from{ transform: translate3d(-2%, -1%, 0) scale(1.02); }
-      to  { transform: translate3d(2%, 1%, 0) scale(1.10); }
-    }
-
-    .brand__logoImg{
-      width: 76%;
-      height: 76%;
-      object-fit: contain;
-      display:block;
-      position:relative;
-      z-index:2;
-      animation: logoFloat 2.6s var(--ease) infinite alternate;
-      filter: drop-shadow(0 12px 26px rgba(0,0,0,.35));
-    }
-    @keyframes logoFloat{
-      from{ transform: translateY(0) rotate(-1deg); }
-      to  { transform: translateY(-2px) rotate(1deg); }
-    }
-
-    .brand__logoFallback{
-      display:none;
-      position:relative;
-      z-index:2;
-      color: rgba(255,212,0,.95);
-      font-size: 22px;
-      animation: ballSpin 4.2s linear infinite;
-      filter: drop-shadow(0 12px 26px rgba(0,0,0,.35));
-    }
-    @keyframes ballSpin{
-      from{ transform: rotate(0deg); }
-      to{ transform: rotate(360deg); }
-    }
-
-    .brand__text{ display:grid; line-height:1.05; }
-    .brand__title{
-      font-weight: 1000;
-      letter-spacing: .8px;
-      color:#fff;
-    }
-    .brand__sub{
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 1.6px;
-      color: rgba(255,255,255,.72);
-    }
-
-    .nav{ display:block; }
-    .nav__list{
-      list-style:none;
-      display:flex;
-      gap: 10px;
-      margin:0;
-      padding:0;
-    }
-    .nav__link{
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(255,255,255,.86);
-      padding: 10px 12px;
-      border-radius: 999px;
-      transition: .25s var(--ease);
-    }
-    .nav__link:hover{
-      background: rgba(255,255,255,.10);
-      transform: translateY(-1px);
-    }
-
-    .header__actions{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-    }
-    .phone{
-      display:flex; align-items:center; gap:10px;
-      font-weight: 1000;
-      color:#fff;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.14);
-      transition: .25s var(--ease);
-      white-space:nowrap;
-    }
-    .phone:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.14);
-    }
-
-    .burger{
-      width:44px; height:44px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      display:none;
-      align-items:center; justify-content:center;
-      gap:5px; flex-direction:column;
-      cursor:pointer;
-      transition: .25s var(--ease);
-    }
-    .burger:hover{ transform: translateY(-1px); }
-    .burger span{
-      width:18px; height:2px;
-      background:#fff;
-      border-radius:10px;
-      transition: .25s var(--ease);
-    }
-
-    .mobile-menu{
-      display:none;
-      background: rgba(10,14,20,.92);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .mobile-menu__inner{
-      padding: 14px 0 18px;
-      display:grid;
-      gap:10px;
-    }
-    .mobile-link{
-      display:flex; align-items:center; gap:10px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      color:#fff;
-      font-weight: 1000;
-    }
-    .mobile-cta{
-      display:grid;
-      gap:10px;
-      margin-top: 6px;
-    }
-
-    /* ================= Hero ================= */
-    .hero{
-      position:relative;
-      min-height: 100svh;
-      overflow:hidden;
-      background:#000;
-      padding-bottom: 110px; /* место под hotbar на мобилке */
-    }
-    .hero__videoWrap{
-      position:absolute;
-      inset:0;
-      overflow:hidden;
-    }
-    .hero__video{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      transform: scale(1.04);
-      filter: saturate(1.10) contrast(1.05);
-    }
-    .hero__overlay{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(255,212,0,.26), transparent 42%),
-        radial-gradient(circle at 82% 70%, rgba(0,0,0,.60), transparent 48%),
-        linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.78));
-    }
-    .hero__particles{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      opacity:.65;
-      mix-blend-mode: screen;
-    }
-
-    .hero__inner{
-      position:relative;
-      padding-top: 86px; /* под шапку */
-      padding-bottom: 26px;
-    }
-    .hero__grid{
-      display:grid;
-      grid-template-columns: minmax(0, 680px) 1fr;
-      gap: 22px;
-      align-items:center;
-      min-height: calc(100svh - 86px - 110px);
-    }
-
-    .hero__pill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      color:#fff;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow: 0 18px 70px rgba(0,0,0,.22);
-      font-weight: 1000;
-      letter-spacing:.2px;
-      animation: pillIn .8s var(--ease) both;
-    }
-    @keyframes pillIn{
-      from{ opacity:0; transform: translateY(12px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
-    .hero__title{
-      margin: 14px 0 8px;
-      color:#fff;
-      font-weight: 1000;
-      letter-spacing: 1px;
-      line-height: 1.02;
-      font-size: clamp(38px, 6vw, 76px);
-      text-shadow: 0 22px 90px rgba(0,0,0,.45);
-      animation: titleIn 1.0s var(--ease) both .05s;
-    }
-    @keyframes titleIn{
-      from{ opacity:0; transform: translateY(14px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-    .hero__titleSub{
-      display:block;
-      font-size: clamp(16px, 2.1vw, 22px);
-      color: rgba(255,255,255,.86);
-      font-weight: 1000;
-      letter-spacing: 2px;
-      margin-top: 8px;
-    }
-    .hero__subtitle{
-      margin: 0 0 18px;
-      color: rgba(255,255,255,.84);
-      font-weight: 700;
-      font-size: clamp(14px, 2vw, 18px);
-      max-width: 640px;
-      animation: subIn 1.0s var(--ease) both .12s;
-    }
-    @keyframes subIn{
-      from{ opacity:0; transform: translateY(10px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
-    .hero__cta{
-      display:flex;
-      gap: 12px;
-      flex-wrap:wrap;
-      margin-top: 10px;
-      animation: ctaIn 1.0s var(--ease) both .18s;
-    }
-    @keyframes ctaIn{
-      from{ opacity:0; transform: translateY(10px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
-    .btn{
-      height: 52px;
-      padding: 0 18px;
-      border-radius: 18px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap: 10px;
-      font-weight: 1000;
-      border: 1px solid transparent;
-      cursor:pointer;
-      transition: .25s var(--ease);
-      user-select:none;
-      position:relative;
-      overflow:hidden;
-      transform: translateZ(0);
-    }
-    .btn::after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 50%);
-      opacity:0;
-      transition:.25s var(--ease);
-      pointer-events:none;
-    }
-    .btn:hover::after{ opacity:1; }
-    .btn:hover{ transform: translateY(-2px) scale(1.01); }
-
-    .btn--primary{
-      background: var(--brand);
-      color: var(--dark);
-      box-shadow: 0 22px 90px rgba(255,212,0,.30);
-    }
-    .btn--glass{
-      background: rgba(255,255,255,.10);
-      color:#fff;
-      border-color: rgba(255,255,255,.16);
-      backdrop-filter: blur(12px);
-    }
-
-    .hero__stats{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
-      max-width: 680px;
-      animation: statsIn 1.0s var(--ease) both .24s;
-    }
-    @keyframes statsIn{
-      from{ opacity:0; transform: translateY(10px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
-    .stat{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      padding: 14px 14px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 18px 70px rgba(0,0,0,.22);
-      transition: .25s var(--ease);
-      position:relative;
-      overflow:hidden;
-    }
-    .stat::before{
-      content:"";
-      position:absolute;
-      inset:-60%;
-      background: radial-gradient(circle at 35% 30%, rgba(255,212,0,.20), transparent 55%);
-      opacity:0;
-      transition:.25s var(--ease);
-      pointer-events:none;
-    }
-    .stat:hover{ transform: translateY(-2px); background: rgba(255,255,255,.11); }
-    .stat:hover::before{ opacity:1; }
-
-    .stat__icon{
-      width:44px;
-      height:44px;
-      border-radius: 16px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,212,0,.95);
-      color: var(--dark);
-      box-shadow: 0 18px 50px rgba(255,212,0,.18);
-    }
-    .stat__top{ color:#fff; font-weight:1000; }
-    .stat__bottom{ color: rgba(255,255,255,.76); font-weight:700; font-size:13px; }
-
-    .hero__scroll{ margin-top: 16px; }
-    .scroll{
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.16);
-      backdrop-filter: blur(12px);
-      transition:.25s var(--ease);
-    }
-    .scroll:hover{ transform: translateY(-2px); }
-    .scroll span{
-      width:10px;height:10px;
-      border-right:2px solid rgba(255,255,255,.92);
-      border-bottom:2px solid rgba(255,255,255,.92);
-      transform: rotate(45deg);
-      animation: bounce 1.2s infinite;
-    }
-    @keyframes bounce{
-      0%,100%{ transform: translateY(-2px) rotate(45deg); }
-      50%{ transform: translateY(3px) rotate(45deg); }
-    }
-
-    /* ================= Sections ================= */
-    .section{ padding: 72px 0; }
-    .section--soft{ background: var(--soft); }
-    .section--dark{ background: var(--dark); color:#fff; }
-    .section--brand{ background: var(--brand); }
-    .section--map{ padding-top: 54px; padding-bottom: 0; background:#fff; }
-
-    .section__head{ margin-bottom: 22px; display:grid; gap: 8px; }
-    .h2{ margin:0; font-size: clamp(26px, 3vw, 36px); font-weight: 1000; letter-spacing:.3px; }
-    .lead{ margin:0; color: rgba(15,17,21,.76); font-weight: 700; max-width: 780px; }
-    .lead--light{ color: rgba(255,255,255,.76); }
-
-    .card{
-      background:#fff;
-      border: 1px solid rgba(15,17,21,.10);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
-      padding: 18px;
-      position:relative;
-      overflow:hidden;
-      transition:.25s var(--ease);
-    }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-60%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,212,0,.18), transparent 55%);
-      opacity:0;
-      transition:.25s var(--ease);
-      pointer-events:none;
-    }
-    .card:hover{ transform: translateY(-2px); box-shadow: var(--shadow2); }
-    .card:hover::before{ opacity:1; }
-
-    .grid-2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      align-items:stretch;
-    }
-
-    /* Photo frames */
-    .frame{
-      border-radius: var(--radius2);
-      overflow:hidden;
-      border: 1px dashed rgba(15,17,21,.22);
-      background:
-        radial-gradient(circle at 25% 30%, rgba(255,212,0,.22), transparent 45%),
-        linear-gradient(135deg, rgba(15,17,21,.06), rgba(15,17,21,.02));
-      min-height: 320px;
-      position:relative;
-      box-shadow: var(--shadow);
-    }
-    .frame img{
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      display:block;
-      opacity: 0;
-      transform: scale(1.04);
-      transition: .65s var(--ease);
-    }
-    .frame.is-loaded img{ opacity: 1; transform: scale(1.0); }
-    .frame__label{
-      position:absolute;
-      left:12px;
-      bottom:12px;
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(15,17,21,.12);
-      padding: 10px 12px;
-      border-radius: 999px;
-      font-weight: 900;
-      font-size: 12px;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.12);
-    }
-    .frame__hint{
-      position:absolute;
-      inset: 16px;
-      border-radius: 22px;
-      background: rgba(255,255,255,.40);
-      border: 1px solid rgba(255,255,255,.55);
-      backdrop-filter: blur(10px);
-      display:flex;
-      align-items:flex-end;
-      padding: 14px;
-      color: rgba(15,17,21,.82);
-      font-weight: 800;
-      opacity: .0;
-      transition:.25s var(--ease);
-    }
-    .frame:hover .frame__hint{ opacity: 1; }
-
-    /* Feature list */
-    .feature-list{ display:grid; gap:14px; }
-    .feature{
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(15,17,21,.03);
-      border:1px solid rgba(15,17,21,.08);
-      transition:.25s var(--ease);
-      position:relative;
-      overflow:hidden;
-    }
-    .feature:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
-    .feature__icon{
-      width:44px;height:44px;
-      border-radius: 16px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,212,0,.26);
-      border: 1px solid rgba(255,212,0,.42);
-      color: var(--dark);
-      font-size: 18px;
-      flex:0 0 auto;
-    }
-    .feature__title{ font-weight:1000; }
-    .feature__desc{
-      margin-top:4px;
-      color: rgba(15,17,21,.70);
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    /* Advantages */
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-    .adv{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: var(--radius2);
-      padding: 16px;
-      transition:.25s var(--ease);
-      position:relative;
-      overflow:hidden;
-    }
-    .adv::before{
-      content:"";
-      position:absolute;
-      inset:-50%;
-      background: radial-gradient(circle at 35% 30%, rgba(255,212,0,.20), transparent 55%);
-      opacity:0;
-      transition:.25s var(--ease);
-      pointer-events:none;
-    }
-    .adv:hover{ transform: translateY(-3px); border-color: rgba(255,212,0,.32); }
-    .adv:hover::before{ opacity:1; }
-    .adv__icon{
-      width:46px;height:46px;
-      display:grid;place-items:center;
-      border-radius: 16px;
-      background: rgba(255,212,0,.14);
-      border:1px solid rgba(255,212,0,.22);
-      font-size:18px;
-      color:#fff;
-    }
-    .adv__title{ margin: 10px 0 6px; font-weight: 1000; font-size: 16px; color:#fff; }
-    .adv__text{ margin:0; color: rgba(255,255,255,.76); font-weight: 700; font-size: 14px; }
-
-    /* Training steps */
-    .steps{ display:grid; gap:12px; }
-    .step{
-      display:flex;
-      gap:14px;
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(15,17,21,.04);
-      border: 1px solid rgba(15,17,21,.08);
-      transition:.25s var(--ease);
-    }
-    .step:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
-    .step__num{
-      width:44px;height:44px;
-      border-radius:16px;
-      display:grid;place-items:center;
-      background: rgba(255,212,0,.22);
-      border: 1px solid rgba(255,212,0,.38);
-      font-weight: 1000;
-      flex:0 0 auto;
-    }
-    .step__title{ font-weight: 1000; display:flex; gap:10px; align-items:center; }
-    .step__text{ margin-top:4px; color: rgba(15,17,21,.70); font-weight: 700; font-size: 14px; }
-
-    /* Gallery */
-    .gallery{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .frame--wide{ grid-column: 1 / -1; min-height: 240px; }
-    .frame--short{ min-height: 200px; }
-
-    /* Programs */
-    .programs{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-    .program{ position:relative; overflow:hidden; }
-    .program::before{
-      content:"";
-      position:absolute;
-      inset:-50%;
-      background: radial-gradient(circle at 35% 30%, rgba(255,212,0,.22), transparent 58%);
-      opacity:.65;
-      pointer-events:none;
-    }
-    .program__top{ display:flex; align-items:center; justify-content:space-between; gap:10px; position:relative; }
-    .program__title{ margin:0; font-weight: 1000; font-size: 18px; position:relative; }
-    .program__badge{
-      width:44px;height:44px;
-      border-radius: 16px;
-      display:grid;place-items:center;
-      background: rgba(255,212,0,.22);
-      border:1px solid rgba(255,212,0,.40);
-      position:relative;
-    }
-    .program__meta{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin: 12px 0 10px;
-      position:relative;
-    }
-    .tag{
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(15,17,21,.05);
-      border: 1px solid rgba(15,17,21,.10);
-      font-weight: 900;
-      font-size: 12px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    .program__text{ margin:0; color: rgba(15,17,21,.74); font-weight: 700; position:relative; }
-
-    /* Locations */
-    .loc-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:14px; }
-    .loc{ display:flex; gap:12px; align-items:flex-start; }
-    .loc__icon{
-      width:46px;height:46px;
-      border-radius: 16px;
-      display:grid;place-items:center;
-      background: rgba(255,212,0,.22);
-      border:1px solid rgba(255,212,0,.40);
-      color: var(--dark);
-      flex:0 0 auto;
-    }
-    .loc__title{ font-weight: 1000; }
-    .loc__text{ color: rgba(15,17,21,.70); font-weight: 700; font-size: 14px; margin-top:4px; }
-
-    /* Contacts */
-    .contact{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 16px;
-      align-items:start;
-    }
-    .contact__box{
-      background: rgba(255,255,255,.88);
-      border:1px solid rgba(15,17,21,.10);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow2);
-      padding: 16px;
-    }
-    .contact__school{ font-weight: 1000; font-size: 18px; margin-bottom: 10px; }
-    .contact__row{ margin-top: 10px; }
-    .contact__label{
-      font-weight: 1000;
-      margin-bottom: 6px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .contact__value{ font-weight: 800; }
-    .contact__list{ margin: 6px 0 0; padding-left: 18px; font-weight: 800; }
-    .contact__phone{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      margin-top: 4px;
-      font-weight: 1000;
-      font-size: 18px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      background: rgba(15,18,25,.92);
-      color:#fff;
-      box-shadow: 0 18px 60px rgba(0,0,0,.18);
-      transition:.25s var(--ease);
-    }
-    .contact__phone:hover{ transform: translateY(-2px); }
-    .contact__buttons{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-
-    .kpi{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      background: rgba(255,255,255,.86);
-      border:1px solid rgba(15,17,21,.10);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
-      padding: 14px 16px;
-    }
-    .kpi__icon{
-      width:52px;height:52px;
-      border-radius: 18px;
-      display:grid;place-items:center;
-      background: rgba(255,212,0,.22);
-      border: 1px solid rgba(255,212,0,.38);
-      font-size: 18px;
-      flex:0 0 auto;
-    }
-    .kpi__num{ font-weight: 1000; font-size: 28px; line-height:1; }
-    .kpi__label{ margin-top:4px; color: rgba(15,17,21,.70); font-weight: 800; font-size: 13px; }
-
-    /* Map */
-    .map-wrap{ margin-top: 12px; width:100%; }
-    .map{
-      width:100%;
-      height: 520px;
-      border-top: 1px solid rgba(15,17,21,.10);
-      border-bottom: 1px solid rgba(15,17,21,.10);
-      background:#fff;
-    }
-
-    /* Map football markers */
-    .ball-marker{ background: transparent; border:0; }
-    .ball-pin{
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,212,0,.95);
-      border: 1px solid rgba(0,0,0,.10);
-      box-shadow: 0 16px 45px rgba(0,0,0,.22);
-      color: #0b0f14;
-      transform: translateZ(0);
-      position:relative;
-      overflow:hidden;
-    }
-    .ball-pin::after{
-      content:"";
-      position:absolute;
-      inset:-50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 55%);
-      opacity:.0;
-      transition:.25s var(--ease);
-      pointer-events:none;
-    }
-    .ball-pin:hover::after{ opacity: 1; }
-    .ball-pin i{ font-size: 18px; }
-
-    .leaflet-control-attribution{
-      font-family: Manrope, system-ui;
-    }
-
-    /* Footer */
-    .footer{
-      background: var(--dark);
-      color:#fff;
-      padding: 22px 0;
-    }
-    .footer__inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-    }
-    .footer__brand{ display:flex; gap:12px; align-items:center; }
-    .footer__title{ font-weight: 1000; }
-    .footer__sub{ color: rgba(255,255,255,.70); font-weight: 800; font-size: 13px; }
-    .footer__phone{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      font-weight: 1000;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,212,0,.14);
-      border: 1px solid rgba(255,212,0,.22);
-    }
-
-    /* ================= Scroll Reveal ================= */
-    .reveal{
-      opacity:0;
-      transform: translateY(18px);
-      transition: .75s var(--ease);
-    }
-    .reveal.is-visible{
-      opacity:1;
-      transform: translateY(0);
-    }
-
-    /* ================= Hotbar ================= */
-    .hotbar{
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      z-index: 300;
-    }
-    .hotbar__btn{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      font-weight: 1000;
-      border:1px solid rgba(255,255,255,.16);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 18px 70px rgba(0,0,0,.22);
-      transition: .25s var(--ease);
-      color:#fff;
-      background: rgba(255,255,255,.10);
-    }
-    .hotbar__btn:hover{ transform: translateY(-2px) scale(1.01); }
-    .hotbar__btn--call{ background: rgba(10,14,20,.55); }
-    .hotbar__btn--wa{ background: rgba(37,211,102,.20); }
-    .hotbar__btn--tg{ background: rgba(36,161,222,.20); }
-    .hotbar__btn span{ font-size:13px; opacity:.95; }
-
-    /* ================= Responsive ================= */
-    @media (max-width: 980px){
-      .hero__grid{
-        grid-template-columns: 1fr;
-        min-height: unset;
-      }
-      .grid-2{ grid-template-columns: 1fr; }
-      .cards{ grid-template-columns: 1fr; }
-      .programs{ grid-template-columns: 1fr; }
-      .contact{ grid-template-columns: 1fr; }
-      .gallery{ grid-template-columns: 1fr; }
-      .frame--wide{ grid-column:auto; }
-      .hero__stats{ grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 820px){
-      .nav{ display:none; }
-      .burger{ display:flex; }
-      .phone{ display:none; }
-
-      .mobile-menu{ display:block; }
-      .mobile-menu[aria-hidden="true"]{ display:none; }
-
-      /* Hotbar bottom bar */
-      .hotbar{
-        left: 12px;
-        right: 12px;
-        bottom: 12px;
-        display:grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        padding: 10px;
-        border-radius: 22px;
-        background: rgba(10,14,20,.55);
-        border: 1px solid rgba(255,255,255,.12);
-        backdrop-filter: blur(16px);
-      }
-      .hotbar__btn{
-        width:100%;
-        justify-content:center;
-        padding: 12px 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,.18);
-      }
-      .hotbar__btn span{ display:none; }
-
-      /* prevent overlap with fixed hotbar */
-      body{ padding-bottom: var(--hotbarH); }
-      @supports(padding: env(safe-area-inset-bottom)){
-        body{ padding-bottom: calc(var(--hotbarH) + env(safe-area-inset-bottom)); }
-      }
-
-      /* hero buttons full width */
-      .hero__cta{
-        display:grid;
-        grid-template-columns: 1fr;
-      }
-      .btn{ width:100%; }
-
-      .loc-grid{ grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 430px){
-      .container{ width: calc(100% - 24px); }
-      .brand{ min-width:auto; }
-      .brand__title{ font-size:14px; }
-      .brand__sub{ font-size:11px; }
-      .frame{ min-height: 260px; }
-      .map{ height: 460px; }
-    }
-
-    /* ================== MOBILE PERFORMANCE MODE (fix lags/crashes) ================== */
-    @media (max-width: 820px){
-      /* remove heavy blur */
-      .header{ backdrop-filter: none; }
-      .hotbar, .hotbar__btn, .hero__pill, .stat, .adv, .btn{
-        backdrop-filter: none !important;
-      }
-
-      /* remove heavy video filters/transforms on mobile */
-      .hero__video{
-        filter: none !important;
-        transform: none !important;
-      }
-
-      /* hide particles canvas on mobile (main lag source) */
-      .hero__particles{ display:none !important; }
-
-      /* lighter shadows */
-      .stat, .btn, .adv, .hero__pill, .brand__logoFrame{
-        box-shadow: 0 10px 26px rgba(0,0,0,.18) !important;
-      }
-
-      /* lighter title */
-      .hero__title{ text-shadow: none !important; }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      *{ animation: none !important; transition: none !important; }
-      .hero__video{ transform:none !important; filter:none !important; }
-      .hero__particles{ display:none !important; }
-    }
-  </style>
-</head>
-
-<body>
-  <!-- HEADER -->
-  <header class="header" id="top">
-    <div class="container header__inner">
-      <a class="brand" href="#top" aria-label="ASTANA JAS Football School">
-        <span class="brand__logoFrame">
-          <!-- SVG -> PNG -> fallback ball -->
-          <img src="./assets/logo.svg" alt="ASTANA JAS" class="brand__logoImg"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-          <img src="./assets/logo.png" alt="ASTANA JAS" class="brand__logoImg" style="display:none"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
-          <i class="fa-solid fa-futbol brand__logoFallback" aria-hidden="true" style="display:none"></i>
-        </span>
-
-        <span class="brand__text">
-          <span class="brand__title">ASTANA JAS</span>
-          <span class="brand__sub">FOOTBALL SCHOOL</span>
-        </span>
-      </a>
-
-      <nav class="nav" aria-label="Основная навигация">
-        <ul class="nav__list">
-          <li><a class="nav__link" href="#about">О школе</a></li>
-          <li><a class="nav__link" href="#programs">Программы</a></li>
-          <li><a class="nav__link" href="#training">Тренировки</a></li>
-          <li><a class="nav__link" href="#locations">Локации</a></li>
-          <li><a class="nav__link" href="#contacts">Контакты</a></li>
-          <li><a class="nav__link" href="#mapSection">Карта</a></li>
-        </ul>
-      </nav>
-
-      <div class="header__actions">
-        <a class="phone" href="tel:+77019744464" aria-label="Позвонить">
-          <i class="fa-solid fa-phone"></i>
-          <span>+7 701 974 4464</span>
-        </a>
-
-        <button class="burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-
-    <!-- MOBILE MENU -->
-    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-      <div class="mobile-menu__inner container">
-        <a class="mobile-link" href="#about"><i class="fa-solid fa-circle-info"></i> О школе</a>
-        <a class="mobile-link" href="#programs"><i class="fa-solid fa-layer-group"></i> Программы</a>
-        <a class="mobile-link" href="#training"><i class="fa-solid fa-dumbbell"></i> Тренировки</a>
-        <a class="mobile-link" href="#locations"><i class="fa-solid fa-location-dot"></i> Локации</a>
-        <a class="mobile-link" href="#contacts"><i class="fa-solid fa-headset"></i> Контакты</a>
-        <a class="mobile-link" href="#mapSection"><i class="fa-solid fa-map"></i> Карта</a>
-
-        <div class="mobile-cta">
-          <a class="btn btn--glass" href="tel:+77019744464"><i class="fa-solid fa-phone"></i> Позвонить</a>
-          <a class="btn btn--primary" href="https://wa.me/77019744464" target="_blank" rel="noopener">
-            <i class="fa-brands fa-whatsapp"></i> WhatsApp
-          </a>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- HERO -->
-  <section class="hero" aria-label="Первый экран">
-    <div class="hero__videoWrap" aria-hidden="true">
-      <video class="hero__video" autoplay muted loop playsinline preload="metadata">
-        <source src="./assets/hero.mp4" type="video/mp4" />
-      </video>
-      <div class="hero__overlay"></div>
-
-      <!-- Particles (disabled on mobile by CSS + JS) -->
-      <canvas class="hero__particles" id="particles"></canvas>
-    </div>
-
-    <div class="container hero__inner">
-      <div class="hero__grid">
-        <div class="reveal">
-          <div class="hero__pill">
-            <i class="fa-solid fa-bolt"></i>
-            <span>Детская футбольная школа в Астане</span>
-          </div>
-
-          <h1 class="hero__title">
-            ASTANA JAS
-            <span class="hero__titleSub">FOOTBALL SCHOOL</span>
-          </h1>
-
-          <p class="hero__subtitle">
-            Развитие, дисциплина и любовь к спорту с раннего возраста.
-            Сильная подача, современный стиль, удобство для родителей.
-          </p>
-
-          <div class="hero__cta">
-            <a class="btn btn--primary" href="#contacts">
-              <i class="fa-solid fa-calendar-check"></i> Записаться
-            </a>
-            <a class="btn btn--glass" href="#about">
-              <i class="fa-solid fa-circle-info"></i> Подробнее
-            </a>
-          </div>
-
-          <div class="hero__stats">
-            <div class="stat">
-              <div class="stat__icon"><i class="fa-solid fa-users"></i></div>
-              <div>
-                <div class="stat__top">Группы по возрасту</div>
-                <div class="stat__bottom">Удобно для родителей</div>
-              </div>
-            </div>
-            <div class="stat">
-              <div class="stat__icon"><i class="fa-solid fa-shield-heart"></i></div>
-              <div>
-                <div class="stat__top">Безопасная нагрузка</div>
-                <div class="stat__bottom">Контроль и методика</div>
-              </div>
-            </div>
-            <div class="stat">
-              <div class="stat__icon"><i class="fa-solid fa-trophy"></i></div>
-              <div>
-                <div class="stat__top">Командный дух</div>
-                <div class="stat__bottom">Рост уверенности</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="hero__scroll">
-            <a class="scroll" href="#about" aria-label="Прокрутить вниз"><span></span></a>
-          </div>
-        </div>
-
-        <div aria-hidden="true"></div>
-      </div>
-    </div>
-
-    <!-- HOTBAR -->
-    <div class="hotbar" aria-label="Горячие кнопки">
-      <a class="hotbar__btn hotbar__btn--call" href="tel:+77019744464" aria-label="Позвонить">
-        <i class="fa-solid fa-phone"></i><span>Позвонить</span>
-      </a>
-      <a class="hotbar__btn hotbar__btn--wa" href="https://wa.me/77019744464" target="_blank" rel="noopener" aria-label="WhatsApp">
-        <i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span>
-      </a>
-      <a class="hotbar__btn hotbar__btn--tg" href="https://t.me/" target="_blank" rel="noopener" aria-label="Telegram">
-        <i class="fa-brands fa-telegram"></i><span>Telegram</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="section" id="about">
-    <div class="container">
-      <div class="section__head reveal">
-        <h2 class="h2">О школе</h2>
-        <p class="lead">
-          ASTANA JAS Football School — современная футбольная школа для детей:
-          физическое развитие, техника, дисциплина и командная игра в безопасной и мотивирующей среде.
-        </p>
-      </div>
-
-      <div class="grid-2">
-        <div class="card reveal">
-          <div class="feature-list">
-            <div class="feature">
-              <div class="feature__icon"><i class="fa-solid fa-futbol"></i></div>
-              <div>
-                <div class="feature__title">Современная методика</div>
-                <div class="feature__desc">Техника, координация и игровое мышление — поэтапно и правильно.</div>
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature__icon"><i class="fa-solid fa-people-group"></i></div>
-              <div>
-                <div class="feature__title">Командная среда</div>
-                <div class="feature__desc">Взаимодействие, дисциплина и уверенность через игру.</div>
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature__icon"><i class="fa-solid fa-heart-pulse"></i></div>
-              <div>
-                <div class="feature__title">Внимание к каждому</div>
-                <div class="feature__desc">Нагрузка под возраст, поддержка и рост без перегруза.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="frame reveal" data-src="./assets/about-1.jpg">
-          <img alt="Фото: тренировка (about-1)" />
-          <div class="frame__hint">Положите файл: <b>assets/about-1.jpg</b></div>
-          <div class="frame__label"><i class="fa-regular fa-image"></i> assets/about-1.jpg</div>
-        </div>
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="grid-2">
-        <div class="frame reveal" data-src="./assets/about-2.jpg">
-          <img alt="Фото: команда (about-2)" />
-          <div class="frame__hint">Положите файл: <b>assets/about-2.jpg</b></div>
-          <div class="frame__label"><i class="fa-regular fa-image"></i> assets/about-2.jpg</div>
-        </div>
-
-        <div class="card reveal">
-          <div class="feature-list">
-            <div class="feature">
-              <div class="feature__icon"><i class="fa-solid fa-shield"></i></div>
-              <div>
-                <div class="feature__title">Безопасность</div>
-                <div class="feature__desc">Упражнения под детскую физиологию и контроль техники.</div>
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature__icon"><i class="fa-solid fa-stopwatch"></i></div>
-              <div>
-                <div class="feature__title">Регулярность</div>
-                <div class="feature__desc">Стабильный график — стабильный результат.</div>
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature__icon"><i class="fa-solid fa-star"></i></div>
-              <div>
-                <div class="feature__title">Мотивация</div>
-                <div class="feature__desc">Драйв, прогресс и желание заниматься дальше.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ADVANTAGES -->
-  <section class="section section--dark">
-    <div class="container">
-      <div class="section__head reveal">
-        <h2 class="h2">Преимущества</h2>
-        <p class="lead lead--light">Сильная подача + живые карточки.</p>
-      </div>
-
-      <div class="cards">
-        <article class="adv reveal">
-          <div class="adv__icon"><i class="fa-solid fa-bullseye"></i></div>
-          <h3 class="adv__title">Профессиональный подход</h3>
-          <p class="adv__text">Структура, цели, прогресс и контроль.</p>
-        </article>
-        <article class="adv reveal">
-          <div class="adv__icon"><i class="fa-solid fa-children"></i></div>
-          <h3 class="adv__title">Возрастные группы</h3>
-          <p class="adv__text">Темп и нагрузка под возраст.</p>
-        </article>
-        <article class="adv reveal">
-          <div class="adv__icon"><i class="fa-solid fa-calendar-days"></i></div>
-          <h3 class="adv__title">Регулярные занятия</h3>
-          <p class="adv__text">Стабильность тренировок — лучший рост.</p>
-        </article>
-        <article class="adv reveal">
-          <div class="adv__icon"><i class="fa-solid fa-dumbbell"></i></div>
-          <h3 class="adv__title">Современный инвентарь</h3>
-          <p class="adv__text">Упражнения и оборудование под детей.</p>
-        </article>
-        <article class="adv reveal">
-          <div class="adv__icon"><i class="fa-solid fa-handshake-angle"></i></div>
-          <h3 class="adv__title">Командный дух</h3>
-          <p class="adv__text">Взаимодействие, уважение, поддержка.</p>
-        </article>
-        <article class="adv reveal">
-          <div class="adv__icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
-          <h3 class="adv__title">Личностное развитие</h3>
-          <p class="adv__text">Дисциплина, уверенность, характер.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- TRAINING -->
-  <section class="section" id="training">
-    <div class="container">
-      <div class="section__head reveal">
-        <h2 class="h2">Тренировочный процесс</h2>
-        <p class="lead">Разминка → техника → игра → мини-матчи → восстановление.</p>
-      </div>
-
-      <div class="grid-2">
-        <div class="card reveal">
-          <div class="steps">
-            <div class="step">
-              <div class="step__num">01</div>
-              <div>
-                <div class="step__title"><i class="fa-solid fa-fire"></i> Разминка</div>
-                <div class="step__text">Подготовка организма и правильный старт.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step__num">02</div>
-              <div>
-                <div class="step__title"><i class="fa-solid fa-shoe-prints"></i> Координация и техника</div>
-                <div class="step__text">Контроль мяча, ловкость, работа ног.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step__num">03</div>
-              <div>
-                <div class="step__title"><i class="fa-solid fa-chess"></i> Игровые элементы</div>
-                <div class="step__text">Пасы, решения, взаимодействия.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step__num">04</div>
-              <div>
-                <div class="step__title"><i class="fa-solid fa-futbol"></i> Мини-матчи</div>
-                <div class="step__text">Эмоции и закрепление навыков в игре.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step__num">05</div>
-              <div>
-                <div class="step__title"><i class="fa-solid fa-heart"></i> Растяжка и восстановление</div>
-                <div class="step__text">Снятие нагрузки и полезные привычки.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="gallery">
-          <div class="frame frame--wide reveal" data-src="./assets/gallery-1.jpg">
-            <img alt="Галерея 1" />
-            <div class="frame__hint">Положите файл: <b>assets/gallery-1.jpg</b></div>
-            <div class="frame__label"><i class="fa-regular fa-image"></i> assets/gallery-1.jpg</div>
-          </div>
-          <div class="frame frame--short reveal" data-src="./assets/gallery-2.jpg">
-            <img alt="Галерея 2" />
-            <div class="frame__hint">Положите файл: <b>assets/gallery-2.jpg</b></div>
-            <div class="frame__label"><i class="fa-regular fa-image"></i> assets/gallery-2.jpg</div>
-          </div>
-          <div class="frame frame--short reveal" data-src="./assets/gallery-3.jpg">
-            <img alt="Галерея 3" />
-            <div class="frame__hint">Положите файл: <b>assets/gallery-3.jpg</b></div>
-            <div class="frame__label"><i class="fa-regular fa-image"></i> assets/gallery-3.jpg</div>
-          </div>
-          <div class="frame frame--short reveal" data-src="./assets/gallery-4.jpg">
-            <img alt="Галерея 4" />
-            <div class="frame__hint">Положите файл: <b>assets/gallery-4.jpg</b></div>
-            <div class="frame__label"><i class="fa-regular fa-image"></i> assets/gallery-4.jpg</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- PROGRAMS -->
-  <section class="section" id="programs">
-    <div class="container">
-      <div class="section__head reveal">
-        <h2 class="h2">Программы обучения</h2>
-        <p class="lead">Цены можно добавить позже. Сейчас — формат и структура.</p>
-      </div>
-
-      <div class="programs">
-        <article class="program card reveal">
-          <div class="program__top">
-            <h3 class="program__title">Start</h3>
-            <div class="program__badge"><i class="fa-solid fa-seedling"></i></div>
-          </div>
-          <div class="program__meta">
-            <span class="tag"><i class="fa-solid fa-child"></i> 5–7 лет</span>
-            <span class="tag"><i class="fa-solid fa-layer-group"></i> База</span>
-            <span class="tag"><i class="fa-solid fa-calendar"></i> 2 раза/нед</span>
-          </div>
-          <p class="program__text">Координация, техника, дисциплина, любовь к игре.</p>
-        </article>
-
-        <article class="program card reveal">
-          <div class="program__top">
-            <h3 class="program__title">Progress</h3>
-            <div class="program__badge"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
-          </div>
-          <div class="program__meta">
-            <span class="tag"><i class="fa-solid fa-child-reaching"></i> 8–10 лет</span>
-            <span class="tag"><i class="fa-solid fa-futbol"></i> Техника + игра</span>
-            <span class="tag"><i class="fa-solid fa-calendar"></i> 3 раза/нед</span>
-          </div>
-          <p class="program__text">Взаимодействия, скорость решений, основы тактики.</p>
-        </article>
-
-        <article class="program card reveal">
-          <div class="program__top">
-            <h3 class="program__title">Team</h3>
-            <div class="program__badge"><i class="fa-solid fa-trophy"></i></div>
-          </div>
-          <div class="program__meta">
-            <span class="tag"><i class="fa-solid fa-person-running"></i> 11–14 лет</span>
-            <span class="tag"><i class="fa-solid fa-chess-knight"></i> Команда</span>
-            <span class="tag"><i class="fa-solid fa-calendar"></i> 3–4 раза/нед</span>
-          </div>
-          <p class="program__text">Роли на поле, матчи, дисциплина и прогресс.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOCATIONS -->
-  <section class="section section--soft" id="locations">
-    <div class="container">
-      <div class="section__head reveal">
-        <h2 class="h2">Наши локации</h2>
-        <p class="lead">Строго по вашим данным.</p>
-      </div>
-
-      <div class="loc-grid">
-        <div class="loc card reveal">
-          <div class="loc__icon"><i class="fa-solid fa-location-dot"></i></div>
-          <div>
-            <div class="loc__title">Школа-лицей №11 им. Ө. Жәнібеков</div>
-            <div class="loc__text">Астана</div>
-          </div>
-        </div>
-        <div class="loc card reveal">
-          <div class="loc__icon"><i class="fa-solid fa-location-dot"></i></div>
-          <div>
-            <div class="loc__title">Школа-лицей №71</div>
-            <div class="loc__text">Астана</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACTS -->
-  <section class="section section--brand" id="contacts">
-    <div class="container">
-      <div class="contact reveal">
-        <div>
-          <h2 class="h2">Свяжитесь с нами</h2>
-
-          <div class="contact__box">
-            <div class="contact__school">ASTANA JAS Football School</div>
-
-            <div class="contact__row">
-              <div class="contact__label"><i class="fa-solid fa-location-dot"></i> Наши локации:</div>
-              <ul class="contact__list">
-                <li>Школа-лицей №11 им. Ө. Жәнібеков</li>
-                <li>Школа-лицей №71</li>
-              </ul>
-            </div>
-
-            <div class="contact__row">
-              <div class="contact__label"><i class="fa-solid fa-user-tie"></i> Контактное лицо:</div>
-              <div class="contact__value">Менеджер — Руслан</div>
-            </div>
-
-            <div class="contact__row">
-              <div class="contact__label"><i class="fa-solid fa-phone"></i> Телефон:</div>
-              <a class="contact__phone" href="tel:+77019744464">+7 701 974 4464</a>
-            </div>
-
-            <div class="contact__buttons">
-              <a class="btn btn--glass" href="tel:+77019744464"><i class="fa-solid fa-phone"></i> Позвонить</a>
-              <a class="btn btn--glass" href="https://wa.me/77019744464" target="_blank" rel="noopener">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp
-              </a>
-              <a class="btn btn--glass" href="https://t.me/" target="_blank" rel="noopener">
-                <i class="fa-brands fa-telegram"></i> Telegram
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:grid; gap:12px">
-          <div class="kpi">
-            <div class="kpi__icon"><i class="fa-solid fa-map-location-dot"></i></div>
-            <div>
-              <div class="kpi__num">2</div>
-              <div class="kpi__label">локации в Астане</div>
-            </div>
-          </div>
-          <div class="kpi">
-            <div class="kpi__icon"><i class="fa-solid fa-diagram-project"></i></div>
-            <div>
-              <div class="kpi__num">5+</div>
-              <div class="kpi__label">этапов тренировки</div>
-            </div>
-          </div>
-          <div class="kpi">
-            <div class="kpi__icon"><i class="fa-solid fa-shield"></i></div>
-            <div>
-              <div class="kpi__num">100%</div>
-              <div class="kpi__label">фокус на детях</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MAP (soccer markers) -->
-  <section class="section section--map" id="mapSection">
-    <div class="container">
-      <div class="section__head reveal">
-        <h2 class="h2">Карта</h2>
-        <p class="lead">Маркер-«мячик». Координаты можно заменить на точные.</p>
-      </div>
-    </div>
-
-    <div class="map-wrap">
-      <div class="map" id="map"></div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container footer__inner">
-      <div class="footer__brand">
-        <span class="brand__logoFrame" aria-hidden="true">
-          <i class="fa-solid fa-futbol" style="color:rgba(255,212,0,.95)"></i>
-        </span>
-        <div>
-          <div class="footer__title">ASTANA JAS Football School</div>
-          <div class="footer__sub">© ASTANA JAS Football School. Все права защищены.</div>
-        </div>
-      </div>
-
-      <a class="footer__phone" href="tel:+77019744464"><i class="fa-solid fa-phone"></i> +7 701 974 4464</a>
-    </div>
-  </footer>
-
-  <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
-
-  <script>
-    // ===== Mobile menu
-    (function(){
-      const burger = document.getElementById('burgerBtn');
-      const menu = document.getElementById('mobileMenu');
-      function setOpen(open){
-        burger?.setAttribute('aria-expanded', String(open));
-        menu?.setAttribute('aria-hidden', String(!open));
-      }
-      burger?.addEventListener('click', () => {
-        const isOpen = burger.getAttribute('aria-expanded') === 'true';
-        setOpen(!isOpen);
-      });
-      menu?.addEventListener('click', (e) => {
-        const a = e.target.closest('a');
-        if(a) setOpen(false);
-      });
-      document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape') setOpen(false);
-      });
-    })();
-
-    // ===== Smooth scroll with header offset
-    (function(){
-      const header = document.querySelector('.header');
-      const offset = () => (header ? header.getBoundingClientRect().height + 10 : 0);
-
-      document.querySelectorAll('a[href^="#"]').forEach(a=>{
-        a.addEventListener('click', (e)=>{
-          const href = a.getAttribute('href');
-          if(!href || href === '#' || href.length < 2) return;
-          const target = document.querySelector(href);
-          if(!target) return;
-          e.preventDefault();
-          const top = target.getBoundingClientRect().top + window.pageYOffset - offset();
-          window.scrollTo({ top, behavior:'smooth' });
-        });
-      });
-    })();
-
-    // ===== Scroll reveal
-    (function(){
-      const items = document.querySelectorAll('.reveal');
-      if(!('IntersectionObserver' in window)){
-        items.forEach(el=>el.classList.add('is-visible'));
-        return;
-      }
-      const io = new IntersectionObserver((entries)=>{
-        entries.forEach(ent=>{
-          if(ent.isIntersecting){
-            ent.target.classList.add('is-visible');
-            io.unobserve(ent.target);
-          }
-        });
-      }, { threshold: 0.14 });
-
-      items.forEach((el,i)=>{
-        el.style.transitionDelay = `${Math.min(i*45, 260)}ms`;
-        io.observe(el);
-      });
-    })();
-
-    // ===== Photo frames: load image if exists, else keep empty
-    (function(){
-      const frames = document.querySelectorAll('.frame[data-src]');
-      frames.forEach(frame=>{
-        const src = frame.getAttribute('data-src');
-        const img = frame.querySelector('img');
-        if(!img || !src) return;
-        img.src = src;
-        img.addEventListener('load', ()=> frame.classList.add('is-loaded'));
-        img.addEventListener('error', ()=> {/* stays empty */});
-      });
-    })();
-
-    // ===== Particles (DISABLED on mobile to avoid lag/crash)
-    (function(){
-      if (window.matchMedia("(max-width: 820px)").matches) return;
-
-      const canvas = document.getElementById('particles');
-      if(!canvas) return;
-      const ctx = canvas.getContext('2d', { alpha: true });
-      let w=0,h=0, dpr=1;
-      const particles = [];
-      const COUNT = 36; // reduced
-
-      function resize(){
-        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        w = canvas.clientWidth;
-        h = canvas.clientHeight;
-        canvas.width = Math.floor(w*dpr);
-        canvas.height = Math.floor(h*dpr);
-        ctx.setTransform(dpr,0,0,dpr,0,0);
-      }
-      function rand(min,max){ return Math.random()*(max-min)+min; }
-      function spawn(){
-        return { x: rand(0,w), y: rand(0,h), r: rand(1.2, 3.2), vx: rand(-0.18, 0.18), vy: rand(-0.12, 0.12), a: rand(0.10, 0.22) };
-      }
-      function init(){
-        particles.length = 0;
-        for(let i=0;i<COUNT;i++) particles.push(spawn());
-      }
-      function tick(){
-        ctx.clearRect(0,0,w,h);
-        for(const p of particles){
-          p.x += p.vx; p.y += p.vy;
-          if(p.x< -20) p.x = w+20;
-          if(p.x> w+20) p.x = -20;
-          if(p.y< -20) p.y = h+20;
-          if(p.y> h+20) p.y = -20;
-
-          ctx.beginPath();
-          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-          ctx.fillStyle = `rgba(255,212,0,${p.a})`;
-          ctx.fill();
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTANA JAS | Elite Football Academy</title>
+    <meta name="description" content="Профессиональная футбольная школа в Астане.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500;700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'header': ['"Oswald"', 'sans-serif'],
+                        'body': ['"Roboto"', 'sans-serif']
+                    },
+                    colors: {
+                        brand: {
+                            gold: '#FFD700',
+                            black: '#111111',
+                            gray: '#F8F9FA'
+                        }
+                    },
+                    boxShadow: {
+                        'frame': '0 10px 30px rgba(0,0,0,0.15)',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 12s linear infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    }
+                }
+            }
         }
-        requestAnimationFrame(tick);
-      }
-      const ro = new ResizeObserver(()=>{ resize(); init(); });
-      ro.observe(canvas);
-      resize(); init(); tick();
-    })();
+    </script>
 
-    // ===== Map with football markers (balls)
-    (function(){
-      const mapEl = document.getElementById("map");
-      if(!mapEl || !window.L) return;
+    <style>
+        body { background-color: #FFFFFF; color: #111111; overflow-x: hidden; width: 100%; position: relative; }
+        html, body { max-width: 100%; overflow-x: hidden; }
 
-      // Центр Астаны (примерно)
-      const map = L.map("map", { scrollWheelZoom:false }).setView([51.128, 71.430], 12);
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fff; }
+        ::-webkit-scrollbar-thumb { background: #FFD700; }
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenStreetMap'
-      }).addTo(map);
+        .img-box {
+            width: 100%; height: 100%;
+            background-color: #F3F4F6;
+            border: 2px dashed #EF4444;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: #EF4444; font-family: monospace; font-size: 12px;
+            position: absolute; top: 0; left: 0; z-index: 5;
+            text-align: center; padding: 10px;
+            pointer-events: none; /* важно: не блокировать клики */
+        }
 
-      const ballIcon = L.divIcon({
-        className: "ball-marker",
-        html: '<div class="ball-pin"><i class="fa-solid fa-futbol"></i></div>',
-        iconSize: [42, 42],
-        iconAnchor: [21, 42],
-        popupAnchor: [0, -40],
-      });
+        .btn-main {
+            position: relative; overflow: hidden; transition: all 0.4s ease;
+            clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .btn-main:hover {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transform: translateY(-2px);
+        }
 
-      // ВРЕМЕННЫЕ координаты (замени на точные, когда будут)
-      const points = [
-        { name: "Школа-лицей №11 им. Ө. Жәнібеков", coords: [51.135, 71.410] },
-        { name: "Школа-лицей №71", coords: [51.115, 71.455] },
-      ];
+        .text-shadow-hero { text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
 
-      points.forEach(p=>{
-        L.marker(p.coords, { icon: ballIcon }).addTo(map).bindPopup(`<b>${p.name}</b>`);
-      });
+        .football-marker {
+            background-image: url('https://cdn-icons-png.flaticon.com/512/53/53283.png');
+            background-size: cover; width: 50px; height: 50px;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4));
+            transition: transform 0.2s;
+        }
 
-      // Чтобы карта корректно отрисовалась после загрузки/скролла
-      setTimeout(()=>map.invalidateSize(), 300);
-    })();
-  </script>
+        /* Lightbox */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 24px;
+        }
+        #lightbox.show { display: flex; }
+        #lightbox img {
+            max-width: min(1100px, 100%);
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 16px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+        }
+        #lightbox button {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            font-size: 18px;
+        }
+        #lightbox button:hover { background: rgba(255,255,255,0.18); }
+
+        /* Уважение reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-bounce-slow, .animate-spin-slow { animation: none !important; }
+            html { scroll-behavior: auto; }
+        }
+    </style>
+</head>
+<body class="font-body antialiased">
+
+    <div id="preloader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-700">
+        <i class="fas fa-futbol text-6xl text-brand-black animate-spin-slow"></i>
+        <h2 class="mt-6 font-header text-3xl font-bold uppercase tracking-widest text-brand-black">Astana Jas</h2>
+    </div>
+
+    <nav class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="navbar">
+        <div class="hidden md:block bg-brand-black text-white text-xs py-2">
+            <div class="container mx-auto px-6 flex justify-between items-center">
+                <div class="flex gap-6 opacity-80">
+                    <span><i class="fas fa-map-marker-alt text-brand-gold mr-2"></i> Астана</span>
+                    <span><i class="far fa-clock text-brand-gold mr-2"></i> 09:00 - 21:00</span>
+                </div>
+                <div class="flex gap-4">
+                    <a href="https://wa.me/77019744464" class="hover:text-brand-gold" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-4 group">
+                <div class="w-12 h-12 relative shrink-0">
+                    <img src="images/logo.png"
+                         onerror="this.src='logo.png'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex'}"
+                         class="w-full h-full object-contain" alt="Logo">
+                    <div class="img-box rounded-full border-none bg-transparent text-black" style="display:none;"><i class="fas fa-shield-alt"></i></div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-header text-xl md:text-2xl font-bold uppercase tracking-tighter leading-none text-black">Astana Jas</span>
+                    <span class="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400">Football School</span>
+                </div>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-8 font-header text-lg font-medium uppercase tracking-wide">
+                <a href="#about" class="hover:text-brand-gold transition">О клубе</a>
+                <a href="#programs" class="hover:text-brand-gold transition">Программы</a>
+                <a href="#kit" class="hover:text-brand-gold transition">Форма</a>
+                <a href="#team" class="hover:text-brand-gold transition">Тренеры</a>
+                <a href="#locations" class="hover:text-brand-gold transition">Контакты</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="https://wa.me/77019744464" class="hidden md:flex btn-main bg-brand-black text-white px-6 py-2 font-header text-lg uppercase tracking-wider hover:bg-brand-gold hover:text-black items-center gap-2">
+                    Записаться
+                </a>
+                <button onclick="toggleMenu()" class="lg:hidden text-3xl text-brand-black p-2" aria-label="Открыть меню">
+                    <i class="fas fa-bars" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-white translate-x-full transition-transform duration-500 flex flex-col pt-32 px-8">
+        <div class="flex flex-col gap-6 font-header text-3xl uppercase font-bold text-brand-black">
+            <a href="#about" onclick="toggleMenu(true)">О Клубе</a>
+            <a href="#programs" onclick="toggleMenu(true)">Программы</a>
+            <a href="#kit" onclick="toggleMenu(true)">Форма</a>
+            <a href="#team" onclick="toggleMenu(true)">Тренеры</a>
+            <a href="#locations" onclick="toggleMenu(true)">Локации</a>
+        </div>
+        <div class="mt-auto mb-10">
+            <a href="https://wa.me/77019744464" class="btn-main w-full py-4 bg-brand-gold text-black font-header uppercase text-xl text-center block rounded-none">
+                WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <header class="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden bg-black">
+        <div class="absolute inset-0 z-0">
+            <!-- Постер для mobile/reduced-motion (покажем через JS) -->
+            <img id="heroPoster" src="images/hero_poster.jpg"
+                 class="absolute w-full h-full object-cover object-top"
+                 alt="Hero poster" style="display:none;" loading="eager" decoding="async">
+
+            <video id="heroVideo" autoplay muted loop playsinline preload="metadata"
+                   poster="images/hero_poster.jpg"
+                   class="absolute w-full h-full object-cover object-top opacity-100">
+                <source src="video/hero.mp4" type="video/mp4">
+            </video>
+
+            <div class="img-box absolute inset-0 z-[-1] border-none bg-gray-900 text-white">
+                <i class="fas fa-video text-4xl"></i> video/hero.mp4
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60"></div>
+        </div>
+
+        <div class="container mx-auto px-6 relative z-10 pt-10 text-center">
+            <span class="inline-block py-2 px-4 border border-white text-white text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-6 backdrop-blur-md bg-black/30 shadow-lg" data-aos="fade-down">
+                Season 2025/2026
+            </span>
+            <h1 class="font-header font-bold text-6xl md:text-[9vw] leading-[0.9] uppercase text-white mb-6 text-shadow-hero" data-aos="zoom-in">
+                Astana <span class="text-brand-gold">Jas</span>
+            </h1>
+            <p class="text-lg md:text-2xl text-gray-100 font-light max-w-2xl mx-auto mb-10 text-shadow-hero" data-aos="fade-up">
+                Воспитываем характер. Создаем чемпионов. <br>
+                <span class="font-bold text-white">История большого футбола начинается здесь.</span>
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
+                <a href="#locations" class="btn-main bg-brand-gold text-brand-black px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-white hover:text-black shadow-xl">
+                    Найти школу
+                </a>
+                <a href="https://wa.me/77019744464" class="btn-main bg-brand-black text-white px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-brand-gold hover:text-black shadow-xl">
+                    WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="py-20 bg-brand-gray overflow-hidden">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+                <div data-aos="fade-right" class="order-2 lg:order-1">
+                    <h4 class="text-brand-gold font-bold uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
+                        <span class="w-8 h-1 bg-brand-gold"></span> Философия
+                    </h4>
+                    <h2 class="font-header text-4xl md:text-6xl font-bold uppercase text-brand-black leading-tight mb-6">
+                        Больше чем <br> Просто Игра
+                    </h2>
+                    <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-8 border-l-4 border-brand-gold pl-6">
+                        Быть лучшим футбольным клубом, несущим историю казахстанского футбола. Мы создаем комплексные условия для прогресса и имеем культурную ценность для общества.
+                    </p>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="bg-white p-5 shadow-sm rounded-xl border border-gray-100">
+                            <h4 class="font-header text-lg uppercase font-bold mb-1"><i class="fas fa-heart text-brand-black mr-2"></i>Ценности</h4>
+                            <p class="text-sm text-gray-500">Принципы честной борьбы. Семья.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-1 lg:order-2 relative w-full" data-aos="fade-left">
+                    <div class="relative p-3 md:p-4">
+                        <div class="absolute inset-0 bg-brand-gold transform rotate-2 rounded-3xl z-0"></div>
+                        <div class="relative bg-white p-2 rounded-3xl shadow-frame z-10">
+                            <img src="images/loc1.jpg" loading="lazy" decoding="async"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                                 class="w-full h-auto rounded-2xl block relative z-20" alt="Команда">
+                            <div class="img-box rounded-2xl bg-gray-100 z-10">
+                                <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                                <span>Нет фото: images/loc1.jpg</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="process" class="py-24 bg-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-32 h-32 bg-brand-gold/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-64 h-64 bg-brand-black/5 rounded-full blur-3xl"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <span class="text-brand-gold font-bold uppercase tracking-[0.2em] text-sm">Road to Pro</span>
+                <h2 class="font-header text-4xl md:text-6xl font-bold uppercase text-brand-black mt-2">
+                    Путь <span class="text-brand-gold">Чемпиона</span>
+                </h2>
+            </div>
+
+            <div class="relative">
+                <div class="hidden md:block absolute top-12 left-[10%] w-[80%] h-1 bg-gray-100 z-0"></div>
+                <div class="hidden md:block absolute top-12 left-[10%] w-[80%] h-1 border-t-2 border-dashed border-brand-gold/50 z-0"></div>
+                <div class="md:hidden absolute top-0 left-8 h-full w-1 border-l-2 border-dashed border-brand-gold/30 z-0"></div>
+
+                <div class="grid md:grid-cols-3 gap-12 md:gap-6 relative z-10">
+                    <div class="group relative flex md:flex-col items-center md:text-center gap-6 md:gap-0" data-aos="fade-up" data-aos-delay="0">
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white border-4 border-gray-100 rounded-full flex items-center justify-center shrink-0 shadow-lg group-hover:border-brand-gold group-hover:scale-110 transition duration-500 relative z-20">
+                            <i class="fas fa-child text-2xl md:text-4xl text-gray-300 group-hover:text-brand-black group-hover:animate-bounce"></i>
+                        </div>
+                        <div class="md:mt-8 pt-2">
+                            <div class="inline-block px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-widest rounded-full mb-3 group-hover:bg-brand-gold group-hover:text-black transition">
+                                5-7 Лет
+                            </div>
+                            <h3 class="font-header text-3xl uppercase font-bold text-brand-black mb-2">Start</h3>
+                            <p class="text-sm text-gray-500 max-w-xs mx-auto">
+                                Развитие ловкости, координации и любви к мячу. Первые шаги в большой игре.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="group relative flex md:flex-col items-center md:text-center gap-6 md:gap-0" data-aos="fade-up" data-aos-delay="200">
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-brand-gold border-4 border-brand-gold/30 rounded-full flex items-center justify-center shrink-0 shadow-xl shadow-brand-gold/30 scale-110 relative z-20">
+                            <i class="fas fa-futbol text-2xl md:text-4xl text-brand-black animate-spin-slow"></i>
+                        </div>
+                        <div class="md:mt-8 pt-2">
+                            <div class="inline-block px-3 py-1 bg-brand-black text-brand-gold text-[10px] font-bold uppercase tracking-widest rounded-full mb-3">
+                                8-10 Лет
+                            </div>
+                            <h3 class="font-header text-3xl uppercase font-bold text-brand-black mb-2">Progress</h3>
+                            <p class="text-sm text-gray-600 max-w-xs mx-auto font-medium">
+                                Техническая база, понимание тактики и командные взаимодействия.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="group relative flex md:flex-col items-center md:text-center gap-6 md:gap-0" data-aos="fade-up" data-aos-delay="400">
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white border-4 border-gray-100 rounded-full flex items-center justify-center shrink-0 shadow-lg group-hover:border-brand-gold group-hover:scale-110 transition duration-500 relative z-20">
+                            <i class="fas fa-trophy text-2xl md:text-4xl text-gray-300 group-hover:text-brand-gold group-hover:animate-bounce"></i>
+                        </div>
+                        <div class="md:mt-8 pt-2">
+                            <div class="inline-block px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-widest rounded-full mb-3 group-hover:bg-brand-gold group-hover:text-black transition">
+                                11-14 Лет
+                            </div>
+                            <h3 class="font-header text-3xl uppercase font-bold text-brand-black mb-2">Team</h3>
+                            <p class="text-sm text-gray-500 max-w-xs mx-auto">
+                                Соревновательный уровень. Участие в турнирах и подготовка к профессиональному спорту.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-16" data-aos="fade-up" data-aos-delay="500">
+                    <a href="#programs" class="inline-flex items-center gap-2 border-b-2 border-brand-black pb-1 font-header text-xl uppercase font-bold hover:text-brand-gold hover:border-brand-gold transition">
+                        Выбрать программу <i class="fas fa-arrow-right text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="programs" class="py-20 bg-gray-50 border-t border-gray-100">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center mb-12">
+                <h2 class="font-header text-4xl md:text-5xl font-bold uppercase text-brand-black mb-4">Наши <span class="text-brand-gold">Программы</span></h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Мы предлагаем тренировки по футболу для детей любого уровня подготовки. Подберем для вас удобное расписание.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col h-full border border-gray-100">
+                    <div class="h-64 relative bg-gray-200">
+                        <img src="images/prog_baby.jpg" loading="lazy" decoding="async"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                             class="w-full h-full object-cover" alt="Baby start">
+                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
+                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                            <span class="text-gray-500 font-bold">images/prog_baby.jpg</span>
+                        </div>
+                    </div>
+                    <div class="bg-brand-gold p-4 md:p-6 flex-grow flex flex-col justify-center text-center">
+                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-4 bg-brand-gold">
+                            <h3 class="font-header text-xl md:text-2xl uppercase font-bold mb-4 break-words hyphens-auto">Программа baby start</h3>
+                            <ul class="text-sm font-bold text-brand-black space-y-2 mb-4">
+                                <li>Набор в группы: 2017-19 г.р.</li>
+                                <li>2 раза в неделю: Суббота-Воскресенье</li>
+                                <li>Время: 11:00-12:00</li>
+                                <li class="text-xs font-normal opacity-80">(В расписании возможны изменения)</li>
+                            </ul>
+                            <p class="text-xl font-header font-bold mt-auto">Стоимость 25.000 тг</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col h-full border border-gray-100">
+                    <div class="h-64 relative bg-gray-200">
+                        <img src="images/prog_weekend.jpg" loading="lazy" decoding="async"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                             class="w-full h-full object-cover" alt="Weekend groups">
+                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
+                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                            <span class="text-gray-500 font-bold">images/prog_weekend.jpg</span>
+                        </div>
+                    </div>
+                    <div class="bg-brand-gold p-4 md:p-6 flex-grow flex flex-col justify-center text-center">
+                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-4 bg-brand-gold">
+                            <h3 class="font-header text-xl md:text-2xl uppercase font-bold mb-4 break-words hyphens-auto">Группы выходного дня</h3>
+                            <ul class="text-sm font-bold text-brand-black space-y-2 mb-4">
+                                <li>Набор в группы: 2013-14 г.р., 2015-16 г.р.</li>
+                                <li>2 раза в неделю: Суббота-Воскресенье</li>
+                                <li>Время: 10:00-11:00</li>
+                                <li class="text-xs font-normal opacity-80">(В расписании возможны изменения)</li>
+                            </ul>
+                            <p class="text-xl font-header font-bold mt-auto">Стоимость 25.000 тг</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col h-full border border-gray-100">
+                    <div class="h-64 relative bg-gray-200">
+                        <img src="images/prog_spec.jpg" loading="lazy" decoding="async"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                             class="w-full h-full object-cover" alt="Spec group">
+                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
+                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                            <span class="text-gray-500 font-bold">images/prog_spec.jpg</span>
+                        </div>
+                    </div>
+                    <div class="bg-brand-gold p-4 md:p-6 flex-grow flex flex-col justify-center text-center">
+                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-4 bg-brand-gold">
+                            <h3 class="font-header text-xl md:text-2xl uppercase font-bold mb-4 break-words">Спецгруппа</h3>
+                            <ul class="text-sm font-bold text-brand-black space-y-2 mb-4">
+                                <li>Набор в группы: 2010-11, 2012-13, 2014-16 г.р.</li>
+                                <li>3 раза в неделю + matchday</li>
+                                <li>Участие в городских и республиканских соревнованиях</li>
+                            </ul>
+                            <p class="text-xl font-header font-bold mt-auto">Стоимость 30.000 тг</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col h-full border border-gray-100">
+                    <div class="h-64 relative bg-gray-200">
+                        <img src="images/prog_small.jpg" loading="lazy" decoding="async"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                             class="w-full h-full object-cover" alt="Small groups">
+                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
+                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                            <span class="text-gray-500 font-bold">images/prog_small.jpg</span>
+                        </div>
+                    </div>
+                    <div class="bg-brand-gold p-4 md:p-6 flex-grow flex flex-col justify-center text-center">
+                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-4 bg-brand-gold">
+                            <h3 class="font-header text-lg md:text-xl uppercase font-bold mb-4 leading-tight break-words">Индивидуальная тренировка в малых группах</h3>
+                            <ul class="text-sm font-bold text-brand-black space-y-2 mb-4 list-disc list-inside text-left">
+                                <li>В группе не больше 5 человек</li>
+                                <li>Грамотно выстроенный процесс</li>
+                                <li>Разнообразие тренировок по технике</li>
+                                <li>Высокоэффективные тренировки</li>
+                                <li>8 тренировок в месяц</li>
+                            </ul>
+                            <p class="text-xl font-header font-bold mt-auto">Стоимость от 50.000 тг</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col border border-gray-100">
+                    <div class="h-64 md:h-80 relative bg-gray-200">
+                        <img src="images/prog_indiv.jpg" loading="lazy" decoding="async"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                             class="w-full h-full object-cover" alt="Indiv">
+                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
+                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                            <span class="text-gray-500 font-bold">images/prog_indiv.jpg</span>
+                        </div>
+                    </div>
+                    <div class="bg-brand-gold p-4 md:p-8 text-center">
+                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-6 bg-brand-gold max-w-2xl mx-auto">
+                            <h3 class="font-header text-lg sm:text-xl md:text-3xl uppercase font-bold mb-4 md:mb-6 leading-tight break-words hyphens-auto">
+                                Индивидуальная работа с тренером 1x1
+                            </h3>
+                            <div class="text-sm font-bold text-brand-black space-y-4 mb-6">
+                                <div>
+                                    <p class="uppercase mb-1 underline">Расписание:</p>
+                                    <p>Понедельник — Четверг: 11:30-12:30 и 15:30-16:30</p>
+                                    <p>Вторник-Четверг: 11:30-12:30 и 15:30-16:30</p>
+                                    <p>Среда-Пятница: 11:30-12:30 и 15:30-16:30</p>
+                                </div>
+                                <div>
+                                    <p class="uppercase mb-1 underline">Что входит в стоимость?</p>
+                                    <p>Работа над ошибками • Современный инвентарь</p>
+                                    <p>Хорошее поле (раздевалки, душевые) • Видеосъемка тренировок</p>
+                                </div>
+                            </div>
+                            <p class="text-xl md:text-2xl font-header font-bold">Стоимость : от 80.000 тг</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="kit" class="py-16 md:py-24 bg-white border-t border-gray-100">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-brand-gold font-bold uppercase tracking-[0.2em] text-[10px]">Elite Gear</span>
+                <h2 class="font-header text-4xl md:text-6xl font-bold uppercase text-brand-black mt-2">
+                    Клубная <span class="text-brand-gold">Форма</span>
+                </h2>
+            </div>
+
+            <div class="max-w-4xl mx-auto" data-aos="zoom-in">
+                <div class="bg-gray-50 rounded-[2rem] p-4 md:p-10 mb-8 cursor-pointer group relative overflow-hidden shadow-sm" onclick="openLightbox('images/kit.jpg?v=4')">
+                    <img src="images/kit.jpg?v=4"
+                         onerror="this.src='https://via.placeholder.com/800x600?text=Jersey+Preview'"
+                         class="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-[0_30px_60px_rgba(0,0,0,0.12)]"
+                         alt="Jersey Design" loading="lazy" decoding="async">
+
+                    <div class="absolute bottom-6 right-6 bg-white/80 backdrop-blur-md p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fas fa-expand-alt text-brand-black"></i>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-brand-black p-8 rounded-[1.5rem] text-white">
+                        <div class="flex items-center gap-4 mb-4">
+                            <i class="fas fa-medal text-brand-gold text-xl"></i>
+                            <h4 class="font-header text-lg uppercase font-bold tracking-wide">Дизайн</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Эксклюзивный паттерн с использованием национального казахского орнамента.</p>
+                    </div>
+
+                    <div class="bg-brand-black p-8 rounded-[1.5rem] text-white">
+                        <div class="flex items-center gap-4 mb-4">
+                            <i class="fas fa-bolt text-brand-gold text-xl"></i>
+                            <h4 class="font-header text-lg uppercase font-bold tracking-wide">Материал</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Высокотехнологичный полиэстер PRO-Fit: дышит и мгновенно отводит влагу.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="py-20 bg-white border-t border-gray-200">
+        <div class="container mx-auto px-2 md:px-6">
+            <h3 class="font-header text-4xl md:text-5xl font-bold uppercase text-brand-black text-center mb-10">
+                Тренерский Штаб
+            </h3>
+
+            <div class="relative w-full rounded-2xl overflow-hidden shadow-xl" data-aos="fade-up">
+                <img src="images/team_full.jpg" loading="lazy" decoding="async"
+                     onerror="this.src='team_full.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex'}"
+                     class="w-full h-auto object-contain block"
+                     alt="Тренерский штаб">
+
+                <div class="img-box bg-gray-100 flex flex-col items-center justify-center min-h-[300px]" style="display:none;">
+                    <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
+                    <span class="text-red-500 font-bold">Загрузите фото: images/team_full.jpg</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white border-t">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="font-header text-xl uppercase text-gray-400 mb-8 tracking-widest">Partners</h3>
+            <div class="flex flex-wrap justify-center items-center gap-12">
+                <div class="w-40 h-20 relative flex justify-center items-center">
+                    <img src="images/tehpro.png" loading="lazy" decoding="async"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                         class="w-full h-full object-contain transition hover:scale-110" alt="Tehpro">
+                    <div class="img-box border-none bg-white text-xs hidden flex-col items-center justify-center absolute inset-0">
+                        <i class="fas fa-times mb-1"></i> Нет images/tehpro.png
+                    </div>
+                </div>
+
+                <div class="w-40 h-20 relative flex justify-center items-center">
+                    <img src="images/zhenis.png" loading="lazy" decoding="async"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                         class="w-full h-full object-contain transition hover:scale-110" alt="Zhenis">
+                    <div class="img-box border-none bg-white text-xs hidden flex-col items-center justify-center absolute inset-0">
+                        <i class="fas fa-times mb-1"></i> Нет images/zhenis.png
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 inline-block px-8 py-3 bg-gray-50 rounded-full border border-gray-200">
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                    <i class="fas fa-handshake text-brand-black mr-2"></i> Меморандум о сотрудничестве с ПФК «Жеңіс»
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="locations" class="py-20 bg-brand-black text-white">
+        <div class="container mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-10">
+                <div data-aos="fade-right">
+                    <h2 class="font-header text-5xl uppercase mb-8">Контакты <span class="text-brand-gold">Клуба</span></h2>
+                    <div class="space-y-4 mb-8">
+                        <div class="p-5 border border-white/10 rounded-lg">
+                            <h3 class="font-header text-xl uppercase mb-1">Школа №11</h3>
+                            <p class="text-gray-400 text-sm">им. Өзбекәлі Жәнібекова</p>
+                        </div>
+                        <div class="p-5 border border-white/10 rounded-lg">
+                            <h3 class="font-header text-xl uppercase mb-1">Школа №71</h3>
+                            <p class="text-gray-400 text-sm">Астана, ул. Е-10</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs text-brand-gold uppercase tracking-widest font-bold mb-1">Менеджер Руслан</p>
+                        <a href="tel:+77019744464" class="text-3xl font-header font-bold block mb-6">+7 701 974 44 64</a>
+                        <a href="https://wa.me/77019744464" class="btn-main w-full py-4 bg-brand-gold text-black text-center font-header text-xl uppercase tracking-wider block">
+                            Написать в WhatsApp
+                        </a>
+                    </div>
+                </div>
+                <div class="h-[400px] bg-white rounded-2xl overflow-hidden relative shadow-2xl" data-aos="fade-left">
+                    <div id="map" class="w-full h-full z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="relative bg-black text-white pt-16 pb-12 border-t border-white/10 overflow-hidden">
+        <div class="absolute inset-0 z-0 md:hidden">
+            <img src="images/footer_bg.jpg"
+                 loading="lazy" decoding="async"
+                 onerror="this.src='https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1000&auto=format&fit=crop'; this.style.opacity='0.2'"
+                 class="w-full h-full object-cover opacity-30" alt="Footer Background">
+        </div>
+
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="flex flex-col items-center gap-6 mb-10">
+                <div class="w-20 h-20 relative group cursor-pointer" onclick="openLightbox('images/logo.png')">
+                    <img src="images/logo.png" class="w-full h-full object-contain" alt="Logo" loading="lazy" decoding="async">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="font-header text-3xl md:text-4xl uppercase tracking-[0.2em] font-bold">Astana Jas</span>
+                    <span class="text-[10px] uppercase tracking-[0.5em] text-brand-gold font-bold">Football Academy</span>
+                </div>
+            </div>
+
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest border-t border-white/5 pt-8">
+                &copy; 2026 Astana Jas. Designed by
+                <a href="https://anukenn.vercel.app/" target="_blank" class="text-white hover:text-brand-gold transition duration-300">
+                    Anuken
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/77019744464" class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition animate-bounce-slow" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- Lightbox -->
+    <div id="lightbox" aria-hidden="true">
+        <button type="button" onclick="closeLightbox()" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+        <img id="lightboxImg" src="" alt="Preview">
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // AOS: отключаем на mobile и при reduced motion (меньше лагов)
+        AOS.init({
+            duration: 800,
+            once: true,
+            disable: isMobile || reduceMotion
+        });
+
+        // Preloader + Video оптимизация
+        window.addEventListener('load', () => {
+            const pre = document.getElementById('preloader');
+            if (pre) {
+                pre.style.opacity = '0';
+                setTimeout(() => { pre.style.display = 'none'; }, 700);
+            }
+
+            // Видео: на mobile/reduced-motion отключаем и показываем постер
+            const heroVideo = document.getElementById('heroVideo');
+            const heroPoster = document.getElementById('heroPoster');
+
+            if (isMobile || reduceMotion) {
+                if (heroVideo) {
+                    try { heroVideo.pause(); } catch(e) {}
+                    heroVideo.removeAttribute('autoplay');
+                    heroVideo.style.display = 'none';
+                }
+                if (heroPoster) heroPoster.style.display = 'block';
+            } else {
+                // На десктопе пробуем воспроизвести (на некоторых браузерах play может быть запрещен)
+                if (heroVideo) {
+                    heroVideo.play().catch(() => {});
+                }
+            }
+        });
+
+        // Mobile menu: блокируем скролл фона + закрытие по ESC
+        function toggleMenu(forceClose = null) {
+            const menu = document.getElementById('mobile-menu');
+            const isOpen = !menu.classList.contains('translate-x-full');
+            const nextOpen = (forceClose === null) ? !isOpen : !forceClose;
+
+            if (nextOpen) {
+                menu.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden';
+            } else {
+                menu.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                toggleMenu(true);
+                closeLightbox();
+            }
+        });
+
+        // Lightbox
+        function openLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            if (!lb || !img) return;
+
+            img.src = src;
+            lb.classList.add('show');
+            lb.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            if (!lb || !img) return;
+
+            lb.classList.remove('show');
+            lb.setAttribute('aria-hidden', 'true');
+            img.src = '';
+            document.body.style.overflow = '';
+        }
+
+        // Закрытие lightbox кликом по фону
+        document.getElementById('lightbox')?.addEventListener('click', (e) => {
+            if (e.target && e.target.id === 'lightbox') closeLightbox();
+        });
+
+        // Map: ленивый запуск (инициализация только при видимости)
+        let mapInited = false;
+
+        function initMap() {
+            if (mapInited) return;
+            if (typeof L === 'undefined') return;
+
+            mapInited = true;
+
+            const map = L.map('map', { scrollWheelZoom: false }).setView([51.13, 71.41], 12);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; CARTO', maxZoom: 20
+            }).addTo(map);
+
+            const ballIcon = L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/53/53283.png',
+                iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20],
+                className: 'football-marker'
+            });
+
+            L.marker([51.152230, 71.404335], {icon: ballIcon}).addTo(map).bindPopup('<b>Школа №11</b>');
+            L.marker([51.104512, 71.402919], {icon: ballIcon}).addTo(map).bindPopup('<b>Школа №71</b>');
+        }
+
+        const mapEl = document.getElementById('map');
+        if (mapEl) {
+            if ('IntersectionObserver' in window) {
+                const obs = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            initMap();
+                            obs.disconnect();
+                        }
+                    });
+                }, { threshold: 0.2 });
+                obs.observe(mapEl);
+            } else {
+                initMap();
+            }
+        }
+    </script>
 </body>
 </html>
