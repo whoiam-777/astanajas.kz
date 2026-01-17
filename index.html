@@ -1,780 +1,1207 @@
 <!DOCTYPE html>
 <html lang="ru" class="scroll-smooth overflow-x-hidden">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASTANA JAS | Elite Football Academy</title>
-    <meta name="description" content="Профессиональная футбольная школа в Астане.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTANA JAS | Elite Football Academy</title>
+  <meta name="description" content="Профессиональная футбольная школа в Астане." />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500;700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500;700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'header': ['"Oswald"', 'sans-serif'],
-                        'body': ['"Roboto"', 'sans-serif']
-                    },
-                    colors: {
-                        brand: {
-                            gold: '#FFD700',
-                            black: '#111111',
-                            gray: '#F8F9FA'
-                        }
-                    },
-                    boxShadow: {
-                        'frame': '0 10px 30px rgba(0,0,0,0.15)',
-                    },
-                    animation: {
-                        'spin-slow': 'spin 12s linear infinite',
-                        'bounce-slow': 'bounce 3s infinite',
-                    }
-                }
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            header: ['"Oswald"', 'sans-serif'],
+            body: ['"Roboto"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              gold: '#FFD700',
+              black: '#111111',
+              gray: '#F8F9FA',
             }
+          },
+          boxShadow: {
+            frame: '0 10px 30px rgba(0,0,0,0.15)',
+            deep: '0 30px 80px rgba(0,0,0,0.35)',
+          },
+          animation: {
+            'spin-slow': 'spin 12s linear infinite',
+            'float': 'float 7s ease-in-out infinite',
+            'pulse-soft': 'pulseSoft 2.6s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            pulseSoft: {
+              '0%, 100%': { transform: 'scale(1)', opacity: 0.95 },
+              '50%': { transform: 'scale(1.02)', opacity: 1 },
+            }
+          }
         }
-    </script>
+      }
+    }
+  </script>
 
-    <style>
-        body { background-color: #FFFFFF; color: #111111; overflow-x: hidden; width: 100%; position: relative; }
-        html, body { max-width: 100%; overflow-x: hidden; }
+  <style>
+    :root{
+      --gold:#FFD700;
+      --black:#111111;
+      --gray:#F8F9FA;
+    }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #fff; }
-        ::-webkit-scrollbar-thumb { background: #FFD700; }
+    html, body { max-width: 100%; overflow-x: hidden; }
+    body { background:#fff; color:#111; }
 
-        .img-box {
-            width: 100%; height: 100%;
-            background-color: #F3F4F6;
-            border: 2px dashed #EF4444;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            color: #EF4444; font-family: monospace; font-size: 12px;
-            position: absolute; top: 0; left: 0; z-index: 5;
-            text-align: center; padding: 10px;
-            pointer-events: none; /* важно: не блокировать клики */
-        }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #fff; }
+    ::-webkit-scrollbar-thumb { background: var(--gold); }
 
-        .btn-main {
-            position: relative; overflow: hidden; transition: all 0.4s ease;
-            clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
-        }
-        .btn-main:hover {
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-            transform: translateY(-2px);
-        }
+    /* Debug placeholder (не блокирует клики) */
+    .img-box{
+      width:100%; height:100%;
+      background:#F3F4F6;
+      border:2px dashed #EF4444;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      color:#EF4444; font-family:monospace; font-size:12px;
+      position:absolute; inset:0; z-index:5;
+      text-align:center; padding:10px;
+      pointer-events:none;
+    }
 
-        .text-shadow-hero { text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+    /* Signature angled button */
+    .btn-main{
+      position:relative; overflow:hidden; transition:all .35s ease;
+      clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .btn-main:hover{
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      transform: translateY(-2px);
+    }
 
-        .football-marker {
-            background-image: url('https://cdn-icons-png.flaticon.com/512/53/53283.png');
-            background-size: cover; width: 50px; height: 50px;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4));
-            transition: transform 0.2s;
-        }
+    .text-shadow-hero{ text-shadow:0 10px 30px rgba(0,0,0,.55); }
 
-        /* Lightbox */
-        #lightbox {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            padding: 24px;
-        }
-        #lightbox.show { display: flex; }
-        #lightbox img {
-            max-width: min(1100px, 100%);
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 16px;
-            box-shadow: 0 20px 80px rgba(0,0,0,0.6);
-        }
-        #lightbox button {
-            position: absolute;
-            top: 18px;
-            right: 18px;
-            width: 44px;
-            height: 44px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.12);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.18);
-            backdrop-filter: blur(8px);
-            font-size: 18px;
-        }
-        #lightbox button:hover { background: rgba(255,255,255,0.18); }
+    /* Noise overlay for premium feel */
+    .noise:before{
+      content:"";
+      position:absolute; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity:.45;
+      pointer-events:none;
+    }
 
-        /* Уважение reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            .animate-bounce-slow, .animate-spin-slow { animation: none !important; }
-            html { scroll-behavior: auto; }
-        }
-    </style>
+    /* Reveal animation (lightweight, no AOS) */
+    .reveal{
+      opacity:0;
+      transform: translateY(18px);
+      transition: opacity .7s ease, transform .7s ease;
+      will-change: opacity, transform;
+    }
+    .reveal.is-visible{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* Lightbox */
+    #lightbox{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.86);
+      display:none;
+      align-items:center; justify-content:center;
+      z-index:99999;
+      padding:24px;
+    }
+    #lightbox.show{ display:flex; }
+    #lightbox img{
+      max-width:min(1100px, 100%);
+      max-height:90vh;
+      object-fit:contain;
+      border-radius:18px;
+      box-shadow:0 25px 110px rgba(0,0,0,0.75);
+    }
+    #lightbox button{
+      position:absolute; top:18px; right:18px;
+      width:44px; height:44px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.12);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      font-size:18px;
+    }
+    #lightbox button:hover{ background: rgba(255,255,255,0.18); }
+
+    /* Leaflet marker */
+    .football-marker{
+      background-image:url('https://cdn-icons-png.flaticon.com/512/53/53283.png');
+      background-size:cover;
+      width:50px; height:50px;
+      filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4));
+      transition: transform .2s;
+    }
+
+    /* Reduced motion respect */
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      .reveal{ transition:none; }
+      .animate-spin, .animate-spin-slow, .animate-bounce, .animate-pulse, .animate-float { animation:none !important; }
+    }
+  </style>
 </head>
+
 <body class="font-body antialiased">
 
-    <div id="preloader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-700">
-        <i class="fas fa-futbol text-6xl text-brand-black animate-spin-slow"></i>
-        <h2 class="mt-6 font-header text-3xl font-bold uppercase tracking-widest text-brand-black">Astana Jas</h2>
+  <!-- Preloader -->
+  <div id="preloader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-700">
+    <div class="relative w-20 h-20 mb-6">
+      <div class="absolute inset-0 rounded-full border-2 border-brand-gold/40 animate-pulse"></div>
+      <div class="absolute inset-2 rounded-full border-2 border-brand-black/10"></div>
+      <i class="fas fa-futbol text-5xl text-brand-black absolute inset-0 flex items-center justify-center animate-spin-slow"></i>
+    </div>
+    <h2 class="font-header text-3xl font-bold uppercase tracking-widest text-brand-black">Astana Jas</h2>
+    <p class="text-xs mt-2 uppercase tracking-[0.35em] text-gray-400 font-bold">Elite Football Academy</p>
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+    <div class="hidden md:block bg-brand-black text-white text-xs py-2">
+      <div class="container mx-auto px-6 flex justify-between items-center">
+        <div class="flex gap-6 opacity-90">
+          <span><i class="fas fa-map-marker-alt text-brand-gold mr-2"></i> Астана</span>
+          <span><i class="far fa-clock text-brand-gold mr-2"></i> 09:00 - 21:00</span>
+        </div>
+        <div class="flex gap-4">
+          <a href="https://wa.me/77019744464" class="hover:text-brand-gold" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
     </div>
 
-    <nav class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="navbar">
-        <div class="hidden md:block bg-brand-black text-white text-xs py-2">
-            <div class="container mx-auto px-6 flex justify-between items-center">
-                <div class="flex gap-6 opacity-80">
-                    <span><i class="fas fa-map-marker-alt text-brand-gold mr-2"></i> Астана</span>
-                    <span><i class="far fa-clock text-brand-gold mr-2"></i> 09:00 - 21:00</span>
-                </div>
-                <div class="flex gap-4">
-                    <a href="https://wa.me/77019744464" class="hover:text-brand-gold" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
+    <div id="navShell" class="bg-white/70 backdrop-blur-xl border-b border-white/20">
+      <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#" class="flex items-center gap-4 group">
+          <div class="w-12 h-12 relative shrink-0">
+            <img src="images/logo.png"
+                 onerror="this.src='logo.png'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex'}"
+                 class="w-full h-full object-contain" alt="Logo">
+            <div class="img-box rounded-full border-none bg-transparent text-black" style="display:none;"><i class="fas fa-shield-alt"></i></div>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-header text-xl md:text-2xl font-bold uppercase tracking-tighter leading-none text-brand-black">Astana Jas</span>
+            <span class="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500">Football School</span>
+          </div>
+        </a>
+
+        <div class="hidden lg:flex items-center gap-8 font-header text-lg font-medium uppercase tracking-wide text-brand-black">
+          <a href="#about" class="hover:text-brand-gold transition">О клубе</a>
+          <a href="#programs" class="hover:text-brand-gold transition">Программы</a>
+          <a href="#kit" class="hover:text-brand-gold transition">Форма</a>
+          <a href="#team" class="hover:text-brand-gold transition">Тренеры</a>
+          <a href="#locations" class="hover:text-brand-gold transition">Контакты</a>
         </div>
 
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="flex items-center gap-4 group">
-                <div class="w-12 h-12 relative shrink-0">
-                    <img src="images/logo.png"
-                         onerror="this.src='logo.png'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex'}"
-                         class="w-full h-full object-contain" alt="Logo">
-                    <div class="img-box rounded-full border-none bg-transparent text-black" style="display:none;"><i class="fas fa-shield-alt"></i></div>
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-header text-xl md:text-2xl font-bold uppercase tracking-tighter leading-none text-black">Astana Jas</span>
-                    <span class="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400">Football School</span>
-                </div>
-            </a>
+        <div class="flex items-center gap-4">
+          <a href="https://wa.me/77019744464"
+             class="hidden md:flex btn-main bg-brand-black text-white px-6 py-2 font-header text-lg uppercase tracking-wider hover:bg-brand-gold hover:text-black items-center gap-2 shadow-lg">
+            Записаться
+          </a>
 
-            <div class="hidden lg:flex items-center gap-8 font-header text-lg font-medium uppercase tracking-wide">
-                <a href="#about" class="hover:text-brand-gold transition">О клубе</a>
-                <a href="#programs" class="hover:text-brand-gold transition">Программы</a>
-                <a href="#kit" class="hover:text-brand-gold transition">Форма</a>
-                <a href="#team" class="hover:text-brand-gold transition">Тренеры</a>
-                <a href="#locations" class="hover:text-brand-gold transition">Контакты</a>
-            </div>
+          <button onclick="toggleMenu()" class="lg:hidden text-3xl text-brand-black p-2" aria-label="Открыть меню">
+            <i class="fas fa-bars" id="menu-icon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-            <div class="flex items-center gap-4">
-                <a href="https://wa.me/77019744464" class="hidden md:flex btn-main bg-brand-black text-white px-6 py-2 font-header text-lg uppercase tracking-wider hover:bg-brand-gold hover:text-black items-center gap-2">
-                    Записаться
-                </a>
-                <button onclick="toggleMenu()" class="lg:hidden text-3xl text-brand-black p-2" aria-label="Открыть меню">
-                    <i class="fas fa-bars" id="menu-icon"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <div id="mobile-menu" class="fixed inset-0 z-40 bg-white translate-x-full transition-transform duration-500 flex flex-col pt-32 px-8">
-        <div class="flex flex-col gap-6 font-header text-3xl uppercase font-bold text-brand-black">
-            <a href="#about" onclick="toggleMenu(true)">О Клубе</a>
-            <a href="#programs" onclick="toggleMenu(true)">Программы</a>
-            <a href="#kit" onclick="toggleMenu(true)">Форма</a>
-            <a href="#team" onclick="toggleMenu(true)">Тренеры</a>
-            <a href="#locations" onclick="toggleMenu(true)">Локации</a>
-        </div>
-        <div class="mt-auto mb-10">
-            <a href="https://wa.me/77019744464" class="btn-main w-full py-4 bg-brand-gold text-black font-header uppercase text-xl text-center block rounded-none">
-                WhatsApp
-            </a>
-        </div>
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed inset-0 z-40 bg-white translate-x-full transition-transform duration-500 flex flex-col pt-28 px-8">
+    <div class="flex items-center gap-3 pb-8 border-b border-gray-100">
+      <div class="w-10 h-10">
+        <img src="images/logo.png" class="w-full h-full object-contain" alt="Logo">
+      </div>
+      <div class="flex flex-col">
+        <span class="font-header text-2xl uppercase font-bold text-brand-black leading-none">Astana Jas</span>
+        <span class="text-[10px] uppercase tracking-[0.35em] text-gray-400 font-bold">Menu</span>
+      </div>
     </div>
 
-    <header class="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden bg-black">
-        <div class="absolute inset-0 z-0">
-            <!-- Постер для mobile/reduced-motion (покажем через JS) -->
-            <img id="heroPoster" src="images/hero_poster.jpg"
-                 class="absolute w-full h-full object-cover object-top"
-                 alt="Hero poster" style="display:none;" loading="eager" decoding="async">
+    <div class="mt-8 flex flex-col gap-6 font-header text-3xl uppercase font-bold text-brand-black">
+      <a href="#about" onclick="toggleMenu(true)">О клубе</a>
+      <a href="#programs" onclick="toggleMenu(true)">Программы</a>
+      <a href="#kit" onclick="toggleMenu(true)">Форма</a>
+      <a href="#team" onclick="toggleMenu(true)">Тренеры</a>
+      <a href="#locations" onclick="toggleMenu(true)">Контакты</a>
+    </div>
 
-            <video id="heroVideo" autoplay muted loop playsinline preload="metadata"
-                   poster="images/hero_poster.jpg"
-                   class="absolute w-full h-full object-cover object-top opacity-100">
-                <source src="video/hero.mp4" type="video/mp4">
-            </video>
+    <div class="mt-auto mb-10 space-y-3">
+      <a href="https://wa.me/77019744464" class="btn-main w-full py-4 bg-brand-gold text-black font-header uppercase text-xl text-center block rounded-none shadow-xl">
+        WhatsApp
+      </a>
+      <button onclick="toggleMenu(true)" class="w-full py-3 border border-gray-200 text-gray-600 font-bold uppercase tracking-widest text-xs">
+        Закрыть
+      </button>
+    </div>
+  </div>
 
-            <div class="img-box absolute inset-0 z-[-1] border-none bg-gray-900 text-white">
-                <i class="fas fa-video text-4xl"></i> video/hero.mp4
+  <!-- Hero -->
+  <header class="relative min-h-screen flex items-center justify-center overflow-hidden bg-black noise">
+    <div class="absolute inset-0 z-0">
+      <img id="heroPoster" src="images/hero_poster.jpg" class="absolute w-full h-full object-cover object-top" alt="Hero poster" style="display:none;" loading="eager" decoding="async">
+
+      <video id="heroVideo" autoplay muted loop playsinline preload="metadata" poster="images/hero_poster.jpg"
+             class="absolute w-full h-full object-cover object-top">
+        <source src="video/hero.mp4" type="video/mp4">
+      </video>
+
+      <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-black/85"></div>
+      <div class="absolute inset-0" style="background: radial-gradient(60% 50% at 50% 20%, rgba(255,215,0,0.18), transparent 60%);"></div>
+
+      <div class="img-box absolute inset-0 z-[-1] border-none bg-gray-900 text-white">
+        <i class="fas fa-video text-4xl"></i> video/hero.mp4
+      </div>
+    </div>
+
+    <div class="container mx-auto px-6 relative z-10 pt-24 pb-20">
+      <div class="grid lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7">
+          <div class="reveal inline-flex items-center gap-3 py-2 px-4 border border-white/20 text-white text-xs md:text-sm font-bold uppercase tracking-[0.25em] mb-6 backdrop-blur-md bg-white/5 shadow-lg">
+            <span class="w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
+            Season 2025/2026
+          </div>
+
+          <h1 class="reveal font-header font-bold text-6xl md:text-[7.2vw] leading-[0.9] uppercase text-white mb-6 text-shadow-hero">
+            Astana <span class="text-brand-gold">Jas</span>
+          </h1>
+
+          <p class="reveal text-lg md:text-2xl text-gray-100 font-light max-w-2xl mb-10 text-shadow-hero">
+            Воспитываем характер. Создаем чемпионов.
+            <br><span class="font-bold text-white">История большого футбола начинается здесь.</span>
+          </p>
+
+          <div class="reveal flex flex-col sm:flex-row gap-4">
+            <a href="#programs" class="btn-main bg-brand-gold text-brand-black px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-white hover:text-black shadow-deep">
+              Выбрать программу
+            </a>
+            <a href="https://wa.me/77019744464" class="btn-main bg-white/10 backdrop-blur-md text-white px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-brand-black hover:text-white border border-white/20 shadow-deep">
+              Записаться в WhatsApp
+            </a>
+          </div>
+
+          <div class="reveal mt-10 grid sm:grid-cols-3 gap-3">
+            <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4">
+              <p class="text-[10px] uppercase tracking-[0.3em] text-gray-200 font-bold">Возраст</p>
+              <p class="mt-1 font-header text-2xl uppercase text-white font-bold">5–14</p>
             </div>
-            <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60"></div>
+            <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4">
+              <p class="text-[10px] uppercase tracking-[0.3em] text-gray-200 font-bold">Локации</p>
+              <p class="mt-1 font-header text-2xl uppercase text-white font-bold">2 школы</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4">
+              <p class="text-[10px] uppercase tracking-[0.3em] text-gray-200 font-bold">Фокус</p>
+              <p class="mt-1 font-header text-2xl uppercase text-white font-bold">Pro Path</p>
+            </div>
+          </div>
         </div>
 
-        <div class="container mx-auto px-6 relative z-10 pt-10 text-center">
-            <span class="inline-block py-2 px-4 border border-white text-white text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-6 backdrop-blur-md bg-black/30 shadow-lg" data-aos="fade-down">
-                Season 2025/2026
-            </span>
-            <h1 class="font-header font-bold text-6xl md:text-[9vw] leading-[0.9] uppercase text-white mb-6 text-shadow-hero" data-aos="zoom-in">
-                Astana <span class="text-brand-gold">Jas</span>
-            </h1>
-            <p class="text-lg md:text-2xl text-gray-100 font-light max-w-2xl mx-auto mb-10 text-shadow-hero" data-aos="fade-up">
-                Воспитываем характер. Создаем чемпионов. <br>
-                <span class="font-bold text-white">История большого футбола начинается здесь.</span>
-            </p>
-            <div class="flex flex-col md:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
-                <a href="#locations" class="btn-main bg-brand-gold text-brand-black px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-white hover:text-black shadow-xl">
-                    Найти школу
+        <div class="lg:col-span-5">
+          <div class="reveal bg-white/10 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 md:p-8 shadow-deep">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <p class="text-[10px] uppercase tracking-[0.35em] text-gray-200 font-bold">Fast Entry</p>
+                <h3 class="font-header text-3xl uppercase font-bold text-white">Запись за 30 секунд</h3>
+              </div>
+              <div class="w-12 h-12 rounded-2xl bg-brand-gold/20 border border-brand-gold/30 flex items-center justify-center">
+                <i class="fas fa-bolt text-brand-gold"></i>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <button onclick="waPrefill('Здравствуйте! Хочу записать ребенка на пробную тренировку. Подскажите расписание и локации.')"
+                      class="w-full btn-main bg-brand-gold text-black py-4 font-header uppercase text-lg tracking-wider shadow-xl">
+                Пробная тренировка
+              </button>
+
+              <button onclick="waPrefill('Здравствуйте! Интересует программа и стоимость. Ребенок: возраст __ лет. Локация: __.')"
+                      class="w-full btn-main bg-brand-black text-white py-4 font-header uppercase text-lg tracking-wider shadow-xl hover:bg-white hover:text-black">
+                Узнать стоимость
+              </button>
+
+              <div class="grid grid-cols-2 gap-3 pt-2">
+                <div class="rounded-2xl p-4 bg-white/5 border border-white/10">
+                  <p class="text-[10px] uppercase tracking-[0.35em] text-gray-300 font-bold">Менеджер</p>
+                  <p class="mt-1 font-header text-xl uppercase text-white font-bold">Руслан</p>
+                </div>
+                <a href="tel:+77019744464" class="rounded-2xl p-4 bg-white/5 border border-white/10 hover:border-brand-gold/40 transition">
+                  <p class="text-[10px] uppercase tracking-[0.35em] text-gray-300 font-bold">Телефон</p>
+                  <p class="mt-1 font-header text-xl uppercase text-white font-bold">+7 701 974 44 64</p>
                 </a>
-                <a href="https://wa.me/77019744464" class="btn-main bg-brand-black text-white px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-brand-gold hover:text-black shadow-xl">
-                    WhatsApp
-                </a>
+              </div>
+
+              <p class="text-xs text-gray-300 pt-3 leading-relaxed">
+                Мы ответим быстро и подберем удобное расписание.
+              </p>
             </div>
+          </div>
+
+          <div class="reveal mt-6 flex items-center gap-3 text-white/70 text-xs uppercase tracking-[0.35em] font-bold">
+            <span class="w-10 h-[2px] bg-brand-gold"></span>
+            Elite Standard • Discipline • Growth
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
 
-    <section id="about" class="py-20 bg-brand-gray overflow-hidden">
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/70 text-xs uppercase tracking-[0.35em] font-bold">
+      <a href="#about" class="inline-flex items-center gap-2 hover:text-brand-gold transition">
+        <span>Scroll</span>
+        <i class="fas fa-arrow-down"></i>
+      </a>
+    </div>
+  </header>
 
-                <div data-aos="fade-right" class="order-2 lg:order-1">
-                    <h4 class="text-brand-gold font-bold uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
-                        <span class="w-8 h-1 bg-brand-gold"></span> Философия
-                    </h4>
-                    <h2 class="font-header text-4xl md:text-6xl font-bold uppercase text-brand-black leading-tight mb-6">
-                        Больше чем <br> Просто Игра
-                    </h2>
-                    <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-8 border-l-4 border-brand-gold pl-6">
-                        Быть лучшим футбольным клубом, несущим историю казахстанского футбола. Мы создаем комплексные условия для прогресса и имеем культурную ценность для общества.
-                    </p>
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="bg-white p-5 shadow-sm rounded-xl border border-gray-100">
-                            <h4 class="font-header text-lg uppercase font-bold mb-1"><i class="fas fa-heart text-brand-black mr-2"></i>Ценности</h4>
-                            <p class="text-sm text-gray-500">Принципы честной борьбы. Семья.</p>
-                        </div>
-                    </div>
-                </div>
+  <!-- About -->
+  <section id="about" class="relative py-20 bg-white">
+    <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(180deg, rgba(255,215,0,0.06), transparent 35%);"></div>
+    <div class="container mx-auto px-6 relative">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-6 reveal">
+          <div class="inline-flex items-center gap-3 text-xs uppercase tracking-[0.35em] font-bold text-gray-500">
+            <span class="w-10 h-[2px] bg-brand-gold"></span> Философия
+          </div>
+          <h2 class="mt-3 font-header text-4xl md:text-6xl font-bold uppercase text-brand-black leading-tight">
+            Больше чем <span class="text-brand-gold">просто</span> игра
+          </h2>
+          <p class="mt-6 text-gray-600 text-base md:text-lg leading-relaxed border-l-4 border-brand-gold pl-6">
+            Мы создаем комплексные условия для прогресса: техника, дисциплина, тактическое мышление и уверенность.
+            Наша цель — воспитать сильных игроков и сильных людей.
+          </p>
 
-                <div class="order-1 lg:order-2 relative w-full" data-aos="fade-left">
-                    <div class="relative p-3 md:p-4">
-                        <div class="absolute inset-0 bg-brand-gold transform rotate-2 rounded-3xl z-0"></div>
-                        <div class="relative bg-white p-2 rounded-3xl shadow-frame z-10">
-                            <img src="images/loc1.jpg" loading="lazy" decoding="async"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                                 class="w-full h-auto rounded-2xl block relative z-20" alt="Команда">
-                            <div class="img-box rounded-2xl bg-gray-100 z-10">
-                                <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
-                                <span>Нет фото: images/loc1.jpg</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+          <div class="mt-8 grid sm:grid-cols-2 gap-4">
+            <div class="rounded-2xl border border-gray-100 bg-white shadow-sm p-5">
+              <p class="text-xs uppercase tracking-[0.35em] font-bold text-gray-400">Ценности</p>
+              <p class="mt-2 font-header text-2xl uppercase font-bold text-brand-black">Честность • Семья</p>
+              <p class="mt-2 text-sm text-gray-500">Принципы честной борьбы и уважение к команде.</p>
             </div>
+            <div class="rounded-2xl border border-gray-100 bg-white shadow-sm p-5">
+              <p class="text-xs uppercase tracking-[0.35em] font-bold text-gray-400">Формат</p>
+              <p class="mt-2 font-header text-2xl uppercase font-bold text-brand-black">Техника + Тактика</p>
+              <p class="mt-2 text-sm text-gray-500">Движение, мышление и игровая практика.</p>
+            </div>
+          </div>
         </div>
-    </section>
 
-    <section id="process" class="py-24 bg-white relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-32 h-32 bg-brand-gold/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-64 h-64 bg-brand-black/5 rounded-full blur-3xl"></div>
+        <div class="lg:col-span-6 reveal">
+          <div class="relative">
+            <div class="absolute -inset-2 rounded-[2.2rem] bg-brand-gold/20 blur-2xl"></div>
+            <div class="relative rounded-[2.2rem] overflow-hidden shadow-deep border border-gray-100 bg-white">
+              <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(70% 60% at 60% 40%, rgba(255,215,0,0.18), transparent 60%);"></div>
+              <img src="images/loc1.jpg" loading="lazy" decoding="async"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                   class="w-full h-auto object-cover" alt="Команда">
+              <div class="img-box bg-gray-100">
+                <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                <span>Нет фото: images/loc1.jpg</span>
+              </div>
 
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="text-center mb-20" data-aos="fade-up">
-                <span class="text-brand-gold font-bold uppercase tracking-[0.2em] text-sm">Road to Pro</span>
-                <h2 class="font-header text-4xl md:text-6xl font-bold uppercase text-brand-black mt-2">
-                    Путь <span class="text-brand-gold">Чемпиона</span>
-                </h2>
-            </div>
-
-            <div class="relative">
-                <div class="hidden md:block absolute top-12 left-[10%] w-[80%] h-1 bg-gray-100 z-0"></div>
-                <div class="hidden md:block absolute top-12 left-[10%] w-[80%] h-1 border-t-2 border-dashed border-brand-gold/50 z-0"></div>
-                <div class="md:hidden absolute top-0 left-8 h-full w-1 border-l-2 border-dashed border-brand-gold/30 z-0"></div>
-
-                <div class="grid md:grid-cols-3 gap-12 md:gap-6 relative z-10">
-                    <div class="group relative flex md:flex-col items-center md:text-center gap-6 md:gap-0" data-aos="fade-up" data-aos-delay="0">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white border-4 border-gray-100 rounded-full flex items-center justify-center shrink-0 shadow-lg group-hover:border-brand-gold group-hover:scale-110 transition duration-500 relative z-20">
-                            <i class="fas fa-child text-2xl md:text-4xl text-gray-300 group-hover:text-brand-black group-hover:animate-bounce"></i>
-                        </div>
-                        <div class="md:mt-8 pt-2">
-                            <div class="inline-block px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-widest rounded-full mb-3 group-hover:bg-brand-gold group-hover:text-black transition">
-                                5-7 Лет
-                            </div>
-                            <h3 class="font-header text-3xl uppercase font-bold text-brand-black mb-2">Start</h3>
-                            <p class="text-sm text-gray-500 max-w-xs mx-auto">
-                                Развитие ловкости, координации и любви к мячу. Первые шаги в большой игре.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="group relative flex md:flex-col items-center md:text-center gap-6 md:gap-0" data-aos="fade-up" data-aos-delay="200">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-brand-gold border-4 border-brand-gold/30 rounded-full flex items-center justify-center shrink-0 shadow-xl shadow-brand-gold/30 scale-110 relative z-20">
-                            <i class="fas fa-futbol text-2xl md:text-4xl text-brand-black animate-spin-slow"></i>
-                        </div>
-                        <div class="md:mt-8 pt-2">
-                            <div class="inline-block px-3 py-1 bg-brand-black text-brand-gold text-[10px] font-bold uppercase tracking-widest rounded-full mb-3">
-                                8-10 Лет
-                            </div>
-                            <h3 class="font-header text-3xl uppercase font-bold text-brand-black mb-2">Progress</h3>
-                            <p class="text-sm text-gray-600 max-w-xs mx-auto font-medium">
-                                Техническая база, понимание тактики и командные взаимодействия.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="group relative flex md:flex-col items-center md:text-center gap-6 md:gap-0" data-aos="fade-up" data-aos-delay="400">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white border-4 border-gray-100 rounded-full flex items-center justify-center shrink-0 shadow-lg group-hover:border-brand-gold group-hover:scale-110 transition duration-500 relative z-20">
-                            <i class="fas fa-trophy text-2xl md:text-4xl text-gray-300 group-hover:text-brand-gold group-hover:animate-bounce"></i>
-                        </div>
-                        <div class="md:mt-8 pt-2">
-                            <div class="inline-block px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-widest rounded-full mb-3 group-hover:bg-brand-gold group-hover:text-black transition">
-                                11-14 Лет
-                            </div>
-                            <h3 class="font-header text-3xl uppercase font-bold text-brand-black mb-2">Team</h3>
-                            <p class="text-sm text-gray-500 max-w-xs mx-auto">
-                                Соревновательный уровень. Участие в турнирах и подготовка к профессиональному спорту.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center mt-16" data-aos="fade-up" data-aos-delay="500">
-                    <a href="#programs" class="inline-flex items-center gap-2 border-b-2 border-brand-black pb-1 font-header text-xl uppercase font-bold hover:text-brand-gold hover:border-brand-gold transition">
-                        Выбрать программу <i class="fas fa-arrow-right text-sm"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="programs" class="py-20 bg-gray-50 border-t border-gray-100">
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="text-center mb-12">
-                <h2 class="font-header text-4xl md:text-5xl font-bold uppercase text-brand-black mb-4">Наши <span class="text-brand-gold">Программы</span></h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Мы предлагаем тренировки по футболу для детей любого уровня подготовки. Подберем для вас удобное расписание.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto">
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col h-full border border-gray-100">
-                    <div class="h-64 relative bg-gray-200">
-                        <img src="images/prog_baby.jpg" loading="lazy" decoding="async"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                             class="w-full h-full object-cover" alt="Baby start">
-                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
-                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
-                            <span class="text-gray-500 font-bold">images/prog_baby.jpg</span>
-                        </div>
-                    </div>
-                    <div class="bg-brand-gold p-4 md:p-6 flex-grow flex flex-col justify-center text-center">
-                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-4 bg-brand-gold">
-                            <h3 class="font-header text-xl md:text-2xl uppercase font-bold mb-4 break-words hyphens-auto">Программа baby start</h3>
-                            <ul class="text-sm font-bold text-brand-black space-y-2 mb-4">
-                                <li>Набор в группы: 2017-19 г.р.</li>
-                                <li>2 раза в неделю: Суббота-Воскресенье</li>
-                                <li>Время: 11:00-12:00</li>
-                                <li class="text-xs font-normal opacity-80">(В расписании возможны изменения)</li>
-                            </ul>
-                            <p class="text-xl font-header font-bold mt-auto">Стоимость 25.000 тг</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col h-full border border-gray-100">
-                    <div class="h-64 relative bg-gray-200">
-                        <img src="images/prog_weekend.jpg" loading="lazy" decoding="async"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                             class="w-full h-full object-cover" alt="Weekend groups">
-                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
-                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
-                            <span class="text-gray-500 font-bold">images/prog_weekend.jpg</span>
-                        </div>
-                    </div>
-                    <div class="bg-brand-gold p-4 md:p-6 flex-grow flex flex-col justify-center text-center">
-                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-4 bg-brand-gold">
-                            <h3 class="font-header text-xl md:text-2xl uppercase font-bold mb-4 break-words hyphens-auto">Группы выходного дня</h3>
-                            <ul class="text-sm font-bold text-brand-black space-y-2 mb-4">
-                                <li>Набор в группы: 2013-14 г.р., 2015-16 г.р.</li>
-                                <li>2 раза в неделю: Суббота-Воскресенье</li>
-                                <li>Время: 10:00-11:00</li>
-                                <li class="text-xs font-normal opacity-80">(В расписании возможны изменения)</li>
-                            </ul>
-                            <p class="text-xl font-header font-bold mt-auto">Стоимость 25.000 тг</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col h-full border border-gray-100">
-                    <div class="h-64 relative bg-gray-200">
-                        <img src="images/prog_spec.jpg" loading="lazy" decoding="async"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                             class="w-full h-full object-cover" alt="Spec group">
-                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
-                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
-                            <span class="text-gray-500 font-bold">images/prog_spec.jpg</span>
-                        </div>
-                    </div>
-                    <div class="bg-brand-gold p-4 md:p-6 flex-grow flex flex-col justify-center text-center">
-                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-4 bg-brand-gold">
-                            <h3 class="font-header text-xl md:text-2xl uppercase font-bold mb-4 break-words">Спецгруппа</h3>
-                            <ul class="text-sm font-bold text-brand-black space-y-2 mb-4">
-                                <li>Набор в группы: 2010-11, 2012-13, 2014-16 г.р.</li>
-                                <li>3 раза в неделю + matchday</li>
-                                <li>Участие в городских и республиканских соревнованиях</li>
-                            </ul>
-                            <p class="text-xl font-header font-bold mt-auto">Стоимость 30.000 тг</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col h-full border border-gray-100">
-                    <div class="h-64 relative bg-gray-200">
-                        <img src="images/prog_small.jpg" loading="lazy" decoding="async"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                             class="w-full h-full object-cover" alt="Small groups">
-                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
-                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
-                            <span class="text-gray-500 font-bold">images/prog_small.jpg</span>
-                        </div>
-                    </div>
-                    <div class="bg-brand-gold p-4 md:p-6 flex-grow flex flex-col justify-center text-center">
-                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-4 bg-brand-gold">
-                            <h3 class="font-header text-lg md:text-xl uppercase font-bold mb-4 leading-tight break-words">Индивидуальная тренировка в малых группах</h3>
-                            <ul class="text-sm font-bold text-brand-black space-y-2 mb-4 list-disc list-inside text-left">
-                                <li>В группе не больше 5 человек</li>
-                                <li>Грамотно выстроенный процесс</li>
-                                <li>Разнообразие тренировок по технике</li>
-                                <li>Высокоэффективные тренировки</li>
-                                <li>8 тренировок в месяц</li>
-                            </ul>
-                            <p class="text-xl font-header font-bold mt-auto">Стоимость от 50.000 тг</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="md:col-span-2 bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col border border-gray-100">
-                    <div class="h-64 md:h-80 relative bg-gray-200">
-                        <img src="images/prog_indiv.jpg" loading="lazy" decoding="async"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                             class="w-full h-full object-cover" alt="Indiv">
-                        <div class="img-box bg-gray-200 border-dashed border-4 border-white flex flex-col items-center justify-center" style="display:none;">
-                            <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
-                            <span class="text-gray-500 font-bold">images/prog_indiv.jpg</span>
-                        </div>
-                    </div>
-                    <div class="bg-brand-gold p-4 md:p-8 text-center">
-                        <div class="border-2 border-brand-black/10 rounded-lg p-3 md:p-6 bg-brand-gold max-w-2xl mx-auto">
-                            <h3 class="font-header text-lg sm:text-xl md:text-3xl uppercase font-bold mb-4 md:mb-6 leading-tight break-words hyphens-auto">
-                                Индивидуальная работа с тренером 1x1
-                            </h3>
-                            <div class="text-sm font-bold text-brand-black space-y-4 mb-6">
-                                <div>
-                                    <p class="uppercase mb-1 underline">Расписание:</p>
-                                    <p>Понедельник — Четверг: 11:30-12:30 и 15:30-16:30</p>
-                                    <p>Вторник-Четверг: 11:30-12:30 и 15:30-16:30</p>
-                                    <p>Среда-Пятница: 11:30-12:30 и 15:30-16:30</p>
-                                </div>
-                                <div>
-                                    <p class="uppercase mb-1 underline">Что входит в стоимость?</p>
-                                    <p>Работа над ошибками • Современный инвентарь</p>
-                                    <p>Хорошее поле (раздевалки, душевые) • Видеосъемка тренировок</p>
-                                </div>
-                            </div>
-                            <p class="text-xl md:text-2xl font-header font-bold">Стоимость : от 80.000 тг</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section id="kit" class="py-16 md:py-24 bg-white border-t border-gray-100">
-        <div class="container mx-auto px-6 md:px-12">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <span class="text-brand-gold font-bold uppercase tracking-[0.2em] text-[10px]">Elite Gear</span>
-                <h2 class="font-header text-4xl md:text-6xl font-bold uppercase text-brand-black mt-2">
-                    Клубная <span class="text-brand-gold">Форма</span>
-                </h2>
-            </div>
-
-            <div class="max-w-4xl mx-auto" data-aos="zoom-in">
-                <div class="bg-gray-50 rounded-[2rem] p-4 md:p-10 mb-8 cursor-pointer group relative overflow-hidden shadow-sm" onclick="openLightbox('images/kit.jpg?v=4')">
-                    <img src="images/kit.jpg?v=4"
-                         onerror="this.src='https://via.placeholder.com/800x600?text=Jersey+Preview'"
-                         class="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-[0_30px_60px_rgba(0,0,0,0.12)]"
-                         alt="Jersey Design" loading="lazy" decoding="async">
-
-                    <div class="absolute bottom-6 right-6 bg-white/80 backdrop-blur-md p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i class="fas fa-expand-alt text-brand-black"></i>
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-brand-black p-8 rounded-[1.5rem] text-white">
-                        <div class="flex items-center gap-4 mb-4">
-                            <i class="fas fa-medal text-brand-gold text-xl"></i>
-                            <h4 class="font-header text-lg uppercase font-bold tracking-wide">Дизайн</h4>
-                        </div>
-                        <p class="text-gray-400 text-sm leading-relaxed">Эксклюзивный паттерн с использованием национального казахского орнамента.</p>
-                    </div>
-
-                    <div class="bg-brand-black p-8 rounded-[1.5rem] text-white">
-                        <div class="flex items-center gap-4 mb-4">
-                            <i class="fas fa-bolt text-brand-gold text-xl"></i>
-                            <h4 class="font-header text-lg uppercase font-bold tracking-wide">Материал</h4>
-                        </div>
-                        <p class="text-gray-400 text-sm leading-relaxed">Высокотехнологичный полиэстер PRO-Fit: дышит и мгновенно отводит влагу.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="team" class="py-20 bg-white border-t border-gray-200">
-        <div class="container mx-auto px-2 md:px-6">
-            <h3 class="font-header text-4xl md:text-5xl font-bold uppercase text-brand-black text-center mb-10">
-                Тренерский Штаб
-            </h3>
-
-            <div class="relative w-full rounded-2xl overflow-hidden shadow-xl" data-aos="fade-up">
-                <img src="images/team_full.jpg" loading="lazy" decoding="async"
-                     onerror="this.src='team_full.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex'}"
-                     class="w-full h-auto object-contain block"
-                     alt="Тренерский штаб">
-
-                <div class="img-box bg-gray-100 flex flex-col items-center justify-center min-h-[300px]" style="display:none;">
-                    <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
-                    <span class="text-red-500 font-bold">Загрузите фото: images/team_full.jpg</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-16 bg-white border-t">
-        <div class="container mx-auto px-6 text-center">
-            <h3 class="font-header text-xl uppercase text-gray-400 mb-8 tracking-widest">Partners</h3>
-            <div class="flex flex-wrap justify-center items-center gap-12">
-                <div class="w-40 h-20 relative flex justify-center items-center">
-                    <img src="images/tehpro.png" loading="lazy" decoding="async"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                         class="w-full h-full object-contain transition hover:scale-110" alt="Tehpro">
-                    <div class="img-box border-none bg-white text-xs hidden flex-col items-center justify-center absolute inset-0">
-                        <i class="fas fa-times mb-1"></i> Нет images/tehpro.png
-                    </div>
-                </div>
-
-                <div class="w-40 h-20 relative flex justify-center items-center">
-                    <img src="images/zhenis.png" loading="lazy" decoding="async"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                         class="w-full h-full object-contain transition hover:scale-110" alt="Zhenis">
-                    <div class="img-box border-none bg-white text-xs hidden flex-col items-center justify-center absolute inset-0">
-                        <i class="fas fa-times mb-1"></i> Нет images/zhenis.png
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-8 inline-block px-8 py-3 bg-gray-50 rounded-full border border-gray-200">
-                <p class="text-xs font-bold text-gray-500 uppercase tracking-wide">
-                    <i class="fas fa-handshake text-brand-black mr-2"></i> Меморандум о сотрудничестве с ПФК «Жеңіс»
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="locations" class="py-20 bg-brand-black text-white">
-        <div class="container mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-10">
-                <div data-aos="fade-right">
-                    <h2 class="font-header text-5xl uppercase mb-8">Контакты <span class="text-brand-gold">Клуба</span></h2>
-                    <div class="space-y-4 mb-8">
-                        <div class="p-5 border border-white/10 rounded-lg">
-                            <h3 class="font-header text-xl uppercase mb-1">Школа №11</h3>
-                            <p class="text-gray-400 text-sm">им. Өзбекәлі Жәнібекова</p>
-                        </div>
-                        <div class="p-5 border border-white/10 rounded-lg">
-                            <h3 class="font-header text-xl uppercase mb-1">Школа №71</h3>
-                            <p class="text-gray-400 text-sm">Астана, ул. Е-10</p>
-                        </div>
-                    </div>
+              <div class="absolute bottom-5 left-5 right-5">
+                <div class="bg-white/85 backdrop-blur-xl rounded-2xl border border-white/50 p-5 shadow-lg">
+                  <div class="flex items-start justify-between gap-4">
                     <div>
-                        <p class="text-xs text-brand-gold uppercase tracking-widest font-bold mb-1">Менеджер Руслан</p>
-                        <a href="tel:+77019744464" class="text-3xl font-header font-bold block mb-6">+7 701 974 44 64</a>
-                        <a href="https://wa.me/77019744464" class="btn-main w-full py-4 bg-brand-gold text-black text-center font-header text-xl uppercase tracking-wider block">
-                            Написать в WhatsApp
-                        </a>
+                      <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-500">Elite Metric</p>
+                      <p class="mt-1 font-header text-2xl uppercase font-bold text-brand-black">Динамика прогресса</p>
+                      <p class="mt-2 text-sm text-gray-600">Структура тренировок, цельность нагрузки и рост дисциплины.</p>
                     </div>
+                    <div class="w-12 h-12 rounded-2xl bg-brand-black text-white flex items-center justify-center shrink-0">
+                      <i class="fas fa-chart-line text-brand-gold"></i>
+                    </div>
+                  </div>
+
+                  <!-- counters -->
+                  <div class="mt-4 grid grid-cols-3 gap-3">
+                    <div class="rounded-xl bg-gray-50 border border-gray-100 p-3 text-center">
+                      <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-400">Тренировок/мес</p>
+                      <p class="mt-1 font-header text-2xl font-bold text-brand-black">
+                        <span class="counter" data-target="8">0</span>
+                      </p>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 border border-gray-100 p-3 text-center">
+                      <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-400">Групп</p>
+                      <p class="mt-1 font-header text-2xl font-bold text-brand-black">
+                        <span class="counter" data-target="6">0</span>
+                      </p>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 border border-gray-100 p-3 text-center">
+                      <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-400">Локации</p>
+                      <p class="mt-1 font-header text-2xl font-bold text-brand-black">
+                        <span class="counter" data-target="2">0</span>
+                      </p>
+                    </div>
+                  </div>
+
                 </div>
-                <div class="h-[400px] bg-white rounded-2xl overflow-hidden relative shadow-2xl" data-aos="fade-left">
-                    <div id="map" class="w-full h-full z-10"></div>
-                </div>
+              </div>
+
             </div>
-        </div>
-    </section>
-
-    <footer class="relative bg-black text-white pt-16 pb-12 border-t border-white/10 overflow-hidden">
-        <div class="absolute inset-0 z-0 md:hidden">
-            <img src="images/footer_bg.jpg"
-                 loading="lazy" decoding="async"
-                 onerror="this.src='https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1000&auto=format&fit=crop'; this.style.opacity='0.2'"
-                 class="w-full h-full object-cover opacity-30" alt="Footer Background">
+          </div>
         </div>
 
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <div class="flex flex-col items-center gap-6 mb-10">
-                <div class="w-20 h-20 relative group cursor-pointer" onclick="openLightbox('images/logo.png')">
-                    <img src="images/logo.png" class="w-full h-full object-contain" alt="Logo" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </section>
+
+  <!-- Programs -->
+  <section id="programs" class="py-20 bg-brand-gray">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Programs</p>
+        <h2 class="mt-2 font-header text-4xl md:text-6xl font-bold uppercase text-brand-black">
+          Наши <span class="text-brand-gold">программы</span>
+        </h2>
+        <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+          Выбирайте формат по возрасту и уровню подготовки. Для каждой программы — быстрый WhatsApp-запрос одним кликом.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-12 gap-6 max-w-6xl mx-auto">
+
+        <!-- Card 1 -->
+        <div class="lg:col-span-6 reveal">
+          <div class="group rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition">
+            <div class="relative h-64 bg-gray-200">
+              <img src="images/prog_baby.jpg" loading="lazy" decoding="async"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                   class="w-full h-full object-cover" alt="Программа baby start">
+              <div class="img-box bg-gray-200 border-dashed border-4 border-white" style="display:none;">
+                <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                <span class="text-gray-500 font-bold">images/prog_baby.jpg</span>
+              </div>
+
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+              <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3">
+                <div>
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">5–7 лет</p>
+                  <h3 class="font-header text-3xl uppercase font-bold text-white">Baby Start</h3>
                 </div>
-                <div class="flex flex-col gap-1">
-                    <span class="font-header text-3xl md:text-4xl uppercase tracking-[0.2em] font-bold">Astana Jas</span>
-                    <span class="text-[10px] uppercase tracking-[0.5em] text-brand-gold font-bold">Football Academy</span>
+                <div class="rounded-2xl bg-brand-gold text-black font-header uppercase font-bold px-4 py-2 shadow-xl">
+                  25.000 тг
                 </div>
+              </div>
             </div>
 
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest border-t border-white/5 pt-8">
-                &copy; 2026 Astana Jas. Designed by
-                <a href="https://anukenn.vercel.app/" target="_blank" class="text-white hover:text-brand-gold transition duration-300">
-                    Anuken
-                </a>
+            <div class="p-6 md:p-8">
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-400">Набор</p>
+                  <p class="mt-1 font-bold text-brand-black">2017–2019 г.р.</p>
+                </div>
+                <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-400">График</p>
+                  <p class="mt-1 font-bold text-brand-black">Сб–Вс • 11:00–12:00</p>
+                </div>
+              </div>
+
+              <div class="mt-5 flex flex-wrap gap-2">
+                <span class="text-xs font-bold px-3 py-2 rounded-full bg-brand-black text-brand-gold uppercase tracking-widest">Координация</span>
+                <span class="text-xs font-bold px-3 py-2 rounded-full bg-gray-100 text-gray-600 uppercase tracking-widest">Дриблинг</span>
+                <span class="text-xs font-bold px-3 py-2 rounded-full bg-gray-100 text-gray-600 uppercase tracking-widest">Любовь к мячу</span>
+              </div>
+
+              <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full"
+                        onclick="waProgram('Программа Baby Start', 'Возраст 5–7', 'Хочу записать ребенка на Baby Start. Подскажите свободные места и локацию.')">
+                  Записаться
+                </button>
+                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition"
+                        onclick="waProgram('Программа Baby Start', 'Возраст 5–7', 'Нужна консультация по Baby Start: условия, экипировка, пробная тренировка.')">
+                  Вопрос тренеру
+                </button>
+              </div>
+
+              <p class="mt-4 text-xs text-gray-500 font-medium">(В расписании возможны изменения)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="lg:col-span-6 reveal">
+          <div class="group rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition">
+            <div class="relative h-64 bg-gray-200">
+              <img src="images/prog_weekend.jpg" loading="lazy" decoding="async"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                   class="w-full h-full object-cover" alt="Группы выходного дня">
+              <div class="img-box bg-gray-200 border-dashed border-4 border-white" style="display:none;">
+                <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                <span class="text-gray-500 font-bold">images/prog_weekend.jpg</span>
+              </div>
+
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+              <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3">
+                <div>
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">8–10 лет</p>
+                  <h3 class="font-header text-3xl uppercase font-bold text-white">Weekend</h3>
+                </div>
+                <div class="rounded-2xl bg-brand-gold text-black font-header uppercase font-bold px-4 py-2 shadow-xl">
+                  25.000 тг
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 md:p-8">
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-400">Набор</p>
+                  <p class="mt-1 font-bold text-brand-black">2013–2016 г.р.</p>
+                </div>
+                <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-400">График</p>
+                  <p class="mt-1 font-bold text-brand-black">Сб–Вс • 10:00–11:00</p>
+                </div>
+              </div>
+
+              <div class="mt-5 flex flex-wrap gap-2">
+                <span class="text-xs font-bold px-3 py-2 rounded-full bg-brand-black text-brand-gold uppercase tracking-widest">Техника</span>
+                <span class="text-xs font-bold px-3 py-2 rounded-full bg-gray-100 text-gray-600 uppercase tracking-widest">Тактика</span>
+                <span class="text-xs font-bold px-3 py-2 rounded-full bg-gray-100 text-gray-600 uppercase tracking-widest">Команда</span>
+              </div>
+
+              <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full"
+                        onclick="waProgram('Группы выходного дня', 'Возраст 8–10', 'Хочу записать ребенка в Weekend-группу. Подскажите места и расписание.')">
+                  Записаться
+                </button>
+                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition"
+                        onclick="waProgram('Группы выходного дня', 'Возраст 8–10', 'Нужна консультация по Weekend-группам: уровень, требования, экипировка.')">
+                  Консультация
+                </button>
+              </div>
+
+              <p class="mt-4 text-xs text-gray-500 font-medium">(В расписании возможны изменения)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="lg:col-span-7 reveal">
+          <div class="rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition">
+            <div class="relative h-72 bg-gray-200">
+              <img src="images/prog_spec.jpg" loading="lazy" decoding="async"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                   class="w-full h-full object-cover" alt="Спецгруппа">
+              <div class="img-box bg-gray-200 border-dashed border-4 border-white" style="display:none;">
+                <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                <span class="text-gray-500 font-bold">images/prog_spec.jpg</span>
+              </div>
+
+              <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+              <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3">
+                <div>
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">11–14 лет</p>
+                  <h3 class="font-header text-4xl uppercase font-bold text-white">Spec Group</h3>
+                </div>
+                <div class="rounded-2xl bg-brand-gold text-black font-header uppercase font-bold px-4 py-2 shadow-xl">
+                  30.000 тг
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 md:p-8">
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-400">Набор</p>
+                  <p class="mt-1 font-bold text-brand-black">2010–2016 г.р.</p>
+                </div>
+                <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-400">Формат</p>
+                  <p class="mt-1 font-bold text-brand-black">3 раза/нед + matchday</p>
+                </div>
+                <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-400">Уровень</p>
+                  <p class="mt-1 font-bold text-brand-black">Соревновательный</p>
+                </div>
+              </div>
+
+              <div class="mt-5 rounded-2xl bg-brand-black text-white p-5 border border-black/10">
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Что внутри</p>
+                <ul class="mt-3 text-sm text-gray-200 space-y-2">
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Техническая база и скорость принятия решений</li>
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Тактика, командные взаимодействия, игровая практика</li>
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Участие в городских и республиканских соревнованиях</li>
+                </ul>
+              </div>
+
+              <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full"
+                        onclick="waProgram('Спецгруппа', 'Возраст 11–14', 'Интересует Спецгруппа: условия отбора, расписание и локации.')">
+                  Узнать условия
+                </button>
+                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition"
+                        onclick="waProgram('Спецгруппа', 'Возраст 11–14', 'Хочу записаться на просмотр/отбор в Спецгруппу. Подскажите формат и время.')">
+                  Запись на просмотр
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="lg:col-span-5 reveal">
+          <div class="rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition h-full flex flex-col">
+            <div class="relative h-72 bg-gray-200">
+              <img src="images/prog_small.jpg" loading="lazy" decoding="async"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                   class="w-full h-full object-cover" alt="Малые группы">
+              <div class="img-box bg-gray-200 border-dashed border-4 border-white" style="display:none;">
+                <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                <span class="text-gray-500 font-bold">images/prog_small.jpg</span>
+              </div>
+
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+              <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3">
+                <div>
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">до 5 человек</p>
+                  <h3 class="font-header text-3xl uppercase font-bold text-white">Small Group</h3>
+                </div>
+                <div class="rounded-2xl bg-brand-gold text-black font-header uppercase font-bold px-4 py-2 shadow-xl">
+                  от 50.000 тг
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 md:p-8 flex flex-col flex-1">
+              <ul class="text-sm text-gray-600 space-y-2">
+                <li><i class="fas fa-check text-brand-gold mr-2"></i>В группе не больше 5 человек</li>
+                <li><i class="fas fa-check text-brand-gold mr-2"></i>Разнообразие тренировок по технике</li>
+                <li><i class="fas fa-check text-brand-gold mr-2"></i>8 тренировок в месяц</li>
+              </ul>
+
+              <div class="mt-auto pt-6">
+                <button class="btn-main bg-brand-black text-white py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full hover:bg-brand-gold hover:text-black transition"
+                        onclick="waProgram('Малая группа', 'до 5 человек', 'Интересуют тренировки в малых группах: расписание, цена и локации.')">
+                  Запрос в WhatsApp
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 (Indiv) -->
+        <div class="lg:col-span-12 reveal">
+          <div class="rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition">
+            <div class="grid lg:grid-cols-12">
+              <div class="lg:col-span-5 relative bg-gray-200 min-h-[280px]">
+                <img src="images/prog_indiv.jpg" loading="lazy" decoding="async"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                     class="w-full h-full object-cover" alt="Индивидуально 1x1">
+                <div class="img-box bg-gray-200 border-dashed border-4 border-white" style="display:none;">
+                  <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                  <span class="text-gray-500 font-bold">images/prog_indiv.jpg</span>
+                </div>
+
+                <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-5 left-5 right-5">
+                  <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">1x1</p>
+                  <h3 class="font-header text-4xl uppercase font-bold text-white">Individual</h3>
+                </div>
+              </div>
+
+              <div class="lg:col-span-7 p-6 md:p-10">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+                  <div>
+                    <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Premium Focus</p>
+                    <h3 class="mt-2 font-header text-3xl md:text-4xl uppercase font-bold text-brand-black">
+                      Индивидуальная работа с тренером
+                    </h3>
+                    <p class="mt-3 text-gray-600">
+                      Работа над ошибками, современный инвентарь, комфортные условия (раздевалки, душевые),
+                      видеосъемка тренировок.
+                    </p>
+                  </div>
+                  <div class="shrink-0 rounded-2xl bg-brand-gold text-black font-header uppercase font-bold px-5 py-3 shadow-xl">
+                    от 80.000 тг
+                  </div>
+                </div>
+
+                <div class="mt-6 grid md:grid-cols-2 gap-4">
+                  <div class="rounded-2xl bg-gray-50 border border-gray-100 p-5">
+                    <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-400">Расписание</p>
+                    <p class="mt-2 text-sm font-bold text-brand-black">Пн—Чт: 11:30–12:30 и 15:30–16:30</p>
+                    <p class="mt-1 text-sm font-bold text-brand-black">Вт—Чт: 11:30–12:30 и 15:30–16:30</p>
+                    <p class="mt-1 text-sm font-bold text-brand-black">Ср—Пт: 11:30–12:30 и 15:30–16:30</p>
+                  </div>
+
+                  <div class="rounded-2xl bg-brand-black text-white border border-black/10 p-5">
+                    <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Идеально если</p>
+                    <ul class="mt-3 text-sm text-gray-200 space-y-2">
+                      <li><i class="fas fa-check text-brand-gold mr-2"></i>нужно быстро поднять технику</li>
+                      <li><i class="fas fa-check text-brand-gold mr-2"></i>есть цель на позицию/роль</li>
+                      <li><i class="fas fa-check text-brand-gold mr-2"></i>важна персональная коррекция</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                  <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full"
+                          onclick="waProgram('Индивидуально 1x1', 'Premium', 'Хочу записаться на индивидуальную тренировку 1x1. Возраст ребенка: __. Удобное время: __.')">
+                    Записаться 1x1
+                  </button>
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition"
+                          onclick="waProgram('Индивидуально 1x1', 'Premium', 'Нужна консультация по 1x1: цели, формат и стоимость.')">
+                    Консультация
+                  </button>
+                </div>
+
+                <p class="mt-4 text-xs text-gray-500 font-medium">Расписание может корректироваться — уточняйте у менеджера.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- grid -->
+    </div>
+  </section>
+
+  <!-- Kit -->
+  <section id="kit" class="py-20 bg-white border-t border-gray-100">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Elite Gear</p>
+        <h2 class="mt-2 font-header text-4xl md:text-6xl font-bold uppercase text-brand-black">
+          Клубная <span class="text-brand-gold">форма</span>
+        </h2>
+      </div>
+
+      <div class="max-w-5xl mx-auto grid lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-7 reveal">
+          <div class="bg-gray-50 rounded-[2rem] p-4 md:p-10 cursor-pointer group relative overflow-hidden shadow-sm border border-gray-100"
+               onclick="openLightbox('images/kit.jpg?v=4')">
+            <img src="images/kit.jpg?v=4"
+                 onerror="this.src='https://via.placeholder.com/1200x900?text=Jersey+Preview'"
+                 class="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-[0_30px_60px_rgba(0,0,0,0.12)]"
+                 alt="Jersey Design" loading="lazy" decoding="async">
+            <div class="absolute bottom-6 right-6 bg-white/80 backdrop-blur-md p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+              <i class="fas fa-expand-alt text-brand-black"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-4 reveal">
+          <div class="rounded-[1.6rem] bg-brand-black text-white p-8 shadow-deep border border-black/10">
+            <div class="flex items-center gap-4 mb-3">
+              <i class="fas fa-medal text-brand-gold text-xl"></i>
+              <h4 class="font-header text-xl uppercase font-bold tracking-wide">Дизайн</h4>
+            </div>
+            <p class="text-gray-300 text-sm leading-relaxed">Эксклюзивный паттерн с использованием национального казахского орнамента.</p>
+          </div>
+
+          <div class="rounded-[1.6rem] bg-brand-black text-white p-8 shadow-deep border border-black/10">
+            <div class="flex items-center gap-4 mb-3">
+              <i class="fas fa-bolt text-brand-gold text-xl"></i>
+              <h4 class="font-header text-xl uppercase font-bold tracking-wide">Материал</h4>
+            </div>
+            <p class="text-gray-300 text-sm leading-relaxed">Полиэстер PRO-Fit: дышит и быстро отводит влагу.</p>
+          </div>
+
+          <div class="rounded-[1.6rem] bg-gray-50 border border-gray-100 p-7">
+            <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Quick note</p>
+            <p class="mt-2 text-gray-700 text-sm leading-relaxed">
+              Форму можно открыть в полном размере — нажмите на изображение.
             </p>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <a href="https://wa.me/77019744464" class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition animate-bounce-slow" aria-label="WhatsApp">
-        <i class="fab fa-whatsapp text-3xl"></i>
-    </a>
+  <!-- Team -->
+  <section id="team" class="py-20 bg-brand-black text-white border-t border-white/10">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-10 reveal">
+        <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Coaching</p>
+        <h2 class="mt-2 font-header text-4xl md:text-6xl font-bold uppercase">
+          Тренерский <span class="text-brand-gold">штаб</span>
+        </h2>
+        <p class="mt-4 text-gray-300 max-w-2xl mx-auto">
+          Профессиональный подход, дисциплина и системная работа с прогрессом.
+        </p>
+      </div>
 
-    <!-- Lightbox -->
-    <div id="lightbox" aria-hidden="true">
-        <button type="button" onclick="closeLightbox()" aria-label="Закрыть"><i class="fas fa-times"></i></button>
-        <img id="lightboxImg" src="" alt="Preview">
+      <div class="reveal relative rounded-[2rem] overflow-hidden shadow-deep border border-white/10">
+        <img src="images/team_full.jpg" loading="lazy" decoding="async"
+             onerror="this.src='team_full.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex'}"
+             class="w-full h-auto object-cover" alt="Тренерский штаб">
+        <div class="img-box bg-gray-100 flex flex-col items-center justify-center min-h-[300px]" style="display:none;">
+          <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
+          <span class="text-red-500 font-bold">Загрузите фото: images/team_full.jpg</span>
+        </div>
+
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent"></div>
+
+        <div class="absolute bottom-6 left-6 right-6">
+          <div class="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">Method</p>
+                <p class="mt-1 font-header text-2xl uppercase font-bold">Техника • Тактика • Психология</p>
+                <p class="mt-2 text-sm text-gray-200">Системное развитие игрока и командных взаимодействий.</p>
+              </div>
+              <button class="btn-main bg-brand-gold text-black px-6 py-3 font-header uppercase text-lg tracking-wider shadow-xl"
+                      onclick="waPrefill('Здравствуйте! Хочу узнать про тренерский состав и методику обучения. Подскажите подробнее.')">
+                Узнать
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Partners -->
+  <section class="py-16 bg-white border-t border-gray-100">
+    <div class="container mx-auto px-6 text-center">
+      <div class="reveal">
+        <h3 class="font-header text-xl uppercase text-gray-400 mb-8 tracking-widest">Partners</h3>
+        <div class="flex flex-wrap justify-center items-center gap-12">
+          <div class="w-40 h-20 relative flex justify-center items-center">
+            <img src="images/tehpro.png" loading="lazy" decoding="async"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                 class="w-full h-full object-contain transition hover:scale-110" alt="Tehpro">
+            <div class="img-box border-none bg-white text-xs hidden flex-col items-center justify-center absolute inset-0">
+              <i class="fas fa-times mb-1"></i> Нет images/tehpro.png
+            </div>
+          </div>
+
+          <div class="w-40 h-20 relative flex justify-center items-center">
+            <img src="images/zhenis.png" loading="lazy" decoding="async"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                 class="w-full h-full object-contain transition hover:scale-110" alt="Zhenis">
+            <div class="img-box border-none bg-white text-xs hidden flex-col items-center justify-center absolute inset-0">
+              <i class="fas fa-times mb-1"></i> Нет images/zhenis.png
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10 inline-block px-8 py-3 bg-gray-50 rounded-full border border-gray-200">
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wide">
+            <i class="fas fa-handshake text-brand-black mr-2"></i> Меморандум о сотрудничестве с ПФК «Жеңіс»
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Locations -->
+  <section id="locations" class="py-20 bg-brand-black text-white">
+    <div class="container mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-10 items-start">
+        <div class="reveal">
+          <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Contacts</p>
+          <h2 class="mt-2 font-header text-5xl uppercase mb-8">Контакты <span class="text-brand-gold">клуба</span></h2>
+
+          <div class="space-y-4 mb-8">
+            <div class="p-6 border border-white/10 rounded-2xl bg-white/5 backdrop-blur-md">
+              <h3 class="font-header text-2xl uppercase mb-1">Школа №11</h3>
+              <p class="text-gray-300 text-sm">им. Өзбекәлі Жәнібекова</p>
+            </div>
+            <div class="p-6 border border-white/10 rounded-2xl bg-white/5 backdrop-blur-md">
+              <h3 class="font-header text-2xl uppercase mb-1">Школа №71</h3>
+              <p class="text-gray-300 text-sm">Астана, ул. Е-10</p>
+            </div>
+          </div>
+
+          <div class="rounded-[2rem] bg-white/5 backdrop-blur-md border border-white/10 p-6">
+            <p class="text-xs text-brand-gold uppercase tracking-widest font-bold mb-1">Менеджер Руслан</p>
+            <a href="tel:+77019744464" class="text-3xl font-header font-bold block mb-4 hover:text-brand-gold transition">+7 701 974 44 64</a>
+
+            <div class="grid sm:grid-cols-2 gap-3">
+              <a href="https://wa.me/77019744464" class="btn-main w-full py-4 bg-brand-gold text-black text-center font-header text-xl uppercase tracking-wider block shadow-xl">
+                WhatsApp
+              </a>
+              <button onclick="waPrefill('Здравствуйте! Подскажите, пожалуйста, как добраться до ближайшей локации?')"
+                      class="btn-main w-full py-4 bg-white/10 text-white text-center font-header text-xl uppercase tracking-wider block border border-white/20 hover:bg-white hover:text-black transition">
+                Как добраться
+              </button>
+            </div>
+
+            <p class="mt-4 text-xs text-gray-300">
+              Карта загрузится автоматически, когда вы доскроллите до блока.
+            </p>
+          </div>
+        </div>
+
+        <div class="reveal h-[420px] bg-white rounded-[2rem] overflow-hidden relative shadow-deep border border-white/10">
+          <div id="map" class="w-full h-full z-10"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative bg-black text-white pt-16 pb-28 border-t border-white/10 overflow-hidden">
+    <div class="absolute inset-0 z-0 md:hidden">
+      <img src="images/footer_bg.jpg" loading="lazy" decoding="async"
+           onerror="this.src='https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1000&auto=format&fit=crop'; this.style.opacity='0.2'"
+           class="w-full h-full object-cover opacity-30" alt="Footer Background">
     </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <div class="container mx-auto px-6 text-center relative z-10">
+      <div class="flex flex-col items-center gap-6 mb-10 reveal">
+        <div class="w-20 h-20 relative group cursor-pointer" onclick="openLightbox('images/logo.png')">
+          <img src="images/logo.png" class="w-full h-full object-contain" alt="Logo" loading="lazy" decoding="async">
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="font-header text-3xl md:text-4xl uppercase tracking-[0.2em] font-bold">Astana Jas</span>
+          <span class="text-[10px] uppercase tracking-[0.5em] text-brand-gold font-bold">Football Academy</span>
+        </div>
+      </div>
 
-    <script>
-        const isMobile = window.matchMedia('(max-width: 767px)').matches;
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      <p class="reveal text-[10px] text-gray-500 font-bold uppercase tracking-widest border-t border-white/5 pt-8">
+        &copy; 2026 Astana Jas. Designed by
+        <a href="https://anukenn.vercel.app/" target="_blank" class="text-white hover:text-brand-gold transition duration-300">
+          Anuken
+        </a>
+      </p>
+    </div>
+  </footer>
 
-        // AOS: отключаем на mobile и при reduced motion (меньше лагов)
-        AOS.init({
-            duration: 800,
-            once: true,
-            disable: isMobile || reduceMotion
+  <!-- Sticky CTA -->
+  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[min(980px,calc(100%-24px))]">
+    <div class="reveal is-visible bg-white/85 backdrop-blur-xl border border-gray-200 rounded-[1.6rem] shadow-deep px-4 py-3 flex items-center justify-between gap-4">
+      <div class="hidden sm:block">
+        <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Quick action</p>
+        <p class="font-header uppercase font-bold text-brand-black text-xl leading-none">Запись в 1 клик</p>
+      </div>
+      <div class="flex-1 flex gap-2">
+        <button onclick="waPrefill('Здравствуйте! Хочу записать ребенка. Возраст: __. Локация: __. Удобные дни: __.')"
+                class="btn-main flex-1 bg-brand-black text-white py-3 font-header uppercase tracking-wider shadow-lg hover:bg-brand-gold hover:text-black transition">
+          Записаться
+        </button>
+        <a href="https://wa.me/77019744464" class="btn-main flex-1 bg-brand-gold text-black py-3 font-header uppercase tracking-wider text-center shadow-lg">
+          WhatsApp
+        </a>
+      </div>
+      <button onclick="window.scrollTo({top:0, behavior:'smooth'})"
+              class="hidden md:inline-flex w-11 h-11 items-center justify-center rounded-2xl bg-gray-100 border border-gray-200 text-gray-700 hover:text-black hover:border-brand-gold/50 transition"
+              aria-label="Наверх">
+        <i class="fas fa-arrow-up"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating WhatsApp -->
+  <a href="https://wa.me/77019744464"
+     class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition"
+     aria-label="WhatsApp">
+    <i class="fab fa-whatsapp text-3xl"></i>
+  </a>
+
+  <!-- Lightbox -->
+  <div id="lightbox" aria-hidden="true">
+    <button type="button" onclick="closeLightbox()" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+    <img id="lightboxImg" src="" alt="Preview">
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const WA_NUMBER = "77019744464";
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Preloader + hero video optimization
+    window.addEventListener('load', () => {
+      const pre = document.getElementById('preloader');
+      if (pre) {
+        pre.style.opacity = '0';
+        setTimeout(() => { pre.style.display = 'none'; }, 700);
+      }
+
+      const heroVideo = document.getElementById('heroVideo');
+      const heroPoster = document.getElementById('heroPoster');
+
+      if (isMobile || reduceMotion) {
+        if (heroVideo) {
+          try { heroVideo.pause(); } catch(e) {}
+          heroVideo.style.display = 'none';
+        }
+        if (heroPoster) heroPoster.style.display = 'block';
+      } else {
+        if (heroVideo) heroVideo.play().catch(() => {});
+      }
+    });
+
+    // Navbar style on scroll
+    const navShell = document.getElementById('navShell');
+    window.addEventListener('scroll', () => {
+      const sc = window.scrollY || 0;
+      if (!navShell) return;
+      if (sc > 18) {
+        navShell.classList.add('bg-white/90');
+        navShell.classList.remove('bg-white/70');
+      } else {
+        navShell.classList.add('bg-white/70');
+        navShell.classList.remove('bg-white/90');
+      }
+    });
+
+    // Mobile menu: lock body scroll
+    function toggleMenu(forceClose = null) {
+      const menu = document.getElementById('mobile-menu');
+      const isOpen = !menu.classList.contains('translate-x-full');
+      const nextOpen = (forceClose === null) ? !isOpen : !forceClose;
+
+      if (nextOpen) {
+        menu.classList.remove('translate-x-full');
+        document.body.style.overflow = 'hidden';
+      } else {
+        menu.classList.add('translate-x-full');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Lightbox
+    function openLightbox(src) {
+      const lb = document.getElementById('lightbox');
+      const img = document.getElementById('lightboxImg');
+      if (!lb || !img) return;
+      img.src = src;
+      lb.classList.add('show');
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      const lb = document.getElementById('lightbox');
+      const img = document.getElementById('lightboxImg');
+      if (!lb || !img) return;
+      lb.classList.remove('show');
+      lb.setAttribute('aria-hidden', 'true');
+      img.src = '';
+      document.body.style.overflow = '';
+    }
+    document.getElementById('lightbox')?.addEventListener('click', (e) => {
+      if (e.target && e.target.id === 'lightbox') closeLightbox();
+    });
+
+    // ESC closes menu + lightbox
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        toggleMenu(true);
+        closeLightbox();
+      }
+    });
+
+    // WhatsApp helpers
+    function waPrefill(message) {
+      const text = encodeURIComponent(message || "");
+      window.open(`https://wa.me/${WA_NUMBER}?text=${text}`, "_blank");
+    }
+    function waProgram(programName, meta, message) {
+      const payload =
+`Здравствуйте!
+Интересует: ${programName}
+${meta ? ("Детали: " + meta) : ""}
+Сообщение: ${message || ""}
+
+Пожалуйста, подскажите: свободные места, расписание и локацию.`;
+      waPrefill(payload);
+    }
+
+    // Reveal animation (IntersectionObserver)
+    const revealEls = Array.from(document.querySelectorAll('.reveal'));
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      const ro = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            ro.unobserve(entry.target);
+          }
         });
+      }, { threshold: 0.15 });
+      revealEls.forEach(el => ro.observe(el));
+    } else {
+      revealEls.forEach(el => el.classList.add('is-visible'));
+    }
 
-        // Preloader + Video оптимизация
-        window.addEventListener('load', () => {
-            const pre = document.getElementById('preloader');
-            if (pre) {
-                pre.style.opacity = '0';
-                setTimeout(() => { pre.style.display = 'none'; }, 700);
-            }
-
-            // Видео: на mobile/reduced-motion отключаем и показываем постер
-            const heroVideo = document.getElementById('heroVideo');
-            const heroPoster = document.getElementById('heroPoster');
-
-            if (isMobile || reduceMotion) {
-                if (heroVideo) {
-                    try { heroVideo.pause(); } catch(e) {}
-                    heroVideo.removeAttribute('autoplay');
-                    heroVideo.style.display = 'none';
-                }
-                if (heroPoster) heroPoster.style.display = 'block';
-            } else {
-                // На десктопе пробуем воспроизвести (на некоторых браузерах play может быть запрещен)
-                if (heroVideo) {
-                    heroVideo.play().catch(() => {});
-                }
-            }
+    // Counters
+    function animateCounter(el) {
+      const target = Number(el.getAttribute('data-target') || '0');
+      const duration = 900;
+      const start = performance.now();
+      function tick(now){
+        const p = Math.min(1, (now - start) / duration);
+        const val = Math.floor(target * (0.1 + 0.9 * p));
+        el.textContent = String(val);
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = String(target);
+      }
+      requestAnimationFrame(tick);
+    }
+    const counters = Array.from(document.querySelectorAll('.counter'));
+    if ('IntersectionObserver' in window) {
+      const co = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            co.unobserve(entry.target);
+          }
         });
+      }, { threshold: 0.6 });
+      counters.forEach(c => co.observe(c));
+    } else {
+      counters.forEach(animateCounter);
+    }
 
-        // Mobile menu: блокируем скролл фона + закрытие по ESC
-        function toggleMenu(forceClose = null) {
-            const menu = document.getElementById('mobile-menu');
-            const isOpen = !menu.classList.contains('translate-x-full');
-            const nextOpen = (forceClose === null) ? !isOpen : !forceClose;
+    // Map: lazy init
+    let mapInited = false;
+    function initMap() {
+      if (mapInited) return;
+      if (typeof L === 'undefined') return;
+      mapInited = true;
 
-            if (nextOpen) {
-                menu.classList.remove('translate-x-full');
-                document.body.style.overflow = 'hidden';
-            } else {
-                menu.classList.add('translate-x-full');
-                document.body.style.overflow = '';
+      const map = L.map('map', { scrollWheelZoom: false }).setView([51.13, 71.41], 12);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; CARTO', maxZoom: 20
+      }).addTo(map);
+
+      const ballIcon = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/53/53283.png',
+        iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20],
+        className: 'football-marker'
+      });
+
+      L.marker([51.152230, 71.404335], {icon: ballIcon}).addTo(map).bindPopup('<b>Школа №11</b>');
+      L.marker([51.104512, 71.402919], {icon: ballIcon}).addTo(map).bindPopup('<b>Школа №71</b>');
+    }
+
+    const mapEl = document.getElementById('map');
+    if (mapEl) {
+      if ('IntersectionObserver' in window) {
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              initMap();
+              obs.disconnect();
             }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                toggleMenu(true);
-                closeLightbox();
-            }
-        });
-
-        // Lightbox
-        function openLightbox(src) {
-            const lb = document.getElementById('lightbox');
-            const img = document.getElementById('lightboxImg');
-            if (!lb || !img) return;
-
-            img.src = src;
-            lb.classList.add('show');
-            lb.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLightbox() {
-            const lb = document.getElementById('lightbox');
-            const img = document.getElementById('lightboxImg');
-            if (!lb || !img) return;
-
-            lb.classList.remove('show');
-            lb.setAttribute('aria-hidden', 'true');
-            img.src = '';
-            document.body.style.overflow = '';
-        }
-
-        // Закрытие lightbox кликом по фону
-        document.getElementById('lightbox')?.addEventListener('click', (e) => {
-            if (e.target && e.target.id === 'lightbox') closeLightbox();
-        });
-
-        // Map: ленивый запуск (инициализация только при видимости)
-        let mapInited = false;
-
-        function initMap() {
-            if (mapInited) return;
-            if (typeof L === 'undefined') return;
-
-            mapInited = true;
-
-            const map = L.map('map', { scrollWheelZoom: false }).setView([51.13, 71.41], 12);
-
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; CARTO', maxZoom: 20
-            }).addTo(map);
-
-            const ballIcon = L.icon({
-                iconUrl: 'https://cdn-icons-png.flaticon.com/512/53/53283.png',
-                iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20],
-                className: 'football-marker'
-            });
-
-            L.marker([51.152230, 71.404335], {icon: ballIcon}).addTo(map).bindPopup('<b>Школа №11</b>');
-            L.marker([51.104512, 71.402919], {icon: ballIcon}).addTo(map).bindPopup('<b>Школа №71</b>');
-        }
-
-        const mapEl = document.getElementById('map');
-        if (mapEl) {
-            if ('IntersectionObserver' in window) {
-                const obs = new IntersectionObserver((entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            initMap();
-                            obs.disconnect();
-                        }
-                    });
-                }, { threshold: 0.2 });
-                obs.observe(mapEl);
-            } else {
-                initMap();
-            }
-        }
-    </script>
+          });
+        }, { threshold: 0.2 });
+        obs.observe(mapEl);
+      } else {
+        initMap();
+      }
+    }
+  </script>
 </body>
 </html>
