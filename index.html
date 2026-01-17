@@ -3,16 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>ASTANA JAS | Elite Football Academy</title>
-  <meta name="description" content="Профессиональная футбольная школа в Астане." />
+  <meta name="description" content="Профессиональная футбольная школа в Астане. Тренировки для детей 5–14 лет. Программы по возрастам, индивидуальные занятия, экипировка и локации." />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500;700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <!-- OpenGraph / Share -->
+  <meta property="og:title" content="ASTANA JAS | Elite Football Academy" />
+  <meta property="og:description" content="Футбольная школа в Астане. Запись в 1 клик через WhatsApp." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:image" content="images/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <!-- Performance: preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500;700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Icons & Leaflet -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
@@ -21,33 +35,27 @@
         extend: {
           fontFamily: {
             header: ['"Oswald"', 'sans-serif'],
-            body: ['"Roboto"', 'sans-serif'],
+            body: ['"Roboto"', 'sans-serif']
           },
           colors: {
             brand: {
               gold: '#FFD700',
               black: '#111111',
-              gray: '#F8F9FA',
+              gray: '#F8F9FA'
             }
           },
           boxShadow: {
             frame: '0 10px 30px rgba(0,0,0,0.15)',
-            deep: '0 30px 80px rgba(0,0,0,0.35)',
+            deep: '0 30px 90px rgba(0,0,0,0.35)'
           },
           animation: {
             'spin-slow': 'spin 12s linear infinite',
             'float': 'float 7s ease-in-out infinite',
-            'pulse-soft': 'pulseSoft 2.6s ease-in-out infinite',
+            'pulse-soft': 'pulseSoft 2.6s ease-in-out infinite'
           },
           keyframes: {
-            float: {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-10px)' },
-            },
-            pulseSoft: {
-              '0%, 100%': { transform: 'scale(1)', opacity: 0.95 },
-              '50%': { transform: 'scale(1.02)', opacity: 1 },
-            }
+            float: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-10px)' } },
+            pulseSoft: { '0%,100%': { transform: 'scale(1)', opacity: 0.95 }, '50%': { transform: 'scale(1.02)', opacity: 1 } }
           }
         }
       }
@@ -83,8 +91,11 @@
 
     /* Signature angled button */
     .btn-main{
-      position:relative; overflow:hidden; transition:all .35s ease;
+      position:relative; overflow:hidden;
+      transition: transform .25s ease, clip-path .35s ease, background-color .25s ease, color .25s ease;
       clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+      transform: translateZ(0);
+      will-change: transform;
     }
     .btn-main:hover{
       clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
@@ -103,17 +114,14 @@
       pointer-events:none;
     }
 
-    /* Reveal animation (lightweight, no AOS) */
+    /* Reveal */
     .reveal{
       opacity:0;
       transform: translateY(18px);
       transition: opacity .7s ease, transform .7s ease;
       will-change: opacity, transform;
     }
-    .reveal.is-visible{
-      opacity:1;
-      transform: translateY(0);
-    }
+    .reveal.is-visible{ opacity:1; transform: translateY(0); }
 
     /* Lightbox */
     #lightbox{
@@ -126,7 +134,7 @@
     }
     #lightbox.show{ display:flex; }
     #lightbox img{
-      max-width:min(1100px, 100%);
+      max-width:min(1200px, 100%);
       max-height:90vh;
       object-fit:contain;
       border-radius:18px;
@@ -144,6 +152,59 @@
     }
     #lightbox button:hover{ background: rgba(255,255,255,0.18); }
 
+    /* Modal */
+    #modal{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.72);
+      display:none;
+      align-items:center; justify-content:center;
+      z-index:99998;
+      padding:18px;
+    }
+    #modal.show{ display:flex; }
+    .modal-card{
+      width:min(980px, 100%);
+      border-radius:22px;
+      overflow:hidden;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(16px);
+      border:1px solid rgba(0,0,0,0.06);
+      box-shadow:0 35px 120px rgba(0,0,0,0.35);
+    }
+
+    /* Scroll progress */
+    #scrollProgress{
+      position:fixed; top:0; left:0;
+      height:3px;
+      width:0%;
+      background: var(--gold);
+      z-index:99999;
+      box-shadow: 0 6px 14px rgba(255,215,0,0.35);
+    }
+
+    /* Cursor spotlight */
+    #spotlight{
+      position:fixed; inset:-80px;
+      pointer-events:none;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity .25s ease;
+      background: radial-gradient(220px 220px at var(--x, 50%) var(--y, 50%), rgba(255,215,0,0.18), transparent 60%);
+      mix-blend-mode: multiply;
+    }
+
+    /* Masonry */
+    .masonry{
+      column-count: 3;
+      column-gap: 14px;
+    }
+    @media (max-width: 1024px){ .masonry{ column-count: 2; } }
+    @media (max-width: 640px){ .masonry{ column-count: 1; } }
+    .masonry-item{
+      break-inside: avoid;
+      margin-bottom: 14px;
+    }
+
     /* Leaflet marker */
     .football-marker{
       background-image:url('https://cdn-icons-png.flaticon.com/512/53/53283.png');
@@ -153,16 +214,34 @@
       transition: transform .2s;
     }
 
-    /* Reduced motion respect */
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
       .reveal{ transition:none; }
+      .btn-main{ transition:none; }
+      #spotlight{ display:none !important; }
       .animate-spin, .animate-spin-slow, .animate-bounce, .animate-pulse, .animate-float { animation:none !important; }
     }
   </style>
+
+  <!-- JSON-LD (можно оставить как шаблон) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SportsOrganization",
+    "name": "Astana Jas Football Academy",
+    "areaServed": "Astana, KZ",
+    "sport": "Football",
+    "url": "",
+    "logo": "images/logo.png",
+    "sameAs": ["https://wa.me/77019744464"]
+  }
+  </script>
 </head>
 
-<body class="font-body antialiased">
+<body class="font-body antialiased relative">
+  <div id="scrollProgress" aria-hidden="true"></div>
+  <div id="spotlight" aria-hidden="true"></div>
 
   <!-- Preloader -->
   <div id="preloader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-700">
@@ -183,8 +262,12 @@
           <span><i class="fas fa-map-marker-alt text-brand-gold mr-2"></i> Астана</span>
           <span><i class="far fa-clock text-brand-gold mr-2"></i> 09:00 - 21:00</span>
         </div>
-        <div class="flex gap-4">
+        <div class="flex items-center gap-3">
           <a href="https://wa.me/77019744464" class="hover:text-brand-gold" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <button class="text-white/80 hover:text-brand-gold transition text-xs uppercase tracking-widest font-bold"
+                  onclick="openModal('quiz')">
+            Подбор программы
+          </button>
         </div>
       </div>
     </div>
@@ -206,15 +289,22 @@
 
         <div class="hidden lg:flex items-center gap-8 font-header text-lg font-medium uppercase tracking-wide text-brand-black">
           <a href="#about" class="hover:text-brand-gold transition">О клубе</a>
+          <a href="#process" class="hover:text-brand-gold transition">Путь</a>
           <a href="#programs" class="hover:text-brand-gold transition">Программы</a>
           <a href="#kit" class="hover:text-brand-gold transition">Форма</a>
           <a href="#team" class="hover:text-brand-gold transition">Тренеры</a>
+          <a href="#gallery" class="hover:text-brand-gold transition">Галерея</a>
+          <a href="#faq" class="hover:text-brand-gold transition">FAQ</a>
           <a href="#locations" class="hover:text-brand-gold transition">Контакты</a>
         </div>
 
         <div class="flex items-center gap-4">
+          <button onclick="openModal('quiz')" class="hidden md:flex btn-main bg-white/10 border border-gray-200 text-brand-black px-6 py-2 font-header text-lg uppercase tracking-wider hover:bg-brand-black hover:text-white items-center gap-2 shadow-lg magnetic">
+            Подбор
+          </button>
+
           <a href="https://wa.me/77019744464"
-             class="hidden md:flex btn-main bg-brand-black text-white px-6 py-2 font-header text-lg uppercase tracking-wider hover:bg-brand-gold hover:text-black items-center gap-2 shadow-lg">
+             class="hidden md:flex btn-main bg-brand-black text-white px-6 py-2 font-header text-lg uppercase tracking-wider hover:bg-brand-gold hover:text-black items-center gap-2 shadow-lg magnetic">
             Записаться
           </a>
 
@@ -240,13 +330,20 @@
 
     <div class="mt-8 flex flex-col gap-6 font-header text-3xl uppercase font-bold text-brand-black">
       <a href="#about" onclick="toggleMenu(true)">О клубе</a>
+      <a href="#process" onclick="toggleMenu(true)">Путь</a>
       <a href="#programs" onclick="toggleMenu(true)">Программы</a>
       <a href="#kit" onclick="toggleMenu(true)">Форма</a>
       <a href="#team" onclick="toggleMenu(true)">Тренеры</a>
+      <a href="#gallery" onclick="toggleMenu(true)">Галерея</a>
+      <a href="#faq" onclick="toggleMenu(true)">FAQ</a>
       <a href="#locations" onclick="toggleMenu(true)">Контакты</a>
     </div>
 
     <div class="mt-auto mb-10 space-y-3">
+      <button onclick="openModal('quiz'); toggleMenu(true)"
+              class="btn-main w-full py-4 bg-white border border-gray-200 text-brand-black font-header uppercase text-xl text-center block rounded-none shadow-xl">
+        Подбор программы
+      </button>
       <a href="https://wa.me/77019744464" class="btn-main w-full py-4 bg-brand-gold text-black font-header uppercase text-xl text-center block rounded-none shadow-xl">
         WhatsApp
       </a>
@@ -262,19 +359,19 @@
       <img id="heroPoster" src="images/hero_poster.jpg" class="absolute w-full h-full object-cover object-top" alt="Hero poster" style="display:none;" loading="eager" decoding="async">
 
       <video id="heroVideo" autoplay muted loop playsinline preload="metadata" poster="images/hero_poster.jpg"
-             class="absolute w-full h-full object-cover object-top">
+             class="absolute w-full h-full object-cover object-top opacity-100">
         <source src="video/hero.mp4" type="video/mp4">
       </video>
-
-      <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-black/85"></div>
-      <div class="absolute inset-0" style="background: radial-gradient(60% 50% at 50% 20%, rgba(255,215,0,0.18), transparent 60%);"></div>
 
       <div class="img-box absolute inset-0 z-[-1] border-none bg-gray-900 text-white">
         <i class="fas fa-video text-4xl"></i> video/hero.mp4
       </div>
+
+      <div class="absolute inset-0 bg-gradient-to-b from-black/75 via-black/25 to-black/90"></div>
+      <div class="absolute inset-0" style="background: radial-gradient(60% 50% at 50% 18%, rgba(255,215,0,0.22), transparent 62%);"></div>
     </div>
 
-    <div class="container mx-auto px-6 relative z-10 pt-24 pb-20">
+    <div class="container mx-auto px-6 relative z-10 pt-28 pb-20">
       <div class="grid lg:grid-cols-12 gap-10 items-center">
         <div class="lg:col-span-7">
           <div class="reveal inline-flex items-center gap-3 py-2 px-4 border border-white/20 text-white text-xs md:text-sm font-bold uppercase tracking-[0.25em] mb-6 backdrop-blur-md bg-white/5 shadow-lg">
@@ -292,11 +389,11 @@
           </p>
 
           <div class="reveal flex flex-col sm:flex-row gap-4">
-            <a href="#programs" class="btn-main bg-brand-gold text-brand-black px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-white hover:text-black shadow-deep">
-              Выбрать программу
-            </a>
-            <a href="https://wa.me/77019744464" class="btn-main bg-white/10 backdrop-blur-md text-white px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-brand-black hover:text-white border border-white/20 shadow-deep">
-              Записаться в WhatsApp
+            <button onclick="openModal('quiz')" class="btn-main bg-brand-gold text-brand-black px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-white hover:text-black shadow-deep magnetic">
+              Подобрать программу
+            </button>
+            <a href="#programs" class="btn-main bg-white/10 backdrop-blur-md text-white px-10 py-4 font-header text-xl uppercase tracking-wider hover:bg-brand-black hover:text-white border border-white/20 shadow-deep magnetic">
+              Смотреть программы
             </a>
           </div>
 
@@ -310,7 +407,7 @@
               <p class="mt-1 font-header text-2xl uppercase text-white font-bold">2 школы</p>
             </div>
             <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4">
-              <p class="text-[10px] uppercase tracking-[0.3em] text-gray-200 font-bold">Фокус</p>
+              <p class="text-[10px] uppercase tracking-[0.3em] text-gray-200 font-bold">Формат</p>
               <p class="mt-1 font-header text-2xl uppercase text-white font-bold">Pro Path</p>
             </div>
           </div>
@@ -330,12 +427,12 @@
 
             <div class="space-y-3">
               <button onclick="waPrefill('Здравствуйте! Хочу записать ребенка на пробную тренировку. Подскажите расписание и локации.')"
-                      class="w-full btn-main bg-brand-gold text-black py-4 font-header uppercase text-lg tracking-wider shadow-xl">
+                      class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full magnetic">
                 Пробная тренировка
               </button>
 
-              <button onclick="waPrefill('Здравствуйте! Интересует программа и стоимость. Ребенок: возраст __ лет. Локация: __.')"
-                      class="w-full btn-main bg-brand-black text-white py-4 font-header uppercase text-lg tracking-wider shadow-xl hover:bg-white hover:text-black">
+              <button onclick="waPrefill('Здравствуйте! Интересует программа и стоимость. Возраст ребенка: __ лет. Локация: __.')"
+                      class="btn-main bg-brand-black text-white py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full hover:bg-white hover:text-black magnetic">
                 Узнать стоимость
               </button>
 
@@ -379,27 +476,36 @@
       <div class="grid lg:grid-cols-12 gap-12 items-center">
         <div class="lg:col-span-6 reveal">
           <div class="inline-flex items-center gap-3 text-xs uppercase tracking-[0.35em] font-bold text-gray-500">
-            <span class="w-10 h-[2px] bg-brand-gold"></span> Философия
+            <span class="w-10 h-[2px] bg-brand-gold"></span> О клубе
           </div>
           <h2 class="mt-3 font-header text-4xl md:text-6xl font-bold uppercase text-brand-black leading-tight">
             Больше чем <span class="text-brand-gold">просто</span> игра
           </h2>
           <p class="mt-6 text-gray-600 text-base md:text-lg leading-relaxed border-l-4 border-brand-gold pl-6">
-            Мы создаем комплексные условия для прогресса: техника, дисциплина, тактическое мышление и уверенность.
-            Наша цель — воспитать сильных игроков и сильных людей.
+            Мы развиваем технику, дисциплину и тактическое мышление. Важно не только выигрывать,
+            но и расти как спортсмен и как личность.
           </p>
 
           <div class="mt-8 grid sm:grid-cols-2 gap-4">
             <div class="rounded-2xl border border-gray-100 bg-white shadow-sm p-5">
-              <p class="text-xs uppercase tracking-[0.35em] font-bold text-gray-400">Ценности</p>
+              <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-400">Ценности</p>
               <p class="mt-2 font-header text-2xl uppercase font-bold text-brand-black">Честность • Семья</p>
-              <p class="mt-2 text-sm text-gray-500">Принципы честной борьбы и уважение к команде.</p>
+              <p class="mt-2 text-sm text-gray-500">Уважение к партнёрам и честная конкуренция.</p>
             </div>
             <div class="rounded-2xl border border-gray-100 bg-white shadow-sm p-5">
-              <p class="text-xs uppercase tracking-[0.35em] font-bold text-gray-400">Формат</p>
+              <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-400">Методика</p>
               <p class="mt-2 font-header text-2xl uppercase font-bold text-brand-black">Техника + Тактика</p>
-              <p class="mt-2 text-sm text-gray-500">Движение, мышление и игровая практика.</p>
+              <p class="mt-2 text-sm text-gray-500">Понимание игры, скорость решений, командность.</p>
             </div>
+          </div>
+
+          <div class="mt-8 flex flex-col sm:flex-row gap-3">
+            <button onclick="openModal('quiz')" class="btn-main bg-brand-black text-white py-4 px-8 font-header uppercase text-lg tracking-wider shadow-xl magnetic">
+              Подобрать программу
+            </button>
+            <button onclick="openModal('schedule')" class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-8 font-header uppercase text-lg tracking-wider hover:bg-brand-gold hover:text-black shadow-sm magnetic">
+              Смотреть расписание
+            </button>
           </div>
         </div>
 
@@ -407,7 +513,6 @@
           <div class="relative">
             <div class="absolute -inset-2 rounded-[2.2rem] bg-brand-gold/20 blur-2xl"></div>
             <div class="relative rounded-[2.2rem] overflow-hidden shadow-deep border border-gray-100 bg-white">
-              <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(70% 60% at 60% 40%, rgba(255,215,0,0.18), transparent 60%);"></div>
               <img src="images/loc1.jpg" loading="lazy" decoding="async"
                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
                    class="w-full h-auto object-cover" alt="Команда">
@@ -420,19 +525,18 @@
                 <div class="bg-white/85 backdrop-blur-xl rounded-2xl border border-white/50 p-5 shadow-lg">
                   <div class="flex items-start justify-between gap-4">
                     <div>
-                      <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-500">Elite Metric</p>
-                      <p class="mt-1 font-header text-2xl uppercase font-bold text-brand-black">Динамика прогресса</p>
-                      <p class="mt-2 text-sm text-gray-600">Структура тренировок, цельность нагрузки и рост дисциплины.</p>
+                      <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-500">Elite Metrics</p>
+                      <p class="mt-1 font-header text-2xl uppercase font-bold text-brand-black">Структура прогресса</p>
+                      <p class="mt-2 text-sm text-gray-600">Системная нагрузка и дисциплина → стабильный рост.</p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-brand-black text-white flex items-center justify-center shrink-0">
                       <i class="fas fa-chart-line text-brand-gold"></i>
                     </div>
                   </div>
 
-                  <!-- counters -->
                   <div class="mt-4 grid grid-cols-3 gap-3">
                     <div class="rounded-xl bg-gray-50 border border-gray-100 p-3 text-center">
-                      <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-400">Тренировок/мес</p>
+                      <p class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-400">Трен/мес</p>
                       <p class="mt-1 font-header text-2xl font-bold text-brand-black">
                         <span class="counter" data-target="8">0</span>
                       </p>
@@ -462,28 +566,109 @@
     </div>
   </section>
 
-  <!-- Programs -->
-  <section id="programs" class="py-20 bg-brand-gray">
+  <!-- Process (Roadmap) -->
+  <section id="process" class="py-24 bg-brand-gray relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-32 h-32 bg-brand-gold/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-64 h-64 bg-brand-black/5 rounded-full blur-3xl"></div>
+
+    <div class="container mx-auto px-6 relative z-10">
+      <div class="text-center mb-16 reveal">
+        <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Road to Pro</p>
+        <h2 class="mt-2 font-header text-4xl md:text-6xl font-bold uppercase text-brand-black">
+          Путь <span class="text-brand-gold">чемпиона</span>
+        </h2>
+        <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+          Пошаговая модель развития: техника → мышление → командность → соревнования → индивидуальная шлифовка.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-5 gap-5">
+        <div class="reveal rounded-[1.6rem] bg-white border border-gray-100 shadow-sm p-6">
+          <div class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center">
+            <i class="fas fa-child text-gray-400"></i>
+          </div>
+          <p class="mt-4 text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">5–7</p>
+          <h3 class="font-header text-2xl uppercase font-bold text-brand-black mt-2">Start</h3>
+          <p class="text-sm text-gray-600 mt-2">Координация, базовая техника и любовь к игре.</p>
+        </div>
+
+        <div class="reveal rounded-[1.6rem] bg-white border border-gray-100 shadow-sm p-6">
+          <div class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center">
+            <i class="fas fa-futbol text-gray-400"></i>
+          </div>
+          <p class="mt-4 text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">8–10</p>
+          <h3 class="font-header text-2xl uppercase font-bold text-brand-black mt-2">Progress</h3>
+          <p class="text-sm text-gray-600 mt-2">Техника, тактика, игровые ситуации и понимание роли.</p>
+        </div>
+
+        <div class="reveal rounded-[1.6rem] bg-brand-black text-white border border-black/10 shadow-deep p-6">
+          <div class="w-12 h-12 rounded-2xl bg-brand-gold/20 border border-brand-gold/25 flex items-center justify-center">
+            <i class="fas fa-brain text-brand-gold"></i>
+          </div>
+          <p class="mt-4 text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">11–14</p>
+          <h3 class="font-header text-2xl uppercase font-bold mt-2">Team IQ</h3>
+          <p class="text-sm text-gray-200 mt-2">Командное мышление, скорость решений, дисциплина.</p>
+        </div>
+
+        <div class="reveal rounded-[1.6rem] bg-white border border-gray-100 shadow-sm p-6">
+          <div class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center">
+            <i class="fas fa-trophy text-gray-400"></i>
+          </div>
+          <p class="mt-4 text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Matchday</p>
+          <h3 class="font-header text-2xl uppercase font-bold text-brand-black mt-2">Competition</h3>
+          <p class="text-sm text-gray-600 mt-2">Турниры, устойчивость, опыт и игровая практика.</p>
+        </div>
+
+        <div class="reveal rounded-[1.6rem] bg-white border border-gray-100 shadow-sm p-6">
+          <div class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center">
+            <i class="fas fa-user-ninja text-gray-400"></i>
+          </div>
+          <p class="mt-4 text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">1x1</p>
+          <h3 class="font-header text-2xl uppercase font-bold text-brand-black mt-2">Individual</h3>
+          <p class="text-sm text-gray-600 mt-2">Индивидуальная коррекция: ошибки, техника, позиция.</p>
+        </div>
+      </div>
+
+      <div class="text-center mt-12 reveal">
+        <button onclick="openModal('quiz')" class="btn-main bg-brand-gold text-black px-10 py-4 font-header text-xl uppercase tracking-wider shadow-deep magnetic">
+          Подобрать программу по возрасту
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Programs + Comparison + CTA -->
+  <section id="programs" class="py-20 bg-white border-t border-gray-100">
     <div class="container mx-auto px-6">
       <div class="text-center mb-12 reveal">
         <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Programs</p>
         <h2 class="mt-2 font-header text-4xl md:text-6xl font-bold uppercase text-brand-black">
-          Наши <span class="text-brand-gold">программы</span>
+          Программы <span class="text-brand-gold">обучения</span>
         </h2>
         <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
-          Выбирайте формат по возрасту и уровню подготовки. Для каждой программы — быстрый WhatsApp-запрос одним кликом.
+          Выберите готовую программу или пройдите мини-квиз — и мы откроем WhatsApp с уже заполненным сообщением.
         </p>
+        <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+          <button onclick="openModal('quiz')" class="btn-main bg-brand-black text-white px-8 py-4 font-header uppercase text-lg tracking-wider shadow-xl magnetic">
+            Квиз подбора
+          </button>
+          <button onclick="document.getElementById('comparison').scrollIntoView({behavior:'smooth'})"
+                  class="btn-main bg-white border border-gray-200 text-brand-black px-8 py-4 font-header uppercase text-lg tracking-wider hover:bg-brand-gold hover:text-black shadow-sm magnetic">
+            Сравнить программы
+          </button>
+        </div>
       </div>
 
+      <!-- Cards -->
       <div class="grid lg:grid-cols-12 gap-6 max-w-6xl mx-auto">
 
-        <!-- Card 1 -->
+        <!-- Baby Start -->
         <div class="lg:col-span-6 reveal">
           <div class="group rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition">
             <div class="relative h-64 bg-gray-200">
               <img src="images/prog_baby.jpg" loading="lazy" decoding="async"
                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                   class="w-full h-full object-cover" alt="Программа baby start">
+                   class="w-full h-full object-cover" alt="Программа Baby Start">
               <div class="img-box bg-gray-200 border-dashed border-4 border-white" style="display:none;">
                 <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
                 <span class="text-gray-500 font-bold">images/prog_baby.jpg</span>
@@ -516,17 +701,17 @@
               <div class="mt-5 flex flex-wrap gap-2">
                 <span class="text-xs font-bold px-3 py-2 rounded-full bg-brand-black text-brand-gold uppercase tracking-widest">Координация</span>
                 <span class="text-xs font-bold px-3 py-2 rounded-full bg-gray-100 text-gray-600 uppercase tracking-widest">Дриблинг</span>
-                <span class="text-xs font-bold px-3 py-2 rounded-full bg-gray-100 text-gray-600 uppercase tracking-widest">Любовь к мячу</span>
+                <span class="text-xs font-bold px-3 py-2 rounded-full bg-gray-100 text-gray-600 uppercase tracking-widest">База</span>
               </div>
 
               <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full"
-                        onclick="waProgram('Программа Baby Start', 'Возраст 5–7', 'Хочу записать ребенка на Baby Start. Подскажите свободные места и локацию.')">
+                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full magnetic"
+                        onclick="waProgram('Baby Start', '5–7 лет', 'Хочу записать ребенка на Baby Start. Подскажите свободные места и локацию.')">
                   Записаться
                 </button>
-                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition"
-                        onclick="waProgram('Программа Baby Start', 'Возраст 5–7', 'Нужна консультация по Baby Start: условия, экипировка, пробная тренировка.')">
-                  Вопрос тренеру
+                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition magnetic"
+                        onclick="waProgram('Baby Start', '5–7 лет', 'Нужна консультация по Baby Start: условия, экипировка, пробная тренировка.')">
+                  Консультация
                 </button>
               </div>
 
@@ -535,13 +720,13 @@
           </div>
         </div>
 
-        <!-- Card 2 -->
+        <!-- Weekend -->
         <div class="lg:col-span-6 reveal">
           <div class="group rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition">
             <div class="relative h-64 bg-gray-200">
               <img src="images/prog_weekend.jpg" loading="lazy" decoding="async"
                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                   class="w-full h-full object-cover" alt="Группы выходного дня">
+                   class="w-full h-full object-cover" alt="Weekend группы">
               <div class="img-box bg-gray-200 border-dashed border-4 border-white" style="display:none;">
                 <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
                 <span class="text-gray-500 font-bold">images/prog_weekend.jpg</span>
@@ -578,12 +763,12 @@
               </div>
 
               <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full"
-                        onclick="waProgram('Группы выходного дня', 'Возраст 8–10', 'Хочу записать ребенка в Weekend-группу. Подскажите места и расписание.')">
+                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full magnetic"
+                        onclick="waProgram('Weekend', '8–10 лет', 'Хочу записать ребенка в Weekend-группу. Подскажите места и расписание.')">
                   Записаться
                 </button>
-                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition"
-                        onclick="waProgram('Группы выходного дня', 'Возраст 8–10', 'Нужна консультация по Weekend-группам: уровень, требования, экипировка.')">
+                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition magnetic"
+                        onclick="waProgram('Weekend', '8–10 лет', 'Нужна консультация по Weekend-группам: уровень, требования, экипировка.')">
                   Консультация
                 </button>
               </div>
@@ -593,7 +778,7 @@
           </div>
         </div>
 
-        <!-- Card 3 -->
+        <!-- Spec -->
         <div class="lg:col-span-7 reveal">
           <div class="rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition">
             <div class="relative h-72 bg-gray-200">
@@ -636,19 +821,19 @@
               <div class="mt-5 rounded-2xl bg-brand-black text-white p-5 border border-black/10">
                 <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Что внутри</p>
                 <ul class="mt-3 text-sm text-gray-200 space-y-2">
-                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Техническая база и скорость принятия решений</li>
-                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Тактика, командные взаимодействия, игровая практика</li>
-                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Участие в городских и республиканских соревнованиях</li>
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Техника + скорость принятия решений</li>
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Тактика, взаимодействия, игровые модели</li>
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Турниры, матч-дни, рост устойчивости</li>
                 </ul>
               </div>
 
               <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full"
-                        onclick="waProgram('Спецгруппа', 'Возраст 11–14', 'Интересует Спецгруппа: условия отбора, расписание и локации.')">
+                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full magnetic"
+                        onclick="waProgram('Spec Group', '11–14 лет', 'Интересует Спецгруппа: условия отбора, расписание и локации.')">
                   Узнать условия
                 </button>
-                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition"
-                        onclick="waProgram('Спецгруппа', 'Возраст 11–14', 'Хочу записаться на просмотр/отбор в Спецгруппу. Подскажите формат и время.')">
+                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition magnetic"
+                        onclick="waProgram('Spec Group', '11–14 лет', 'Хочу записаться на просмотр/отбор в Спецгруппу. Подскажите формат и время.')">
                   Запись на просмотр
                 </button>
               </div>
@@ -656,7 +841,7 @@
           </div>
         </div>
 
-        <!-- Card 4 -->
+        <!-- Small Group -->
         <div class="lg:col-span-5 reveal">
           <div class="rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition h-full flex flex-col">
             <div class="relative h-72 bg-gray-200">
@@ -682,22 +867,26 @@
 
             <div class="p-6 md:p-8 flex flex-col flex-1">
               <ul class="text-sm text-gray-600 space-y-2">
-                <li><i class="fas fa-check text-brand-gold mr-2"></i>В группе не больше 5 человек</li>
-                <li><i class="fas fa-check text-brand-gold mr-2"></i>Разнообразие тренировок по технике</li>
+                <li><i class="fas fa-check text-brand-gold mr-2"></i>Группа до 5 человек</li>
+                <li><i class="fas fa-check text-brand-gold mr-2"></i>Техника, скорость, работа над деталями</li>
                 <li><i class="fas fa-check text-brand-gold mr-2"></i>8 тренировок в месяц</li>
               </ul>
 
-              <div class="mt-auto pt-6">
-                <button class="btn-main bg-brand-black text-white py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full hover:bg-brand-gold hover:text-black transition"
-                        onclick="waProgram('Малая группа', 'до 5 человек', 'Интересуют тренировки в малых группах: расписание, цена и локации.')">
+              <div class="mt-auto pt-6 space-y-3">
+                <button class="btn-main bg-brand-black text-white py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full hover:bg-brand-gold hover:text-black transition magnetic"
+                        onclick="waProgram('Small Group', 'до 5 человек', 'Интересуют тренировки в малых группах: расписание, цена и локации.')">
                   Запрос в WhatsApp
+                </button>
+                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition magnetic"
+                        onclick="openModal('schedule')">
+                  Посмотреть расписание
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Card 5 (Indiv) -->
+        <!-- Individual -->
         <div class="lg:col-span-12 reveal">
           <div class="rounded-[2rem] overflow-hidden border border-gray-100 bg-white shadow-lg hover:shadow-deep transition">
             <div class="grid lg:grid-cols-12">
@@ -746,19 +935,19 @@
                     <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Идеально если</p>
                     <ul class="mt-3 text-sm text-gray-200 space-y-2">
                       <li><i class="fas fa-check text-brand-gold mr-2"></i>нужно быстро поднять технику</li>
-                      <li><i class="fas fa-check text-brand-gold mr-2"></i>есть цель на позицию/роль</li>
                       <li><i class="fas fa-check text-brand-gold mr-2"></i>важна персональная коррекция</li>
+                      <li><i class="fas fa-check text-brand-gold mr-2"></i>есть цель на позицию/роль</li>
                     </ul>
                   </div>
                 </div>
 
                 <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                  <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full"
-                          onclick="waProgram('Индивидуально 1x1', 'Premium', 'Хочу записаться на индивидуальную тренировку 1x1. Возраст ребенка: __. Удобное время: __.')">
+                  <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase text-lg tracking-wider shadow-xl w-full magnetic"
+                          onclick="waProgram('Individual 1x1', 'Premium', 'Хочу записаться на индивидуальную тренировку 1x1. Возраст ребенка: __. Удобное время: __.')">
                     Записаться 1x1
                   </button>
-                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition"
-                          onclick="waProgram('Индивидуально 1x1', 'Premium', 'Нужна консультация по 1x1: цели, формат и стоимость.')">
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase text-lg tracking-wider w-full hover:bg-brand-black hover:text-white transition magnetic"
+                          onclick="waProgram('Individual 1x1', 'Premium', 'Нужна консультация по 1x1: цели, формат и стоимость.')">
                     Консультация
                   </button>
                 </div>
@@ -769,7 +958,155 @@
           </div>
         </div>
 
-      </div><!-- grid -->
+      </div>
+
+      <!-- Comparison -->
+      <div id="comparison" class="mt-16 reveal max-w-6xl mx-auto">
+        <div class="rounded-[2rem] border border-gray-100 bg-brand-gray p-6 md:p-10 shadow-sm">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Comparison</p>
+              <h3 class="mt-2 font-header text-3xl md:text-4xl uppercase font-bold text-brand-black">
+                Сравнение программ
+              </h3>
+              <p class="mt-2 text-gray-600">Быстро понять разницу и выбрать лучший путь.</p>
+            </div>
+            <button onclick="openModal('quiz')" class="btn-main bg-brand-black text-white px-8 py-4 font-header uppercase text-lg tracking-wider shadow-xl magnetic">
+              Подбор за 30 секунд
+            </button>
+          </div>
+
+          <div class="mt-6 overflow-x-auto">
+            <table class="w-full text-left border-separate" style="border-spacing: 0 10px;">
+              <thead>
+                <tr class="text-[10px] uppercase tracking-[0.35em] font-bold text-gray-500">
+                  <th class="px-4">Программа</th>
+                  <th class="px-4">Возраст</th>
+                  <th class="px-4">Частота</th>
+                  <th class="px-4">Фокус</th>
+                  <th class="px-4">Цена</th>
+                </tr>
+              </thead>
+              <tbody class="text-sm">
+                <tr class="bg-white border border-gray-100">
+                  <td class="px-4 py-4 rounded-l-2xl font-bold text-brand-black">Baby Start</td>
+                  <td class="px-4 py-4">5–7</td>
+                  <td class="px-4 py-4">2 раза/нед</td>
+                  <td class="px-4 py-4">База, координация</td>
+                  <td class="px-4 py-4 rounded-r-2xl font-bold">25.000 тг</td>
+                </tr>
+                <tr class="bg-white border border-gray-100">
+                  <td class="px-4 py-4 rounded-l-2xl font-bold text-brand-black">Weekend</td>
+                  <td class="px-4 py-4">8–10</td>
+                  <td class="px-4 py-4">2 раза/нед</td>
+                  <td class="px-4 py-4">Техника, тактика</td>
+                  <td class="px-4 py-4 rounded-r-2xl font-bold">25.000 тг</td>
+                </tr>
+                <tr class="bg-white border border-gray-100">
+                  <td class="px-4 py-4 rounded-l-2xl font-bold text-brand-black">Spec Group</td>
+                  <td class="px-4 py-4">11–14</td>
+                  <td class="px-4 py-4">3 раза/нед + matchday</td>
+                  <td class="px-4 py-4">Соревнования</td>
+                  <td class="px-4 py-4 rounded-r-2xl font-bold">30.000 тг</td>
+                </tr>
+                <tr class="bg-white border border-gray-100">
+                  <td class="px-4 py-4 rounded-l-2xl font-bold text-brand-black">Small Group</td>
+                  <td class="px-4 py-4">Любой</td>
+                  <td class="px-4 py-4">8/мес</td>
+                  <td class="px-4 py-4">Детали, техника</td>
+                  <td class="px-4 py-4 rounded-r-2xl font-bold">от 50.000 тг</td>
+                </tr>
+                <tr class="bg-white border border-gray-100">
+                  <td class="px-4 py-4 rounded-l-2xl font-bold text-brand-black">Individual 1x1</td>
+                  <td class="px-4 py-4">Любой</td>
+                  <td class="px-4 py-4">По запросу</td>
+                  <td class="px-4 py-4">Персональная коррекция</td>
+                  <td class="px-4 py-4 rounded-r-2xl font-bold">от 80.000 тг</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="mt-4 text-xs text-gray-500">
+            Примечание: расписание и места уточняйте у менеджера.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-20 bg-brand-black text-white border-t border-white/10">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Trust</p>
+        <h2 class="mt-2 font-header text-4xl md:text-6xl font-bold uppercase">
+          Отзывы <span class="text-brand-gold">родителей</span>
+        </h2>
+        <p class="mt-4 text-gray-300 max-w-2xl mx-auto">
+          Примерная секция (можешь заменить текст на реальные отзывы).
+        </p>
+      </div>
+
+      <div class="reveal rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl shadow-deep overflow-hidden">
+        <div class="p-6 md:p-10">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">Slider</p>
+              <p class="mt-2 font-header text-2xl md:text-3xl uppercase font-bold">Что говорят о нас</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 hover:border-brand-gold/40 transition"
+                      onclick="slideTestimonial(-1)" aria-label="Назад">
+                <i class="fas fa-arrow-left text-brand-gold"></i>
+              </button>
+              <button class="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 hover:border-brand-gold/40 transition"
+                      onclick="slideTestimonial(1)" aria-label="Вперед">
+                <i class="fas fa-arrow-right text-brand-gold"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-8 grid lg:grid-cols-12 gap-6 items-start">
+            <div class="lg:col-span-8">
+              <div class="rounded-[1.6rem] bg-black/40 border border-white/10 p-6 md:p-8">
+                <div class="flex items-center gap-2 text-brand-gold">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p id="tText" class="mt-4 text-lg md:text-xl text-gray-100 leading-relaxed">
+                  —
+                </p>
+                <div class="mt-6 flex items-center justify-between">
+                  <div>
+                    <p id="tName" class="font-header uppercase text-2xl font-bold">—</p>
+                    <p id="tMeta" class="text-xs uppercase tracking-[0.35em] text-gray-400 font-bold">—</p>
+                  </div>
+                  <button onclick="waPrefill('Здравствуйте! Хочу узнать подробности и записаться.')" class="btn-main bg-brand-gold text-black px-6 py-3 font-header uppercase tracking-wider shadow-xl magnetic">
+                    Записаться
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-4">
+              <div class="rounded-[1.6rem] bg-white/5 border border-white/10 p-6">
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">Highlights</p>
+                <ul class="mt-4 text-sm text-gray-200 space-y-3">
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Системная методика</li>
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Дисциплина и рост уверенности</li>
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Командное мышление</li>
+                  <li><i class="fas fa-check text-brand-gold mr-2"></i>Матч-дни и практика</li>
+                </ul>
+                <button onclick="openModal('quiz')" class="mt-6 btn-main w-full bg-brand-black text-white py-4 font-header uppercase tracking-wider shadow-xl hover:bg-brand-gold hover:text-black transition magnetic">
+                  Подбор программы
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -814,12 +1151,10 @@
             <p class="text-gray-300 text-sm leading-relaxed">Полиэстер PRO-Fit: дышит и быстро отводит влагу.</p>
           </div>
 
-          <div class="rounded-[1.6rem] bg-gray-50 border border-gray-100 p-7">
-            <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Quick note</p>
-            <p class="mt-2 text-gray-700 text-sm leading-relaxed">
-              Форму можно открыть в полном размере — нажмите на изображение.
-            </p>
-          </div>
+          <button onclick="waPrefill('Здравствуйте! Интересует клубная форма: размеры, стоимость и как заказать.')"
+                  class="btn-main w-full bg-brand-gold text-black py-4 font-header uppercase tracking-wider shadow-xl magnetic">
+            Узнать про форму
+          </button>
         </div>
       </div>
     </div>
@@ -857,7 +1192,7 @@
                 <p class="mt-1 font-header text-2xl uppercase font-bold">Техника • Тактика • Психология</p>
                 <p class="mt-2 text-sm text-gray-200">Системное развитие игрока и командных взаимодействий.</p>
               </div>
-              <button class="btn-main bg-brand-gold text-black px-6 py-3 font-header uppercase text-lg tracking-wider shadow-xl"
+              <button class="btn-main bg-brand-gold text-black px-6 py-3 font-header uppercase text-lg tracking-wider shadow-xl magnetic"
                       onclick="waPrefill('Здравствуйте! Хочу узнать про тренерский состав и методику обучения. Подскажите подробнее.')">
                 Узнать
               </button>
@@ -865,6 +1200,73 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery (Masonry) -->
+  <section id="gallery" class="py-20 bg-white border-t border-gray-100">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Gallery</p>
+        <h2 class="mt-2 font-header text-4xl md:text-6xl font-bold uppercase text-brand-black">
+          Галерея <span class="text-brand-gold">тренировок</span>
+        </h2>
+        <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+          Здесь можно разместить ваши фото. Пути оставлены в формате <b>images/...</b> (можешь заменить файлы).
+        </p>
+      </div>
+
+      <div class="reveal masonry max-w-6xl mx-auto">
+        <!-- Плейсхолдеры: просто загрузи такие файлы в images/ -->
+        <div class="masonry-item">
+          <div class="rounded-[1.2rem] overflow-hidden border border-gray-100 shadow-sm bg-gray-50 cursor-pointer" onclick="openLightbox('images/gallery_1.jpg')">
+            <img src="images/gallery_1.jpg" loading="lazy" decoding="async"
+                 onerror="this.src='https://via.placeholder.com/1200x900?text=images/gallery_1.jpg'"
+                 class="w-full h-auto object-cover" alt="Gallery 1">
+          </div>
+        </div>
+        <div class="masonry-item">
+          <div class="rounded-[1.2rem] overflow-hidden border border-gray-100 shadow-sm bg-gray-50 cursor-pointer" onclick="openLightbox('images/gallery_2.jpg')">
+            <img src="images/gallery_2.jpg" loading="lazy" decoding="async"
+                 onerror="this.src='https://via.placeholder.com/1200x1400?text=images/gallery_2.jpg'"
+                 class="w-full h-auto object-cover" alt="Gallery 2">
+          </div>
+        </div>
+        <div class="masonry-item">
+          <div class="rounded-[1.2rem] overflow-hidden border border-gray-100 shadow-sm bg-gray-50 cursor-pointer" onclick="openLightbox('images/gallery_3.jpg')">
+            <img src="images/gallery_3.jpg" loading="lazy" decoding="async"
+                 onerror="this.src='https://via.placeholder.com/1200x900?text=images/gallery_3.jpg'"
+                 class="w-full h-auto object-cover" alt="Gallery 3">
+          </div>
+        </div>
+        <div class="masonry-item">
+          <div class="rounded-[1.2rem] overflow-hidden border border-gray-100 shadow-sm bg-gray-50 cursor-pointer" onclick="openLightbox('images/gallery_4.jpg')">
+            <img src="images/gallery_4.jpg" loading="lazy" decoding="async"
+                 onerror="this.src='https://via.placeholder.com/1200x1100?text=images/gallery_4.jpg'"
+                 class="w-full h-auto object-cover" alt="Gallery 4">
+          </div>
+        </div>
+        <div class="masonry-item">
+          <div class="rounded-[1.2rem] overflow-hidden border border-gray-100 shadow-sm bg-gray-50 cursor-pointer" onclick="openLightbox('images/gallery_5.jpg')">
+            <img src="images/gallery_5.jpg" loading="lazy" decoding="async"
+                 onerror="this.src='https://via.placeholder.com/1200x900?text=images/gallery_5.jpg'"
+                 class="w-full h-auto object-cover" alt="Gallery 5">
+          </div>
+        </div>
+        <div class="masonry-item">
+          <div class="rounded-[1.2rem] overflow-hidden border border-gray-100 shadow-sm bg-gray-50 cursor-pointer" onclick="openLightbox('images/gallery_6.jpg')">
+            <img src="images/gallery_6.jpg" loading="lazy" decoding="async"
+                 onerror="this.src='https://via.placeholder.com/1200x1500?text=images/gallery_6.jpg'"
+                 class="w-full h-auto object-cover" alt="Gallery 6">
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-10 reveal">
+        <button onclick="waPrefill('Здравствуйте! Хочу записать ребенка на тренировку. Подскажите ближайшую локацию и расписание.')" class="btn-main bg-brand-black text-white px-10 py-4 font-header uppercase tracking-wider shadow-xl magnetic">
+          Записаться после просмотра
+        </button>
       </div>
     </div>
   </section>
@@ -903,42 +1305,110 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section id="faq" class="py-20 bg-brand-gray border-t border-gray-100">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">FAQ</p>
+        <h2 class="mt-2 font-header text-4xl md:text-6xl font-bold uppercase text-brand-black">
+          Частые <span class="text-brand-gold">вопросы</span>
+        </h2>
+        <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+          Аккордеон без библиотек — быстро, красиво, удобно.
+        </p>
+      </div>
+
+      <div class="max-w-4xl mx-auto space-y-3 reveal">
+        <div class="rounded-[1.4rem] bg-white border border-gray-100 shadow-sm overflow-hidden">
+          <button class="w-full flex items-center justify-between p-6 text-left" onclick="toggleFaq(this)">
+            <span class="font-header uppercase font-bold text-lg">Нужна ли форма сразу?</span>
+            <i class="fas fa-chevron-down text-gray-400"></i>
+          </button>
+          <div class="px-6 pb-6 hidden">
+            <p class="text-gray-600 text-sm leading-relaxed">
+              На старт можно прийти в удобной спортивной одежде. По форме и размерам — уточните у менеджера.
+            </p>
+          </div>
+        </div>
+
+        <div class="rounded-[1.4rem] bg-white border border-gray-100 shadow-sm overflow-hidden">
+          <button class="w-full flex items-center justify-between p-6 text-left" onclick="toggleFaq(this)">
+            <span class="font-header uppercase font-bold text-lg">Можно ли попробовать одно занятие?</span>
+            <i class="fas fa-chevron-down text-gray-400"></i>
+          </button>
+          <div class="px-6 pb-6 hidden">
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Да, вы можете записаться на пробную тренировку через WhatsApp.
+            </p>
+          </div>
+        </div>
+
+        <div class="rounded-[1.4rem] bg-white border border-gray-100 shadow-sm overflow-hidden">
+          <button class="w-full flex items-center justify-between p-6 text-left" onclick="toggleFaq(this)">
+            <span class="font-header uppercase font-bold text-lg">Как выбрать программу?</span>
+            <i class="fas fa-chevron-down text-gray-400"></i>
+          </button>
+          <div class="px-6 pb-6 hidden">
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Быстрее всего — через квиз подбора: возраст, цель и удобные дни. Затем откроется WhatsApp с готовым сообщением.
+            </p>
+            <button onclick="openModal('quiz')" class="mt-4 btn-main bg-brand-gold text-black px-6 py-3 font-header uppercase tracking-wider shadow-xl magnetic">
+              Открыть квиз
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- Locations -->
-  <section id="locations" class="py-20 bg-brand-black text-white">
+  <section id="locations" class="py-20 bg-brand-black text-white border-t border-white/10">
     <div class="container mx-auto px-6">
       <div class="grid lg:grid-cols-2 gap-10 items-start">
         <div class="reveal">
           <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Contacts</p>
           <h2 class="mt-2 font-header text-5xl uppercase mb-8">Контакты <span class="text-brand-gold">клуба</span></h2>
 
-          <div class="space-y-4 mb-8">
-            <div class="p-6 border border-white/10 rounded-2xl bg-white/5 backdrop-blur-md">
-              <h3 class="font-header text-2xl uppercase mb-1">Школа №11</h3>
-              <p class="text-gray-300 text-sm">им. Өзбекәлі Жәнібекова</p>
-            </div>
-            <div class="p-6 border border-white/10 rounded-2xl bg-white/5 backdrop-blur-md">
-              <h3 class="font-header text-2xl uppercase mb-1">Школа №71</h3>
-              <p class="text-gray-300 text-sm">Астана, ул. Е-10</p>
-            </div>
-          </div>
-
-          <div class="rounded-[2rem] bg-white/5 backdrop-blur-md border border-white/10 p-6">
-            <p class="text-xs text-brand-gold uppercase tracking-widest font-bold mb-1">Менеджер Руслан</p>
-            <a href="tel:+77019744464" class="text-3xl font-header font-bold block mb-4 hover:text-brand-gold transition">+7 701 974 44 64</a>
-
-            <div class="grid sm:grid-cols-2 gap-3">
-              <a href="https://wa.me/77019744464" class="btn-main w-full py-4 bg-brand-gold text-black text-center font-header text-xl uppercase tracking-wider block shadow-xl">
-                WhatsApp
-              </a>
-              <button onclick="waPrefill('Здравствуйте! Подскажите, пожалуйста, как добраться до ближайшей локации?')"
-                      class="btn-main w-full py-4 bg-white/10 text-white text-center font-header text-xl uppercase tracking-wider block border border-white/20 hover:bg-white hover:text-black transition">
-                Как добраться
+          <!-- Location Tabs -->
+          <div class="rounded-[2rem] bg-white/5 backdrop-blur-md border border-white/10 p-5 md:p-6">
+            <div class="flex gap-2">
+              <button id="locTab1" onclick="selectLocation(0)" class="flex-1 btn-main bg-brand-gold text-black py-3 font-header uppercase tracking-wider shadow-xl magnetic">
+                Школа №11
+              </button>
+              <button id="locTab2" onclick="selectLocation(1)" class="flex-1 btn-main bg-white/10 text-white border border-white/20 py-3 font-header uppercase tracking-wider hover:bg-white hover:text-black transition magnetic">
+                Школа №71
               </button>
             </div>
 
-            <p class="mt-4 text-xs text-gray-300">
-              Карта загрузится автоматически, когда вы доскроллите до блока.
-            </p>
+            <div class="mt-5 space-y-3">
+              <div class="p-5 border border-white/10 rounded-2xl bg-white/5">
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">Адрес</p>
+                <p id="locAddress" class="mt-2 font-header text-2xl uppercase font-bold">им. Өзбекәлі Жәнібекова</p>
+                <p id="locCity" class="mt-1 text-gray-300 text-sm">Астана</p>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-3">
+                <button onclick="waPrefill(currentLocationWaText())"
+                        class="btn-main w-full py-4 bg-brand-gold text-black text-center font-header text-lg uppercase tracking-wider block shadow-xl magnetic">
+                  Написать в WhatsApp
+                </button>
+                <a href="tel:+77019744464"
+                   class="btn-main w-full py-4 bg-white/10 text-white text-center font-header text-lg uppercase tracking-wider block border border-white/20 hover:bg-white hover:text-black transition magnetic">
+                  Позвонить
+                </a>
+              </div>
+
+              <p class="mt-2 text-xs text-gray-300">
+                Карта загрузится автоматически, когда вы доскроллите до блока.
+              </p>
+            </div>
+          </div>
+
+          <!-- Manager -->
+          <div class="mt-6 rounded-[2rem] bg-white/5 backdrop-blur-md border border-white/10 p-6">
+            <p class="text-xs text-brand-gold uppercase tracking-widest font-bold mb-1">Менеджер Руслан</p>
+            <a href="tel:+77019744464" class="text-3xl font-header font-bold block hover:text-brand-gold transition">+7 701 974 44 64</a>
           </div>
         </div>
 
@@ -979,17 +1449,17 @@
 
   <!-- Sticky CTA -->
   <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[min(980px,calc(100%-24px))]">
-    <div class="reveal is-visible bg-white/85 backdrop-blur-xl border border-gray-200 rounded-[1.6rem] shadow-deep px-4 py-3 flex items-center justify-between gap-4">
+    <div class="reveal is-visible bg-white/88 backdrop-blur-xl border border-gray-200 rounded-[1.6rem] shadow-deep px-4 py-3 flex items-center justify-between gap-4">
       <div class="hidden sm:block">
         <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Quick action</p>
         <p class="font-header uppercase font-bold text-brand-black text-xl leading-none">Запись в 1 клик</p>
       </div>
       <div class="flex-1 flex gap-2">
-        <button onclick="waPrefill('Здравствуйте! Хочу записать ребенка. Возраст: __. Локация: __. Удобные дни: __.')"
-                class="btn-main flex-1 bg-brand-black text-white py-3 font-header uppercase tracking-wider shadow-lg hover:bg-brand-gold hover:text-black transition">
-          Записаться
+        <button onclick="openModal('quiz')"
+                class="btn-main flex-1 bg-brand-black text-white py-3 font-header uppercase tracking-wider shadow-lg hover:bg-brand-gold hover:text-black transition magnetic">
+          Подбор
         </button>
-        <a href="https://wa.me/77019744464" class="btn-main flex-1 bg-brand-gold text-black py-3 font-header uppercase tracking-wider text-center shadow-lg">
+        <a href="https://wa.me/77019744464" class="btn-main flex-1 bg-brand-gold text-black py-3 font-header uppercase tracking-wider text-center shadow-lg magnetic">
           WhatsApp
         </a>
       </div>
@@ -1014,12 +1484,69 @@
     <img id="lightboxImg" src="" alt="Preview">
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Modal (Quiz + Schedule) -->
+  <div id="modal" aria-hidden="true" onclick="modalOutsideClose(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between p-5 md:p-6 border-b border-black/5">
+        <div>
+          <p id="modalEyebrow" class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Modal</p>
+          <h3 id="modalTitle" class="font-header text-2xl md:text-3xl uppercase font-bold text-brand-black">—</h3>
+        </div>
+        <button onclick="closeModal()" class="w-11 h-11 rounded-2xl bg-gray-100 border border-gray-200 text-gray-700 hover:text-black hover:border-brand-gold/50 transition" aria-label="Закрыть">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
 
+      <div id="modalBody" class="p-5 md:p-6">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const WA_NUMBER = "77019744464";
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Program data
+    const PROGRAMS = [
+      { id:'baby', title:'Baby Start', age:'5–7', price:'25.000 тг', freq:'2 раза/нед', focus:'База, координация', schedule:'Сб–Вс 11:00–12:00', wa:'Хочу записать ребенка на Baby Start. Подскажите свободные места и локацию.' },
+      { id:'weekend', title:'Weekend', age:'8–10', price:'25.000 тг', freq:'2 раза/нед', focus:'Техника, тактика', schedule:'Сб–Вс 10:00–11:00', wa:'Хочу записать ребенка в Weekend-группу. Подскажите места и расписание.' },
+      { id:'spec', title:'Spec Group', age:'11–14', price:'30.000 тг', freq:'3 раза/нед + matchday', focus:'Соревнования', schedule:'3 раза/нед + matchday', wa:'Интересует Спецгруппа: условия отбора, расписание и локации.' },
+      { id:'small', title:'Small Group', age:'Любой', price:'от 50.000 тг', freq:'8/мес', focus:'Детали, техника', schedule:'По согласованию', wa:'Интересуют тренировки в малых группах: расписание, цена и локации.' },
+      { id:'indiv', title:'Individual 1x1', age:'Любой', price:'от 80.000 тг', freq:'По запросу', focus:'Персональная коррекция', schedule:'Пн—Пт (окна по расписанию)', wa:'Хочу записаться на индивидуальную тренировку 1x1. Возраст ребенка: __. Удобное время: __.' }
+    ];
+
+    // Locations tabs
+    const LOCATIONS = [
+      { name:'Школа №11', address:'им. Өзбекәлі Жәнібекова', city:'Астана', lat:51.152230, lng:71.404335, popup:'<b>Школа №11</b>' },
+      { name:'Школа №71', address:'ул. Е-10', city:'Астана', lat:51.104512, lng:71.402919, popup:'<b>Школа №71</b>' }
+    ];
+    let currentLocIndex = 0;
+
+    // Testimonials
+    const TESTIMONIALS = [
+      { text:'Ребенок стал увереннее, дисциплина выросла, на поле быстрее принимает решения. Очень сильная структура тренировок.', name:'Айгерим', meta:'Родитель • 9 лет' },
+      { text:'Нравится подход: не просто бегают, а реально учат думать, держать позицию и играть в команде.', name:'Данияр', meta:'Родитель • 11 лет' },
+      { text:'Тренер объясняет понятно, прогресс заметен уже через несколько недель. Ребенок сам просится на тренировки.', name:'Жанна', meta:'Родитель • 7 лет' }
+    ];
+    let tIndex = 0;
+
+    function setTestimonial(i){
+      tIndex = (i + TESTIMONIALS.length) % TESTIMONIALS.length;
+      const t = TESTIMONIALS[tIndex];
+      const tText = document.getElementById('tText');
+      const tName = document.getElementById('tName');
+      const tMeta = document.getElementById('tMeta');
+      if (tText) tText.textContent = t.text;
+      if (tName) tName.textContent = t.name;
+      if (tMeta) tMeta.textContent = t.meta;
+    }
+    function slideTestimonial(dir){
+      setTestimonial(tIndex + dir);
+    }
 
     // Preloader + hero video optimization
     window.addEventListener('load', () => {
@@ -1028,6 +1555,9 @@
         pre.style.opacity = '0';
         setTimeout(() => { pre.style.display = 'none'; }, 700);
       }
+
+      // Testimonials init
+      setTestimonial(0);
 
       const heroVideo = document.getElementById('heroVideo');
       const heroPoster = document.getElementById('heroPoster');
@@ -1043,23 +1573,38 @@
       }
     });
 
-    // Navbar style on scroll
+    // Navbar style on scroll + Scroll Progress
     const navShell = document.getElementById('navShell');
     window.addEventListener('scroll', () => {
       const sc = window.scrollY || 0;
-      if (!navShell) return;
-      if (sc > 18) {
-        navShell.classList.add('bg-white/90');
-        navShell.classList.remove('bg-white/70');
-      } else {
-        navShell.classList.add('bg-white/70');
-        navShell.classList.remove('bg-white/90');
+      if (navShell) {
+        if (sc > 18) { navShell.classList.add('bg-white/90'); navShell.classList.remove('bg-white/70'); }
+        else { navShell.classList.add('bg-white/70'); navShell.classList.remove('bg-white/90'); }
       }
-    });
+
+      const doc = document.documentElement;
+      const h = (doc.scrollHeight - doc.clientHeight) || 1;
+      const p = Math.min(100, Math.max(0, (sc / h) * 100));
+      const bar = document.getElementById('scrollProgress');
+      if (bar) bar.style.width = p.toFixed(2) + '%';
+    }, { passive:true });
+
+    // Cursor spotlight (desktop only)
+    const spotlight = document.getElementById('spotlight');
+    if (!isMobile && !reduceMotion && spotlight) {
+      spotlight.style.opacity = '1';
+      window.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        spotlight.style.setProperty('--x', x + '%');
+        spotlight.style.setProperty('--y', y + '%');
+      }, { passive:true });
+    }
 
     // Mobile menu: lock body scroll
     function toggleMenu(forceClose = null) {
       const menu = document.getElementById('mobile-menu');
+      if (!menu) return;
       const isOpen = !menu.classList.contains('translate-x-full');
       const nextOpen = (forceClose === null) ? !isOpen : !forceClose;
 
@@ -1095,11 +1640,12 @@
       if (e.target && e.target.id === 'lightbox') closeLightbox();
     });
 
-    // ESC closes menu + lightbox
+    // ESC closes menu + lightbox + modal
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         toggleMenu(true);
         closeLightbox();
+        closeModal();
       }
     });
 
@@ -1112,14 +1658,14 @@
       const payload =
 `Здравствуйте!
 Интересует: ${programName}
-${meta ? ("Детали: " + meta) : ""}
+${meta ? ("Возраст/детали: " + meta) : ""}
 Сообщение: ${message || ""}
 
 Пожалуйста, подскажите: свободные места, расписание и локацию.`;
       waPrefill(payload);
     }
 
-    // Reveal animation (IntersectionObserver)
+    // Reveal (IntersectionObserver)
     const revealEls = Array.from(document.querySelectorAll('.reveal'));
     if ('IntersectionObserver' in window && !reduceMotion) {
       const ro = new IntersectionObserver((entries) => {
@@ -1164,17 +1710,332 @@ ${meta ? ("Детали: " + meta) : ""}
       counters.forEach(animateCounter);
     }
 
-    // Map: lazy init
+    // Magnetic buttons (desktop only)
+    function initMagnetic() {
+      if (isMobile || reduceMotion) return;
+      const items = Array.from(document.querySelectorAll('.magnetic'));
+      items.forEach((btn) => {
+        const strength = 10;
+        btn.addEventListener('mousemove', (e) => {
+          const r = btn.getBoundingClientRect();
+          const x = e.clientX - r.left - r.width / 2;
+          const y = e.clientY - r.top - r.height / 2;
+          const dx = Math.max(-strength, Math.min(strength, x / 12));
+          const dy = Math.max(-strength, Math.min(strength, y / 12));
+          btn.style.transform = `translate(${dx}px, ${dy}px)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = '';
+        });
+      });
+    }
+    initMagnetic();
+
+    // FAQ
+    function toggleFaq(btn){
+      const body = btn.nextElementSibling;
+      if (!body) return;
+      const icon = btn.querySelector('i');
+      const isOpen = !body.classList.contains('hidden');
+      if (isOpen) {
+        body.classList.add('hidden');
+        if (icon) icon.style.transform = '';
+      } else {
+        body.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // Modal system
+    function openModal(type){
+      const modal = document.getElementById('modal');
+      const eyebrow = document.getElementById('modalEyebrow');
+      const title = document.getElementById('modalTitle');
+      const body = document.getElementById('modalBody');
+      if (!modal || !eyebrow || !title || !body) return;
+
+      if (type === 'quiz') {
+        eyebrow.textContent = 'Program Quiz';
+        title.textContent = 'Подбор программы';
+        body.innerHTML = quizTemplate();
+      } else if (type === 'schedule') {
+        eyebrow.textContent = 'Schedule';
+        title.textContent = 'Расписание';
+        body.innerHTML = scheduleTemplate();
+      } else {
+        eyebrow.textContent = 'Modal';
+        title.textContent = 'Окно';
+        body.innerHTML = '<p class="text-gray-600">—</p>';
+      }
+
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(){
+      const modal = document.getElementById('modal');
+      const body = document.getElementById('modalBody');
+      if (!modal) return;
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+      if (body) body.innerHTML = '';
+      document.body.style.overflow = '';
+    }
+    function modalOutsideClose(e){
+      if (e.target && e.target.id === 'modal') closeModal();
+    }
+
+    function quizTemplate(){
+      return `
+      <div class="grid lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7">
+          <div class="rounded-[1.6rem] bg-white border border-gray-100 p-6">
+            <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">3 шага</p>
+            <p class="mt-2 font-header text-2xl uppercase font-bold text-brand-black">Подберём формат</p>
+            <p class="mt-2 text-gray-600 text-sm">
+              Выберите возраст, цель и удобные дни — получим рекомендацию и откроем WhatsApp с готовым текстом.
+            </p>
+
+            <div class="mt-5 space-y-4">
+              <div>
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Возраст</p>
+                <div class="mt-2 grid sm:grid-cols-3 gap-2">
+                  <button class="btn-main bg-brand-black text-white py-3 font-header uppercase tracking-wider magnetic" onclick="quizSet('age','5-7', this)">5–7</button>
+                  <button class="btn-main bg-brand-black text-white py-3 font-header uppercase tracking-wider magnetic" onclick="quizSet('age','8-10', this)">8–10</button>
+                  <button class="btn-main bg-brand-black text-white py-3 font-header uppercase tracking-wider magnetic" onclick="quizSet('age','11-14', this)">11–14</button>
+                </div>
+              </div>
+
+              <div>
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Цель</p>
+                <div class="mt-2 grid sm:grid-cols-2 gap-2">
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-3 font-header uppercase tracking-wider hover:bg-brand-gold hover:text-black magnetic" onclick="quizSet('goal','техника', this)">Техника</button>
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-3 font-header uppercase tracking-wider hover:bg-brand-gold hover:text-black magnetic" onclick="quizSet('goal','соревнования', this)">Соревнования</button>
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-3 font-header uppercase tracking-wider hover:bg-brand-gold hover:text-black magnetic" onclick="quizSet('goal','дисциплина', this)">Дисциплина</button>
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-3 font-header uppercase tracking-wider hover:bg-brand-gold hover:text-black magnetic" onclick="quizSet('goal','индивидуально', this)">Индивидуально</button>
+                </div>
+              </div>
+
+              <div>
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Удобные дни</p>
+                <div class="mt-2 grid sm:grid-cols-3 gap-2">
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-3 font-header uppercase tracking-wider hover:bg-brand-black hover:text-white magnetic" onclick="quizSet('days','будни', this)">Будни</button>
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-3 font-header uppercase tracking-wider hover:bg-brand-black hover:text-white magnetic" onclick="quizSet('days','выходные', this)">Выходные</button>
+                  <button class="btn-main bg-white border border-gray-200 text-brand-black py-3 font-header uppercase tracking-wider hover:bg-brand-black hover:text-white magnetic" onclick="quizSet('days','любой', this)">Любой</button>
+                </div>
+              </div>
+
+              <div class="pt-3 flex flex-col sm:flex-row gap-3">
+                <button class="btn-main bg-brand-gold text-black py-4 px-6 font-header uppercase tracking-wider shadow-xl magnetic" onclick="quizSubmit()">
+                  Получить рекомендацию
+                </button>
+                <button class="btn-main bg-white border border-gray-200 text-brand-black py-4 px-6 font-header uppercase tracking-wider hover:bg-brand-black hover:text-white magnetic" onclick="quizReset()">
+                  Сбросить
+                </button>
+              </div>
+
+              <p class="text-xs text-gray-500">Если не выбрано — мы всё равно сформируем сообщение, и менеджер уточнит детали.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="rounded-[1.6rem] bg-brand-black text-white border border-black/10 p-6">
+            <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Recommendation</p>
+            <p class="mt-2 font-header text-2xl uppercase font-bold">Результат</p>
+            <p class="mt-3 text-sm text-gray-200" id="quizResult">
+              Выберите параметры и нажмите “Получить рекомендацию”.
+            </p>
+
+            <div class="mt-6 rounded-2xl bg-white/10 border border-white/10 p-5">
+              <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">Сразу в WhatsApp</p>
+              <button class="mt-3 btn-main w-full bg-brand-gold text-black py-4 font-header uppercase tracking-wider shadow-xl magnetic"
+                      onclick="quizSubmit(true)">
+                Открыть WhatsApp
+              </button>
+              <button class="mt-3 btn-main w-full bg-white/10 text-white py-4 font-header uppercase tracking-wider border border-white/20 hover:bg-white hover:text-black magnetic"
+                      onclick="closeModal()">
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      `;
+    }
+
+    function scheduleTemplate(){
+      return `
+      <div class="grid lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7">
+          <div class="rounded-[1.6rem] bg-white border border-gray-100 p-6">
+            <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Overview</p>
+            <p class="mt-2 font-header text-2xl uppercase font-bold text-brand-black">Пример расписания</p>
+            <p class="mt-2 text-gray-600 text-sm">Можно заменить на актуальное расписание. Здесь — удобный макет.</p>
+
+            <div class="mt-5 space-y-3">
+              <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Выходные</p>
+                <p class="mt-2 font-bold text-brand-black">Weekend: Сб–Вс • 10:00–11:00</p>
+                <p class="mt-1 font-bold text-brand-black">Baby Start: Сб–Вс • 11:00–12:00</p>
+              </div>
+
+              <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+                <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-gray-500">Будни</p>
+                <p class="mt-2 font-bold text-brand-black">Individual 1x1: Пн–Пт • окна 11:30–12:30 и 15:30–16:30</p>
+                <p class="mt-1 text-sm text-gray-600">Спецгруппа: по расписанию + matchday</p>
+              </div>
+
+              <p class="text-xs text-gray-500">Расписание уточняйте у менеджера. В расписании возможны изменения.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="rounded-[1.6rem] bg-brand-black text-white border border-black/10 p-6">
+            <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Action</p>
+            <p class="mt-2 font-header text-2xl uppercase font-bold">Запись</p>
+            <p class="mt-3 text-sm text-gray-200">
+              Напишите менеджеру — подберём удобную группу и локацию.
+            </p>
+
+            <div class="mt-6 space-y-3">
+              <button onclick="waPrefill('Здравствуйте! Подскажите, пожалуйста, актуальное расписание и свободные места. Возраст ребенка: __. Удобные дни: __.')"
+                      class="btn-main w-full bg-brand-gold text-black py-4 font-header uppercase tracking-wider shadow-xl magnetic">
+                Написать в WhatsApp
+              </button>
+              <button onclick="openModal('quiz')"
+                      class="btn-main w-full bg-white/10 text-white py-4 font-header uppercase tracking-wider border border-white/20 hover:bg-white hover:text-black magnetic">
+                Подбор программы
+              </button>
+              <button onclick="closeModal()"
+                      class="btn-main w-full bg-white/10 text-white py-4 font-header uppercase tracking-wider border border-white/20 hover:bg-white hover:text-black magnetic">
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      `;
+    }
+
+    const QUIZ_STATE = { age:null, goal:null, days:null };
+
+    function quizSet(key, val, el){
+      QUIZ_STATE[key] = val;
+
+      // Visual selection: reset siblings inside same block
+      const parent = el?.parentElement;
+      if (parent) {
+        Array.from(parent.children).forEach(btn => {
+          btn.classList.remove('bg-brand-gold','text-black');
+          // restore base styles
+          if (btn.classList.contains('bg-brand-black')) {
+            btn.classList.add('text-white');
+          }
+        });
+      }
+
+      // highlight current
+      el.classList.add('bg-brand-gold','text-black');
+      el.classList.remove('text-white');
+
+      updateQuizResultText();
+    }
+
+    function pickProgram(){
+      const { age, goal } = QUIZ_STATE;
+      // Priority: individual goal
+      if (goal === 'индивидуально') return PROGRAMS.find(p => p.id==='indiv');
+
+      if (age === '5-7') return PROGRAMS.find(p => p.id==='baby');
+      if (age === '8-10') return PROGRAMS.find(p => p.id==='weekend');
+      if (age === '11-14') {
+        if (goal === 'соревнования') return PROGRAMS.find(p => p.id==='spec');
+        return PROGRAMS.find(p => p.id==='spec');
+      }
+
+      // If age not selected: choose based on goal
+      if (goal === 'соревнования') return PROGRAMS.find(p => p.id==='spec');
+      if (goal === 'техника' || goal === 'дисциплина') return PROGRAMS.find(p => p.id==='weekend');
+      return PROGRAMS.find(p => p.id==='weekend');
+    }
+
+    function updateQuizResultText(){
+      const el = document.getElementById('quizResult');
+      if (!el) return;
+
+      const p = pickProgram();
+      const age = QUIZ_STATE.age ? QUIZ_STATE.age.replace('-', '–') : 'не указан';
+      const goal = QUIZ_STATE.goal || 'не указана';
+      const days = QUIZ_STATE.days || 'не указаны';
+
+      el.innerHTML = `
+        <div class="rounded-2xl bg-white/10 border border-white/10 p-4">
+          <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-white/70">Вводные</p>
+          <p class="mt-2 text-sm text-gray-200">Возраст: <b>${age}</b></p>
+          <p class="mt-1 text-sm text-gray-200">Цель: <b>${goal}</b></p>
+          <p class="mt-1 text-sm text-gray-200">Дни: <b>${days}</b></p>
+        </div>
+
+        <div class="mt-4 rounded-2xl bg-black/35 border border-white/10 p-4">
+          <p class="text-[10px] uppercase tracking-[0.45em] font-bold text-brand-gold">Рекомендация</p>
+          <p class="mt-2 font-header uppercase text-2xl font-bold">${p.title}</p>
+          <p class="mt-1 text-sm text-gray-200">Возраст: <b>${p.age}</b> • Частота: <b>${p.freq}</b></p>
+          <p class="mt-1 text-sm text-gray-200">Фокус: <b>${p.focus}</b></p>
+          <p class="mt-2 text-sm text-gray-200">Ориентир по цене: <b>${p.price}</b></p>
+        </div>
+      `;
+    }
+
+    function quizMessage(program){
+      const age = QUIZ_STATE.age ? QUIZ_STATE.age.replace('-', '–') : '__';
+      const goal = QUIZ_STATE.goal || '__';
+      const days = QUIZ_STATE.days || '__';
+      return `Здравствуйте!
+Подбор программы (квиз):
+Возраст: ${age}
+Цель: ${goal}
+Удобные дни: ${days}
+
+Рекомендация: ${program.title}
+Хочу записаться. Подскажите свободные места, расписание и ближайшую локацию.`;
+    }
+
+    function quizSubmit(openWa = true){
+      const program = pickProgram();
+      updateQuizResultText();
+      if (openWa) waPrefill(quizMessage(program));
+    }
+
+    function quizReset(){
+      QUIZ_STATE.age = null; QUIZ_STATE.goal = null; QUIZ_STATE.days = null;
+      const res = document.getElementById('quizResult');
+      if (res) res.textContent = 'Выберите параметры и нажмите “Получить рекомендацию”.';
+
+      // clear highlight
+      const body = document.getElementById('modalBody');
+      if (!body) return;
+      body.querySelectorAll('button').forEach(b=>{
+        // remove highlight if any
+        b.classList.remove('bg-brand-gold','text-black');
+      });
+    }
+
+    // Map: lazy init + tab control
     let mapInited = false;
+    let mapObj = null;
+    let markers = [];
+
     function initMap() {
       if (mapInited) return;
       if (typeof L === 'undefined') return;
       mapInited = true;
 
-      const map = L.map('map', { scrollWheelZoom: false }).setView([51.13, 71.41], 12);
+      mapObj = L.map('map', { scrollWheelZoom: false }).setView([51.13, 71.41], 12);
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; CARTO', maxZoom: 20
-      }).addTo(map);
+      }).addTo(mapObj);
 
       const ballIcon = L.icon({
         iconUrl: 'https://cdn-icons-png.flaticon.com/512/53/53283.png',
@@ -1182,8 +2043,50 @@ ${meta ? ("Детали: " + meta) : ""}
         className: 'football-marker'
       });
 
-      L.marker([51.152230, 71.404335], {icon: ballIcon}).addTo(map).bindPopup('<b>Школа №11</b>');
-      L.marker([51.104512, 71.402919], {icon: ballIcon}).addTo(map).bindPopup('<b>Школа №71</b>');
+      markers = LOCATIONS.map((loc) => {
+        return L.marker([loc.lat, loc.lng], {icon: ballIcon}).addTo(mapObj).bindPopup(loc.popup);
+      });
+
+      // center current
+      setTimeout(() => selectLocation(0, true), 0);
+    }
+
+    function selectLocation(idx, silent=false){
+      currentLocIndex = idx;
+
+      const tab1 = document.getElementById('locTab1');
+      const tab2 = document.getElementById('locTab2');
+      const addr = document.getElementById('locAddress');
+      const city = document.getElementById('locCity');
+
+      const loc = LOCATIONS[idx];
+      if (addr) addr.textContent = loc.address;
+      if (city) city.textContent = loc.city;
+
+      // Tabs style
+      if (tab1 && tab2) {
+        if (idx === 0) {
+          tab1.classList.add('bg-brand-gold','text-black');
+          tab1.classList.remove('bg-white/10','text-white');
+          tab2.classList.add('bg-white/10','text-white');
+          tab2.classList.remove('bg-brand-gold','text-black');
+        } else {
+          tab2.classList.add('bg-brand-gold','text-black');
+          tab2.classList.remove('bg-white/10','text-white');
+          tab1.classList.add('bg-white/10','text-white');
+          tab1.classList.remove('bg-brand-gold','text-black');
+        }
+      }
+
+      if (!silent && mapObj) {
+        mapObj.flyTo([loc.lat, loc.lng], 14, { animate: !reduceMotion, duration: reduceMotion ? 0 : 0.9 });
+        try { markers[idx]?.openPopup(); } catch(e) {}
+      }
+    }
+
+    function currentLocationWaText(){
+      const loc = LOCATIONS[currentLocIndex];
+      return `Здравствуйте! Интересует запись в ${loc.name}. Адрес: ${loc.address}. Возраст ребенка: __. Удобные дни: __.`;
     }
 
     const mapEl = document.getElementById('map');
@@ -1202,6 +2105,22 @@ ${meta ? ("Детали: " + meta) : ""}
         initMap();
       }
     }
+
+    // Auto-rotate testimonials (desktop)
+    if (!reduceMotion) {
+      setInterval(() => {
+        // do not rotate if modal is open
+        const modal = document.getElementById('modal');
+        if (modal && modal.classList.contains('show')) return;
+        slideTestimonial(1);
+      }, 6500);
+    }
   </script>
+
+  <noscript>
+    <div style="padding:12px; background:#111; color:#fff; text-align:center;">
+      Для корректной работы интерактивов включите JavaScript.
+    </div>
+  </noscript>
 </body>
 </html>
