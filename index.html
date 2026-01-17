@@ -1544,18 +1544,55 @@
     }
 
     // Preloader + hero video optimization
-    window.addEventListener('load', () => {
-      const pre = document.getElementById('preloader');
-      if (pre) {
-        pre.style.opacity = '0';
-        setTimeout(() => { pre.style.display = 'none'; }, 700);
-      }
+    function hidePreloader(){
+  const pre = document.getElementById('preloader');
+  if (!pre) return;
+  pre.style.opacity = '0';
+  setTimeout(() => { pre.style.display = 'none'; }, 700);
+}
 
-      // Testimonials init
-      setTestimonial(0);
+// Прелоадер закрываем как можно раньше
+window.addEventListener('DOMContentLoaded', () => {
+  hidePreloader();
+  // на всякий случай ещё раз (если браузер кеш/возврат)
+  setTimeout(hidePreloader, 1500);
+});
 
-            const heroVideo = document.getElementById('heroVideo');
-      const heroPoster = document.getElementById('heroPoster');
+// И всё равно пробуем на load (если всё ок — просто повторно спрячется)
+window.addEventListener('load', () => {
+  hidePreloader();
+
+  // Testimonials init
+  setTestimonial(0);
+
+  const heroVideo = document.getElementById('heroVideo');
+  const heroPoster = document.getElementById('heroPoster');
+
+  // На всякий случай: если видео не играет — показываем постер
+  function showPosterOnly() {
+    if (heroVideo) heroVideo.style.display = 'none';
+    if (heroPoster) heroPoster.style.display = 'block';
+  }
+
+  if (reduceMotion) {
+    showPosterOnly();
+  } else if (heroVideo) {
+    const tryPlay = () => heroVideo.play().catch(() => showPosterOnly());
+
+    heroVideo.muted = true;
+    heroVideo.setAttribute('muted', '');
+    heroVideo.setAttribute('playsinline', '');
+    heroVideo.setAttribute('webkit-playsinline', '');
+
+    tryPlay();
+    heroVideo.addEventListener('error', showPosterOnly, { once: true });
+  } else {
+    showPosterOnly();
+  }
+});
+
+// Жёсткий “предохранитель” — даже если всё подвисло, прелоадер уйдёт
+setTimeout(hidePreloader, 3500);
 
       // На мобилке НЕ отключаем видео — пробуем запустить.
       // Если браузер запретил/не поддержал кодек — показываем постер.
