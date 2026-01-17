@@ -1554,19 +1554,33 @@
       // Testimonials init
       setTestimonial(0);
 
-      const heroVideo = document.getElementById('heroVideo');
+            const heroVideo = document.getElementById('heroVideo');
       const heroPoster = document.getElementById('heroPoster');
 
-      if (isMobile || reduceMotion) {
-        if (heroVideo) {
-          try { heroVideo.pause(); } catch(e) {}
-          heroVideo.style.display = 'none';
-        }
+      // На мобилке НЕ отключаем видео — пробуем запустить.
+      // Если браузер запретил/не поддержал кодек — показываем постер.
+      function showPosterOnly() {
+        if (heroVideo) heroVideo.style.display = 'none';
         if (heroPoster) heroPoster.style.display = 'block';
-      } else {
-        if (heroVideo) heroVideo.play().catch(() => {});
       }
-    });
+
+      if (reduceMotion) {
+        showPosterOnly();
+      } else if (heroVideo) {
+        const tryPlay = () => heroVideo.play().catch(() => showPosterOnly());
+
+        // На всякий случай принудительно выставляем атрибуты для iOS/Android
+        heroVideo.muted = true;
+        heroVideo.setAttribute('muted', '');
+        heroVideo.setAttribute('playsinline', '');
+        heroVideo.setAttribute('webkit-playsinline', '');
+
+        tryPlay();
+
+        heroVideo.addEventListener('error', showPosterOnly, { once: true });
+      } else {
+        showPosterOnly();
+      }
 
     // Navbar style on scroll + Scroll Progress
     const navShell = document.getElementById('navShell');
